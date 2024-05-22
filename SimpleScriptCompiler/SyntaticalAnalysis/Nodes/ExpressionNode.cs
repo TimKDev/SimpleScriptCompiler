@@ -39,7 +39,7 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
         {
             IExpressionPart expression;
 
-            if(tokensOfExpression.Count == 0)
+            if (tokensOfExpression.Count == 0)
             {
                 throw new ArgumentException("Tokens are needed to construct expression.");
             }
@@ -47,16 +47,9 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
             if (tokensOfExpression.Count == 1)
             {
                 expression = CreateValueOrVariableFromToken(tokensOfExpression[0]);
+                return new ExpressionNode(expression);
             }
-
-            var smallestSpecificityIndex = GetIndexOfSmallestSpecificityOperation(tokensOfExpression) ?? throw new Exception($"Line {tokensOfExpression[0].Line}: Invalid Expression.");
-            var tokenWithSmallestSpecificity = tokensOfExpression[smallestSpecificityIndex];
-            var leftSide = tokensOfExpression[0..smallestSpecificityIndex];
-            var rightSide = tokensOfExpression[(smallestSpecificityIndex + 1)..];
-            var currentOperation = OperationNode.Create(TransformTokenType(tokenWithSmallestSpecificity.TokenType));
-
-            ComputeASTRecursiv(currentOperation, leftSide, rightSide);
-            expression = currentOperation;
+            expression = CreateNextOperationNode(tokensOfExpression);
 
             return new ExpressionNode(expression);
         }
@@ -72,13 +65,13 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
                 if (token.TokenType == TokenType.OPEN_BRACKET) currentBracketCount++;
                 if (token.TokenType == TokenType.CLOSED_BRACKET) currentBracketCount--;
                 if (currentBracketCount < 0) throw new Exception($"Line {token.Line}: Open Bracket must be used before closing one.");
-                
+
                 var currentSpecificity = currentBracketCount * 10;
                 if (!OperationNode.SupportedTokenTypes.Contains(token.TokenType)) continue;
                 if (token.TokenType == TokenType.MULTIPLY || token.TokenType == TokenType.DIVIDE) currentSpecificity++;
                 if (token.TokenType == TokenType.POWER) currentSpecificity += 2;
 
-                if(currentSpecificity < smallestSpeficity)
+                if (currentSmallestSpeficityIndex == null || currentSpecificity < smallestSpeficity)
                 {
                     currentSmallestSpeficityIndex = i;
                     smallestSpeficity = currentSpecificity;
@@ -95,18 +88,43 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
 
         private static void ComputeASTRecursiv(OperationNode currentOperationNode, List<Token> leftOperantTokens, List<Token> rightOperantTokens)
         {
-            IExpressionPart leftExpression;
-            if(leftOperantTokens.Count == 1)
+            //Left Part:
+            IExpressionPart? leftExpression;
+            if (leftOperantTokens.Count == 1)
             {
                 var leftToken = leftOperantTokens[0];
                 leftExpression = CreateValueOrVariableFromToken(leftToken);
             }
-            var smallestSpecificityIndex = GetIndexOfSmallestSpecificityOperation(leftOperantTokens) ?? throw new Exception($"Line {leftOperantTokens[0].Line}: Invalid Expression.");
+            else
+            {
+                leftExpression = CreateNextOperationNode(leftOperantTokens);
+            }
+            currentOperationNode.FirstOperant = leftExpression ?? throw new Exception();
 
-            var tokenWithSmallestSpecificity = leftOperantTokens[smallestSpecificityIndex];
-            var leftSide = leftOperantTokens[0..smallestSpecificityIndex];
-            var rightSide = leftOperantTokens[(smallestSpecificityIndex + 1)..];
+            //Right Part:
+            IExpressionPart? rightExpression;
+            if (rightOperantTokens.Count == 1)
+            {
+                var rightToken = rightOperantTokens[0];
+                rightExpression = CreateValueOrVariableFromToken(rightToken);
+            }
+            else
+            {
+                rightExpression = CreateNextOperationNode(rightOperantTokens);
+            }
+            currentOperationNode.SecondOperant = rightExpression ?? throw new Exception();
 
+        }
+
+        private static OperationNode CreateNextOperationNode(List<Token> tokensOfExpression){
+            var smallestSpecificityIndex = GetIndexOfSmallestSpecificityOperation(tokensOfExpression) ?? throw new Exception($"Line {tokensOfExpression[0].Line}: Invalid Expression.");
+            var tokenWithSmallestSpecificity = tokensOfExpression[smallestSpecificityIndex];
+            var leftSide = tokensOfExpression[0..smallestSpecificityIndex];
+            var rightSide = tokensOfExpression[(smallestSpecificityIndex + 1)..];
+            var currentOperation = OperationNode.Create(TransformTokenType(tokenWithSmallestSpecificity.TokenType));
+            ComputeASTRecursiv(currentOperation, leftSide, rightSide);
+
+            return currentOperation;
         }
 
         private static IExpressionPart CreateValueOrVariableFromToken(Token token)

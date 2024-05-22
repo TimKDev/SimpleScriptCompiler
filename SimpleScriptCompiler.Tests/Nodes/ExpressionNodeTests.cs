@@ -2,17 +2,17 @@
 using SimpleScriptCompiler.LexicalAnalysis;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Enums;
+using tf = TokenFactory;
 
 namespace SimpleScriptCompiler.Tests.Nodes
 {
     public class ExpressionNodeTests
     {
-
         [Fact]
         public void CreateByTokens_ShouldConstructExpression_GivenSimpleAddition()
         {
             //1 + test
-            var input = new List<Token>() { new Token(TokenType.Number, 1, "1"), new Token(TokenType.PLUS, 1), new Token(TokenType.Variable, 1, "test") };
+            var input = new List<Token>() { tf.Num(1), tf.Add(), tf.Var("test") };
             var result = ExpressionNode.CreateByTokens(input);
             result.Value.Should().BeOfType<OperationNode>();
             OperationNode operationNode = (OperationNode)result.Value;
@@ -26,7 +26,7 @@ namespace SimpleScriptCompiler.Tests.Nodes
         public void CreateByTokens_ShouldConstructExpression_GivenSimpleMultiplication()
         {
             //1 * 7
-            var input = new List<Token>() { new Token(TokenType.Number, 1, "1"), new Token(TokenType.MULTIPLY, 1), new Token(TokenType.Number, 1, "7") };
+            var input = new List<Token>() { tf.Num(1), tf.Mul(), tf.Num(7) };
             var result = ExpressionNode.CreateByTokens(input);
             result.Value.Should().BeOfType<OperationNode>();
             OperationNode operationNode = (OperationNode)result.Value;
@@ -44,7 +44,28 @@ namespace SimpleScriptCompiler.Tests.Nodes
         public void CreateByTokens_ShouldConstructExpressionNode_GivenTwoOperationsWithoutMultiBeforeAdd()
         {
             //2 * 3 - 6
-            var input = new List<Token>() { new Token(TokenType.Number, 1, "2"), new Token(TokenType.MULTIPLY, 1), new Token(TokenType.Number, 1, "3"), new Token(TokenType.MINUS, 1), new Token(TokenType.Number, 1, "6"), };
+            var input = new List<Token>() { tf.Num(2), tf.Mul(), tf.Num(3), tf.Sub(), tf.Num(6) };
+            var result = ExpressionNode.CreateByTokens(input);
+
+            result.Value.Should().BeOfType<OperationNode>();
+            OperationNode operationNode = (OperationNode)result.Value;
+
+            operationNode.OperationType.Should().Be(OperationTypes.MINUS);
+            operationNode.FirstOperant.Should().BeOfType<OperationNode>();
+            operationNode.SecondOperant.Should().BeOfType<NumberValueNode>();
+
+            var firstOperant = (OperationNode)operationNode.FirstOperant;
+            firstOperant.OperationType.Should().Be(OperationTypes.MULTIPLY);
+            firstOperant.FirstOperant.Should().BeOfType<NumberValueNode>();
+            firstOperant.SecondOperant.Should().BeOfType<NumberValueNode>();
+        }
+
+        // Test für 2 Operations mit Punkt vor Strich
+        [Fact]
+        public void CreateByTokens_ShouldConstructExpressionNode_GivenTwoOperationsWithMultiBeforeAdd()
+        {
+            //6 - 2 * 3
+            var input = new List<Token>() {tf.Num(6), tf.Sub(), tf.Num(2), tf.Mul(), tf.Num(3)};
             var result = ExpressionNode.CreateByTokens(input);
 
             result.Value.Should().BeOfType<OperationNode>();
@@ -56,12 +77,16 @@ namespace SimpleScriptCompiler.Tests.Nodes
 
             var secondOperant = (OperationNode)operationNode.SecondOperant;
             secondOperant.OperationType.Should().Be(OperationTypes.MULTIPLY);
-            secondOperant.FirstOperant.Should().BeOfType<NumberValueNode>();
+            secondOperant.SecondOperant.Should().BeOfType<NumberValueNode>();
             secondOperant.SecondOperant.Should().BeOfType<NumberValueNode>();
         }
-
-        // Test für 2 Operations mit Punkt vor Strich
         // Test für 2 Operations mit Klammern
+        // Test mit **
+
+        // Tests für invalide Ausdrücke
+
+        
 
     }
+
 }

@@ -1,11 +1,10 @@
 ﻿using SimpleScriptCompiler.LexicalAnalysis;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SimpleScriptCompiler.SyntaticalAnalysis
 {
-    //Aufgabe des Parsers ist es herauszufinden welche Tokens zu einer Node oder ihren Parent Nodes gehören. Die Nodes sind dann dafür zuständig mit Hilfe von Factory Methoden aus den Tokens die entsprechende Node zu erstellen.
-    public class Parser
+  //Aufgabe des Parsers ist es herauszufinden welche Tokens zu einer Node oder ihren Parent Nodes gehören. Die Nodes sind dann dafür zuständig mit Hilfe von Factory Methoden aus den Tokens die entsprechende Node zu erstellen.
+  public class Parser
     {
 
         //LET a = 0
