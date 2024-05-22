@@ -38,4 +38,14 @@ public class TokenFactory
     {
         return new Token(TokenType.POWER, 1);
     }
+
+    public static Token Open()
+    {
+        return new Token(TokenType.OPEN_BRACKET, 1);
+    }
+
+    public static Token Close()
+    {
+        return new Token(TokenType.CLOSED_BRACKET, 1);
+    }
 }
