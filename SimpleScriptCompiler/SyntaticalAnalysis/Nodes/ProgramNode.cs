@@ -1,5 +1,5 @@
-﻿using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Enums;
-using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Interfaces;
+﻿using SimpleScriptCompiler.SyntaticalAnalysis.NewNodes.Interfaces;
+using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Enums;
 
 namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
 {
@@ -7,6 +7,6 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
     {
         public NodeTypes Type => NodeTypes.Program;
 
-        public List<INode> ChildNodes { get; } = new List<INode>();
+        public List<INode> ChildNodes { get; } = [];
     }
 }

@@ -1,4 +1,5 @@
 ﻿using SimpleScriptCompiler.LexicalAnalysis;
+using SimpleScriptCompiler.SyntaticalAnalysis.NewNodes.Interfaces;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Enums;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Interfaces;
 

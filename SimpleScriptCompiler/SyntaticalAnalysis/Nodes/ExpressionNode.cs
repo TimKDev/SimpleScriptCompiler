@@ -1,4 +1,5 @@
 ﻿using SimpleScriptCompiler.LexicalAnalysis;
+using SimpleScriptCompiler.SyntaticalAnalysis.NewNodes.Interfaces;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Enums;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Interfaces;
 
@@ -10,7 +11,6 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
             TokenType.Number,
             TokenType.String,
             TokenType.Variable,
-            TokenType.ASSIGN,
             TokenType.PLUS,
             TokenType.MINUS,
             TokenType.MULTIPLY,
@@ -42,7 +42,7 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
                 throw new ArgumentException("Tokens are needed to construct expression.");
             }
 
-            var expressionPart = CreateExpressionPart(tokensOfExpression);
+            IExpressionPart expressionPart = CreateExpressionPart(tokensOfExpression);
             return new ExpressionNode(expressionPart);
         }
 
@@ -55,15 +55,37 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
             int currentBracketCount = 0;
             for (int i = 0; i < tokens.Count; i++)
             {
-                var token = tokens[i];
-                if (token.TokenType == TokenType.OPEN_BRACKET) currentBracketCount++;
-                if (token.TokenType == TokenType.CLOSED_BRACKET) currentBracketCount--;
-                if (currentBracketCount < 0) throw new Exception($"Line {token.Line}: Open Bracket must be used before closing one.");
+                Token token = tokens[i];
+                if (token.TokenType == TokenType.OPEN_BRACKET)
+                {
+                    currentBracketCount++;
+                }
 
-                var currentSpecificity = currentBracketCount * 10;
-                if (!OperationNode.SupportedTokenTypes.Contains(token.TokenType)) continue;
-                if (token.TokenType == TokenType.MULTIPLY || token.TokenType == TokenType.DIVIDE) currentSpecificity++;
-                if (token.TokenType == TokenType.POWER) currentSpecificity += 2;
+                if (token.TokenType == TokenType.CLOSED_BRACKET)
+                {
+                    currentBracketCount--;
+                }
+
+                if (currentBracketCount < 0)
+                {
+                    throw new Exception($"Line {token.Line}: Open Bracket must be used before closing one.");
+                }
+
+                int currentSpecificity = currentBracketCount * 10;
+                if (!OperationNode.SupportedTokenTypes.Contains(token.TokenType))
+                {
+                    continue;
+                }
+
+                if (token.TokenType == TokenType.MULTIPLY || token.TokenType == TokenType.DIVIDE)
+                {
+                    currentSpecificity++;
+                }
+
+                if (token.TokenType == TokenType.POWER)
+                {
+                    currentSpecificity += 2;
+                }
 
                 if (currentSmallestSpeficityIndex == null || currentSpecificity < smallestSpeficity)
                 {
@@ -92,8 +114,12 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
             {
                 // Expression does not contain any operation but could have multiple parts which can only be unnecessary brackets at start and end, e.g. ((4))
                 tokens = RemoveStartAndEndBrackets(tokens);
-                if (tokens.Count != 1) throw new Exception("Invalid Operation");
-                var token = tokens[0];
+                if (tokens.Count != 1)
+                {
+                    throw new Exception("Invalid Operation");
+                }
+
+                Token token = tokens[0];
                 return CreateValueOrVariableFromToken(token);
             }
 
@@ -102,30 +128,33 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
 
         private static bool CheckIfExpressionContainsNoOperation(List<Token> tokens)
         {
-            foreach (var token in tokens)
+            foreach (Token token in tokens)
             {
-                if (OperationNode.SupportedTokenTypes.Contains(token.TokenType)) return false;
+                if (OperationNode.SupportedTokenTypes.Contains(token.TokenType))
+                {
+                    return false;
+                }
             }
             return true;
         }
 
         private static OperationNode CreateNextOperationNode(List<Token> tokensOfExpression)
         {
-            var (smallestSpecificityIndex, smallestSpecificity) = GetIndexOfSmallestSpecificityOperation(tokensOfExpression);
+            (int? smallestSpecificityIndex, int smallestSpecificity) = GetIndexOfSmallestSpecificityOperation(tokensOfExpression);
             if (smallestSpecificityIndex == null)
             {
                 throw new Exception($"Line {tokensOfExpression[0].Line}: Invalid Expression.");
             }
-            var numberOfUnnecessaryBrackets = (smallestSpecificity - smallestSpecificity % 10) / 10;
+            int numberOfUnnecessaryBrackets = (smallestSpecificity - smallestSpecificity % 10) / 10;
             if (numberOfUnnecessaryBrackets != 0)
             {
                 tokensOfExpression = tokensOfExpression.Skip(numberOfUnnecessaryBrackets).SkipLast(numberOfUnnecessaryBrackets).ToList();
             }
-            var smallestIndexAfterRemovingBrackets = smallestSpecificityIndex.Value - numberOfUnnecessaryBrackets;
-            var tokenWithSmallestSpecificity = tokensOfExpression[smallestIndexAfterRemovingBrackets];
-            var leftSide = tokensOfExpression[0..smallestIndexAfterRemovingBrackets];
-            var rightSide = tokensOfExpression[(smallestIndexAfterRemovingBrackets + 1)..];
-            var currentOperation = OperationNode.Create(TransformTokenType(tokenWithSmallestSpecificity.TokenType));
+            int smallestIndexAfterRemovingBrackets = smallestSpecificityIndex.Value - numberOfUnnecessaryBrackets;
+            Token tokenWithSmallestSpecificity = tokensOfExpression[smallestIndexAfterRemovingBrackets];
+            List<Token> leftSide = tokensOfExpression[0..smallestIndexAfterRemovingBrackets];
+            List<Token> rightSide = tokensOfExpression[(smallestIndexAfterRemovingBrackets + 1)..];
+            OperationNode currentOperation = OperationNode.Create(TransformTokenType(tokenWithSmallestSpecificity.TokenType));
             ComputeASTRecursiv(currentOperation, leftSide, rightSide);
 
             return currentOperation;
@@ -133,10 +162,23 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
 
         private static List<Token> RemoveStartAndEndBrackets(List<Token> input)
         {
-            if (input[0].TokenType != TokenType.OPEN_BRACKET) return input;
-            if (input[^1].TokenType != TokenType.CLOSED_BRACKET) throw new Exception("Open Bracket must be closed.");
-            var result = input.Skip(1).SkipLast(1).ToList();
-            if (result[0].TokenType == TokenType.OPEN_BRACKET) return RemoveStartAndEndBrackets(result); // e.g (((4)))
+            // This methode blindly removes brackets at the start and end of an expression without checking if these brackets are really connected, which is not necessaryly the case. This works e.g. when the expression contains no operation, but not in general!
+            if (input[0].TokenType != TokenType.OPEN_BRACKET)
+            {
+                return input;
+            }
+
+            if (input[^1].TokenType != TokenType.CLOSED_BRACKET)
+            {
+                throw new Exception("Open Bracket must be closed.");
+            }
+
+            List<Token> result = input.Skip(1).SkipLast(1).ToList();
+            if (result[0].TokenType == TokenType.OPEN_BRACKET)
+            {
+                return RemoveStartAndEndBrackets(result); // e.g (((4)))
+            }
+
             return result;
         }
 

@@ -1,0 +1,2 @@
+﻿LET name = "T" + "I" + "M"
+PRINT "Hello " + name

@@ -18,3 +18,8 @@ ENDWHILE
 
 LET x = a +b*c - 1
 +d IF 
+
+
+
+1. LET a = 0 + Some Expression
+2. PRINT Some Expression

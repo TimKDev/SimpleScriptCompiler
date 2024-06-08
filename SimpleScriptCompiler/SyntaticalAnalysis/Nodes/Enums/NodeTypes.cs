@@ -8,6 +8,8 @@
         StringValue,
         NumberValue,
         Operation,
-        Variable
+        Variable,
+        Addition,
+        Multiplication
     }
 }

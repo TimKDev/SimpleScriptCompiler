@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SimpleScriptCompiler.LexicalAnalysis;
 using SimpleScriptCompiler.SyntaticalAnalysis;
+using SimpleScriptCompiler.SyntaticalAnalysis.NewNodes;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes;
 
 namespace SimpleScriptCompiler.Tests

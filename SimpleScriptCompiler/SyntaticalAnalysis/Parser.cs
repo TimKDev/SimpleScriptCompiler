@@ -1,24 +1,25 @@
 ﻿using SimpleScriptCompiler.LexicalAnalysis;
+using SimpleScriptCompiler.SyntaticalAnalysis.NewNodes.Nodes;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes;
 
 namespace SimpleScriptCompiler.SyntaticalAnalysis
 {
-  //Aufgabe des Parsers ist es herauszufinden welche Tokens zu einer Node oder ihren Parent Nodes gehören. Die Nodes sind dann dafür zuständig mit Hilfe von Factory Methoden aus den Tokens die entsprechende Node zu erstellen.
-  public class Parser
+    //Aufgabe des Parsers ist es herauszufinden welche Tokens zu einer Node oder ihren Parent Nodes gehören. Die Nodes sind dann dafür zuständig mit Hilfe von Factory Methoden aus den Tokens die entsprechende Node zu erstellen.
+    public class Parser
     {
 
         //LET a = 0
         public ProgramNode ParseToAST(List<Token> tokens)
         {
             var program = new ProgramNode();
-            var i = 0;
+            int i = 0;
             while (i < tokens.Count)
             {
-                var token = tokens[i];
+                Token token = tokens[i];
                 if (token.TokenType == TokenType.LET)
                 {
-                    var variableDeklarationTokens = GetVariableDeklarationTokensFromStartPosition(tokens, i);
-                    var variableDeklarationToken = VariableDeklarationNode.CreateFromTokens(variableDeklarationTokens);
+                    List<Token> variableDeklarationTokens = GetVariableDeklarationTokensFromStartPosition(tokens, i);
+                    VariableDeklarationNode variableDeklarationToken = VariableDeklarationNode.CreateFromTokens(variableDeklarationTokens);
                     program.ChildNodes.Add(variableDeklarationToken);
                     i += variableDeklarationTokens.Count;
                     continue;
@@ -36,7 +37,7 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis
                 throw new Exception("Invalid Syntax"); //Rule: Es müssen 1 oder 3 Tokens folgen mit Identifier(, ASSERT und Initvalue)
             }
 
-            var variableDeklarationTokens = new List<Token>() {
+            List<Token> variableDeklarationTokens = new() {
                 tokens[startPosition],
                 tokens[startPosition + 1]
             };
@@ -45,7 +46,7 @@ namespace SimpleScriptCompiler.SyntaticalAnalysis
             {
                 //Beispiel: LET test = a + b * 2
                 variableDeklarationTokens.Add(tokens[startPosition + 2]);
-                var expressionTokens = GetExpressionFromStartPosition(tokens, startPosition + 3);
+                List<Token> expressionTokens = GetExpressionFromStartPosition(tokens, startPosition + 3);
                 variableDeklarationTokens.AddRange(expressionTokens);
                 return variableDeklarationTokens;
             }

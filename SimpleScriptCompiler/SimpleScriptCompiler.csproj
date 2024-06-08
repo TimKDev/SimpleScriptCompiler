@@ -22,4 +22,8 @@
     <Folder Include="SyntaticalAnalysis\Nodes\Exceptions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="EntertainingErrors" Version="0.0.1" />
+  </ItemGroup>
+
 </Project>

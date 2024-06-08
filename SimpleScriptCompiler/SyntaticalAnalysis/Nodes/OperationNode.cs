@@ -1,10 +1,11 @@
 ﻿using SimpleScriptCompiler.LexicalAnalysis;
+using SimpleScriptCompiler.SyntaticalAnalysis.NewNodes.Interfaces;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Enums;
 using SimpleScriptCompiler.SyntaticalAnalysis.Nodes.Interfaces;
 
 namespace SimpleScriptCompiler.SyntaticalAnalysis.Nodes
 {
-  public class OperationNode : INode, IExpressionPart
+    public class OperationNode : INode, IExpressionPart
   {
     public static TokenType[] SupportedTokenTypes = [
         TokenType.PLUS,
