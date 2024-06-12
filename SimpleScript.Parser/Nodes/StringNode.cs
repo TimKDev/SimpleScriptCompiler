@@ -1,6 +1,6 @@
 ﻿namespace SimpleScript.Parser.Nodes
 {
-    public class StringNode : IPrintableNode
+    public class StringNode : IPrintableNode, IAddable
     {
         public string Value { get; set; }
 

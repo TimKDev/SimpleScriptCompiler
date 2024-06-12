@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Tests.Helper;
 using SimpleScriptCompiler.LexicalAnalysis;
 using TF = SimpleScript.Parser.Tests.Helper.TokenFactory;
 
-namespace SimpleScript.Parser.Tests
+namespace SimpleScript.Parser.Tests.ParserTests
 {
     public class ParserTestHelloWorldProgram
     {
@@ -14,7 +15,7 @@ namespace SimpleScript.Parser.Tests
         [Fact]
         public void ParseTokens_StringNodeShouldHaveValueHelloSimpleScript_GivenProgramTokens()
         {
-            ProgramNode programNode = _sut.ParseTokens(ProgramTokens);
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             PrintNode printNode = programNode.ChildNodes[0];
             StringNode? stringNode = printNode.ChildNodes[0] as StringNode;
             stringNode!.Value.Should().Be(HelloMessage);

@@ -1,9 +1,10 @@
 ﻿using FluentAssertions;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Tests.Helper;
 using SimpleScriptCompiler.LexicalAnalysis;
 using TF = SimpleScript.Parser.Tests.Helper.TokenFactory;
 
-namespace SimpleScript.Parser.Tests
+namespace SimpleScript.Parser.Tests.ParserTests
 {
     public class ParserTestsHelloWorldWithPlusProgram
     {
@@ -15,7 +16,7 @@ namespace SimpleScript.Parser.Tests
         [Fact]
         public void ParserTests_PrintNodeShouldHaveAddNodeAsChild_GivenProgramTokens()
         {
-            ProgramNode programmingNode = _sut.ParseTokens(ProgramTokens);
+            ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             programmingNode.ChildNodes.Count.Should().Be(1);
             programmingNode.ChildNodes[0].Should().BeOfType<PrintNode>();
             PrintNode printNode = programmingNode.ChildNodes[0];
@@ -26,7 +27,7 @@ namespace SimpleScript.Parser.Tests
         [Fact]
         public void ParserTests_AddNodeShouldHaveTwoStringsAsChildren()
         {
-            ProgramNode programmingNode = _sut.ParseTokens(ProgramTokens);
+            ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             PrintNode printNode = programmingNode.ChildNodes[0];
             AddNode? addNode = printNode.ChildNodes[0] as AddNode;
             addNode!.ChildNodes.Count.Should().Be(2);
@@ -35,13 +36,13 @@ namespace SimpleScript.Parser.Tests
         [Fact]
         public void ParserTests_StringsShouldHaveValuesHelloAndWorld()
         {
-            ProgramNode programmingNode = _sut.ParseTokens(ProgramTokens);
+            ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             PrintNode printNode = programmingNode.ChildNodes[0];
             AddNode addNode = (printNode.ChildNodes[0] as AddNode)!;
-            StringNode firstString = addNode.ChildNodes[0];
-            StringNode secondString = addNode.ChildNodes[1];
-            firstString.Value.Should().Be(Hello);
-            secondString.Value.Should().Be(World);
+            StringNode? firstString = addNode.ChildNodes[0] as StringNode;
+            StringNode? secondString = addNode.ChildNodes[1] as StringNode;
+            firstString!.Value.Should().Be(Hello);
+            secondString!.Value.Should().Be(World);
         }
     }
 }

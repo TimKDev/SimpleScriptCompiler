@@ -2,6 +2,6 @@
 {
     public class AddNode : IPrintableNode
     {
-        public List<StringNode> ChildNodes { get; set; } = [];
+        public List<IAddable> ChildNodes { get; set; } = [];
     }
 }

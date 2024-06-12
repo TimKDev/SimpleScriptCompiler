@@ -12,17 +12,15 @@ namespace SimpleScript.Parser
             PrintNode printNode = new();
             if (inputTokens.Select(token => token.TokenType).Contains(TokenType.PLUS))
             {
-                int positionOfPlus = inputTokens.FindIndex(token => token.TokenType == TokenType.PLUS);
-                AddNode addNode = new();
-                if (positionOfPlus == 0)
+                List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
+                Result<AddNode> addNodeResult = ExpressionBuilder.CreateExpression(tokensOfExpression);
+
+                if (!addNodeResult.IsSuccess)
                 {
-                    return Error.Create("Plus Operation is missing first operant.");
+                    return addNodeResult.Convert<ProgramNode>();
                 }
-                string? firstString = inputTokens[positionOfPlus - 1].Value;
-                string? secondString = inputTokens[positionOfPlus + 1].Value;
-                addNode.ChildNodes.Add(new StringNode(firstString));
-                addNode.ChildNodes.Add(new StringNode(secondString));
-                printNode.ChildNodes.Add(addNode);
+
+                printNode.ChildNodes.Add(addNodeResult.Value);
                 programNode.ChildNodes.Add(printNode);
             }
             else
@@ -33,5 +31,7 @@ namespace SimpleScript.Parser
 
             return programNode;
         }
+
+
     }
 }
