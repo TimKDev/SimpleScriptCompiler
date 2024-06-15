@@ -1,6 +1,6 @@
 ﻿namespace SimpleScript.Parser.Nodes
 {
-    public class AddNode : IPrintableNode
+    public class AddNode : IBinaryOperation, IExpression
     {
         public List<IAddable> ChildNodes { get; set; } = [];
     }

@@ -1,4 +1,6 @@
-﻿namespace SimpleScriptCompiler.LexicalAnalysis
+﻿using SimpleScript.Lexer;
+
+namespace SimpleScriptCompiler.LexicalAnalysis
 {
     public class Lexer
     {

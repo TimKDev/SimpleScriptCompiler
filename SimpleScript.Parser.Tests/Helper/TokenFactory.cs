@@ -1,3 +1,4 @@
+using SimpleScript.Lexer;
 using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser.Tests.Helper

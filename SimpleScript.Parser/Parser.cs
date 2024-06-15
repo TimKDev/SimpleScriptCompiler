@@ -1,4 +1,6 @@
 ﻿using EntertainingErrors;
+using SimpleScript.Lexer;
+using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.Nodes;
 using SimpleScriptCompiler.LexicalAnalysis;
 
@@ -13,7 +15,7 @@ namespace SimpleScript.Parser
             if (inputTokens.Select(token => token.TokenType).Contains(TokenType.PLUS))
             {
                 List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
-                Result<AddNode> addNodeResult = ExpressionBuilder.CreateExpression(tokensOfExpression);
+                Result<IExpression> addNodeResult = ExpressionFactory.Create(tokensOfExpression);
 
                 if (!addNodeResult.IsSuccess)
                 {

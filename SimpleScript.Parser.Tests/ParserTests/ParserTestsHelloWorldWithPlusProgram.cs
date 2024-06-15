@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
+using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Tests.Helper;
-using SimpleScriptCompiler.LexicalAnalysis;
 using TF = SimpleScript.Parser.Tests.Helper.TokenFactory;
 
 namespace SimpleScript.Parser.Tests.ParserTests
