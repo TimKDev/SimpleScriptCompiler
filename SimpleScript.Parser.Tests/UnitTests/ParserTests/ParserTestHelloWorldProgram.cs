@@ -1,16 +1,25 @@
 ﻿using FluentAssertions;
+using NSubstitute;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Tests.Helper;
-using TF = SimpleScript.Parser.Tests.Helper.TokenFactory;
+using TF = SimpleScript.Parser.Tests.Helper.Factories.TokenFactory;
 
-namespace SimpleScript.Parser.Tests.ParserTests
+namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
 {
     public class ParserTestHelloWorldProgram
     {
-        private readonly Parser _sut = new();
         private static readonly string HelloMessage = "Hello World";
         private readonly List<Token> ProgramTokens = [TF.Print(), TF.Str(HelloMessage)];
+
+        private readonly IExpressionFactory _expressionFactory = Substitute.For<IExpressionFactory>();
+        private readonly Parser _sut;
+
+        public ParserTestHelloWorldProgram()
+        {
+            _sut = new Parser(_expressionFactory);
+        }
 
         [Fact]
         public void ParseTokens_StringNodeShouldHaveValueHelloSimpleScript_GivenProgramTokens()

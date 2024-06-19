@@ -1,8 +1,8 @@
-﻿using SimpleScript.Parser.Nodes;
+﻿using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser
 {
-    public interface IExpression : IPrintableNode
+    public interface IExpression : IPrintableNode, IAddable
     {
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SimpleScript.Parser.Nodes
+﻿using SimpleScript.Parser.Nodes.Interfaces;
+
+namespace SimpleScript.Parser.Nodes
 {
     public class AddNode : IBinaryOperation, IExpression
     {

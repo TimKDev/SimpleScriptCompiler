@@ -1,30 +1,32 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Nodes.Interfaces;
 using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser.NodeFactories
 {
-    public static class MultiplicationNodeFactory
+    public class MultiplicationNodeFactory : IMultiplicationNodeFactory
     {
-        public static Result<MultiplyNode> Create(Token firstOperand, Token secondOperand)
+        public Result<MultiplyNode> Create(List<Token> firstOperand, List<Token> secondOperand)
         {
-            Result<IMultiplyable> firstValueResult = TransformToMultiplyableNode(firstOperand);
+            Result<IMultiplyable> firstValueResult = TransformTokensToMultiplyableNode(firstOperand);
             if (!firstValueResult.IsSuccess)
             {
                 return firstValueResult.Convert<MultiplyNode>();
             }
 
-            Result<IMultiplyable> secondValueResult = TransformToMultiplyableNode(secondOperand);
+            Result<IMultiplyable> secondValueResult = TransformTokensToMultiplyableNode(secondOperand);
             if (!secondValueResult.IsSuccess)
             {
                 return secondValueResult.Convert<MultiplyNode>();
             }
 
-            if (!AreTypesCompatibleForMultiplication(firstOperand, secondOperand, out Error? error) && error != null)
-            {
-                return error;
-            }
+            //if (!AreTypesCompatibleForMultiplication(firstOperand, secondOperand, out Error? error) && error != null)
+            //{
+            //    return error;
+            //}
 
             MultiplyNode multiplyNode = new()
             {
@@ -34,17 +36,30 @@ namespace SimpleScript.Parser.NodeFactories
             return multiplyNode;
         }
 
-        private static Result<IMultiplyable> TransformToMultiplyableNode(Token operand)
+        private Result<IMultiplyable> TransformTokensToMultiplyableNode(List<Token> tokens)
         {
-            return operand.TokenType switch
+            if (tokens.Count == 1)
             {
-                TokenType.Number => new NumberNode(int.Parse(operand.Value!)),
-                TokenType.Variable => new VariableNode(operand.Value!),
-                _ => Error.Create($"Token type {operand.TokenType} is not supported for multiplication.")
+                return TransformTokenToMultiplyableNode(tokens[0]);
+            }
+
+            //TTODO Use DI Conatainer:
+            ExpressionFactory expressionFactory = new(new AdditionNodeFactory(), new MultiplicationNodeFactory());
+
+            return expressionFactory.Create(tokens).Convert<IMultiplyable>();
+        }
+
+        private Result<IMultiplyable> TransformTokenToMultiplyableNode(Token token)
+        {
+            return token.TokenType switch
+            {
+                TokenType.Number => new NumberNode(int.Parse(token.Value!)),
+                TokenType.Variable => new VariableNode(token.Value!),
+                _ => Error.Create($"Token type {token.TokenType} is not supported for multiplication.")
             };
         }
 
-        private static bool AreTypesCompatibleForMultiplication(Token firstOperand, Token secondOperand, out Error? error)
+        private bool AreTypesCompatibleForMultiplication(Token firstOperand, Token secondOperand, out Error? error)
         {
             error = null;
 

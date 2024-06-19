@@ -2,16 +2,18 @@
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Tests.Helper;
-using TF = SimpleScript.Parser.Tests.Helper.TokenFactory;
+using SimpleScript.Parser.Tests.Helper.Factories;
+using TF = SimpleScript.Parser.Tests.Helper.Factories.TokenFactory;
 
-namespace SimpleScript.Parser.Tests.ParserTests
+namespace SimpleScript.Parser.Tests.ComponentTests.ParserTests
 {
-    public class ParserTestsHelloWorldWithPlusProgram
+    public class ParserTestsPrintNumbersWithPlusProgram
     {
-        private readonly Parser _sut = new();
-        private static readonly string Hello = "Hello";
-        private static readonly string World = "World";
-        private readonly List<Token> ProgramTokens = [TF.Print(), TF.Str(Hello), TF.Add(), TF.Str(World)];
+        private static readonly int num1 = 1;
+        private static readonly int num2 = 2;
+        private readonly List<Token> ProgramTokens = [TF.Print(), TF.Num(num1), TF.Add(), TF.Num(num2)];
+
+        private readonly Parser _sut = ParserFactory.Create();
 
         [Fact]
         public void ParserTests_PrintNodeShouldHaveAddNodeAsChild_GivenProgramTokens()
@@ -25,7 +27,7 @@ namespace SimpleScript.Parser.Tests.ParserTests
         }
 
         [Fact]
-        public void ParserTests_AddNodeShouldHaveTwoStringsAsChildren()
+        public void ParserTests_AddNodeShouldHaveTwoChildNodes()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             PrintNode printNode = programmingNode.ChildNodes[0];
@@ -34,15 +36,15 @@ namespace SimpleScript.Parser.Tests.ParserTests
         }
 
         [Fact]
-        public void ParserTests_StringsShouldHaveValuesHelloAndWorld()
+        public void ParserTests_NumbersShouldHaveValues1And2()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             PrintNode printNode = programmingNode.ChildNodes[0];
             AddNode addNode = (printNode.ChildNodes[0] as AddNode)!;
-            StringNode? firstString = addNode.ChildNodes[0] as StringNode;
-            StringNode? secondString = addNode.ChildNodes[1] as StringNode;
-            firstString!.Value.Should().Be(Hello);
-            secondString!.Value.Should().Be(World);
+            NumberNode? firstNumber = addNode.ChildNodes[0] as NumberNode;
+            NumberNode? secondNumber = addNode.ChildNodes[1] as NumberNode;
+            firstNumber!.Value.Should().Be(num1);
+            secondNumber!.Value.Should().Be(num2);
         }
     }
 }

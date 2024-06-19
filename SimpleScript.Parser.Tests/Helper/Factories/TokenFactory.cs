@@ -1,7 +1,7 @@
 using SimpleScript.Lexer;
 using SimpleScriptCompiler.LexicalAnalysis;
 
-namespace SimpleScript.Parser.Tests.Helper
+namespace SimpleScript.Parser.Tests.Helper.Factories
 {
     public class TokenFactory
     {

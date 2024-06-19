@@ -1,30 +1,32 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Nodes.Interfaces;
 using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser.NodeFactories
 {
-    public static class AdditionNodeFactory
+    public class AdditionNodeFactory : IAdditionNodeFactory
     {
-        public static Result<AddNode> Create(Token firstOperand, Token secondOperand)
+        public Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand)
         {
-            Result<IAddable> firstValueResult = TransformToAddableNode(firstOperand);
+            Result<IAddable> firstValueResult = TransformTokensToAddableNode(firstOperand);
             if (!firstValueResult.IsSuccess)
             {
                 return firstValueResult.Convert<AddNode>();
             }
 
-            Result<IAddable> secondValueResult = TransformToAddableNode(secondOperand);
+            Result<IAddable> secondValueResult = TransformTokensToAddableNode(secondOperand);
             if (!secondValueResult.IsSuccess)
             {
                 return secondValueResult.Convert<AddNode>();
             }
 
-            if (!AreTypesCompatibleForAddition(firstOperand, secondOperand, out Error? error) && error != null)
-            {
-                return error;
-            }
+            //if (!AreTypesCompatibleForAddition(firstOperand, secondOperand, out Error? error) && error != null)
+            //{
+            //    return error;
+            //}
 
             AddNode addNode = new()
             {
@@ -34,7 +36,21 @@ namespace SimpleScript.Parser.NodeFactories
             return addNode;
         }
 
-        private static Result<IAddable> TransformToAddableNode(Token operand)
+
+        private Result<IAddable> TransformTokensToAddableNode(List<Token> tokens)
+        {
+            if (tokens.Count == 1)
+            {
+                return TransformTokenToAddableNode(tokens[0]);
+            }
+
+            //TTODO Use DI Conatainer:
+            ExpressionFactory expressionFactory = new(new AdditionNodeFactory(), new MultiplicationNodeFactory());
+
+            return expressionFactory.Create(tokens).Convert<IAddable>();
+        }
+
+        private Result<IAddable> TransformTokenToAddableNode(Token operand)
         {
             return operand.TokenType switch
             {

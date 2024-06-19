@@ -1,35 +1,51 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser.NodeFactories
 {
-    public static class ExpressionFactory
+    public class ExpressionFactory : IExpressionFactory
     {
-        private static readonly TokenType[] _tokensOfBinaryOperations = [TokenType.PLUS, TokenType.MULTIPLY];
+        private readonly IAdditionNodeFactory _additionNodeFactory;
+        private readonly IMultiplicationNodeFactory _multiplicationNodeFactory;
 
-        public static Result<IExpression> Create(List<Token> inputTokens)
+        public ExpressionFactory(IAdditionNodeFactory additionNodeFactory, IMultiplicationNodeFactory multiplicationNodeFactory)
         {
-            int positionOfBinaryExpression = inputTokens.FindIndex(token => _tokensOfBinaryOperations.Contains(token.TokenType));
-            if (positionOfBinaryExpression == 0 || positionOfBinaryExpression == inputTokens.Count - 1)
+            _additionNodeFactory = additionNodeFactory;
+            _multiplicationNodeFactory = multiplicationNodeFactory;
+        }
+
+        public Result<IExpression> Create(List<Token> inputTokens)
+        {
+            int positionOfNextBinaryExpression = FindIndexOfNextBinaryOperator(inputTokens);
+            if (positionOfNextBinaryExpression == 0 || positionOfNextBinaryExpression == inputTokens.Count - 1)
             {
                 return Error.Create("Binary Operation is missing operant.");
             }
 
-            Token operantToken = inputTokens[positionOfBinaryExpression];
-            Token firstOperant = inputTokens[positionOfBinaryExpression - 1];
-            Token secondOperant = inputTokens[positionOfBinaryExpression + 1];
+            Token operantToken = inputTokens[positionOfNextBinaryExpression];
+            List<Token> firstOperant = inputTokens.Take(positionOfNextBinaryExpression).ToList();
+            List<Token> secondOperant = inputTokens.Skip(positionOfNextBinaryExpression + 1).ToList();
 
             if (operantToken.TokenType == TokenType.PLUS)
             {
-                return AdditionNodeFactory.Create(firstOperant, secondOperant).Convert<IExpression>();
+                return _additionNodeFactory.Create(firstOperant, secondOperant).Convert<IExpression>();
             }
             else if (operantToken.TokenType == TokenType.MULTIPLY)
             {
-                return MultiplicationNodeFactory.Create(firstOperant, secondOperant).Convert<IExpression>();
+                return _multiplicationNodeFactory.Create(firstOperant, secondOperant).Convert<IExpression>();
             }
 
             return Error.Create("Unknown Error happend.");
+        }
+
+        private static int FindIndexOfNextBinaryOperator(List<Token> inputTokens)
+        {
+            int indexOfNextMultiplication = inputTokens.FindIndex(token => token.TokenType == TokenType.MULTIPLY);
+            int indexOfNextAddition = inputTokens.FindIndex(token => token.TokenType == TokenType.PLUS);
+
+            return indexOfNextAddition != -1 ? indexOfNextAddition : indexOfNextMultiplication;
         }
     }
 }

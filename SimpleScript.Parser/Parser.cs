@@ -1,6 +1,6 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.NodeFactories;
+using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScriptCompiler.LexicalAnalysis;
 
@@ -8,6 +8,13 @@ namespace SimpleScript.Parser
 {
     public class Parser
     {
+        private IExpressionFactory _expressionFactory;
+
+        public Parser(IExpressionFactory expressionFactory)
+        {
+            _expressionFactory = expressionFactory;
+        }
+
         public Result<ProgramNode> ParseTokens(List<Token> inputTokens)
         {
             ProgramNode programNode = new();
@@ -15,7 +22,7 @@ namespace SimpleScript.Parser
             if (inputTokens.Select(token => token.TokenType).Contains(TokenType.PLUS))
             {
                 List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
-                Result<IExpression> addNodeResult = ExpressionFactory.Create(tokensOfExpression);
+                Result<IExpression> addNodeResult = _expressionFactory.Create(tokensOfExpression);
 
                 if (!addNodeResult.IsSuccess)
                 {

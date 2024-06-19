@@ -1,4 +1,4 @@
-﻿namespace SimpleScript.Parser.Nodes
+﻿namespace SimpleScript.Parser.Nodes.Interfaces
 {
     internal interface IBinaryOperation
     {
