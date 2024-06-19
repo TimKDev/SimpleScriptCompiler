@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class VariableNode : IAddable, IMultiplyable
+    public class VariableNode : IExpression, IMultiplyable
     {
         public string Name { get; set; }
         public VariableNode(string name)

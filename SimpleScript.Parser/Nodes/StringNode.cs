@@ -1,8 +1,6 @@
-﻿using SimpleScript.Parser.Nodes.Interfaces;
-
-namespace SimpleScript.Parser.Nodes
+﻿namespace SimpleScript.Parser.Nodes
 {
-    public class StringNode : IPrintableNode, IAddable
+    public class StringNode : IExpression
     {
         public string Value { get; set; }
 

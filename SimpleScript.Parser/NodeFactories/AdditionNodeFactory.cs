@@ -9,15 +9,15 @@ namespace SimpleScript.Parser.NodeFactories
 {
     public class AdditionNodeFactory : IAdditionNodeFactory
     {
-        public Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand)
+        public Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand, IExpressionFactory expressionFactory)
         {
-            Result<IAddable> firstValueResult = TransformTokensToAddableNode(firstOperand);
+            Result<IAddable> firstValueResult = TransformTokensToAddableNode(firstOperand, expressionFactory);
             if (!firstValueResult.IsSuccess)
             {
                 return firstValueResult.Convert<AddNode>();
             }
 
-            Result<IAddable> secondValueResult = TransformTokensToAddableNode(secondOperand);
+            Result<IAddable> secondValueResult = TransformTokensToAddableNode(secondOperand, expressionFactory);
             if (!secondValueResult.IsSuccess)
             {
                 return secondValueResult.Convert<AddNode>();
@@ -37,15 +37,12 @@ namespace SimpleScript.Parser.NodeFactories
         }
 
 
-        private Result<IAddable> TransformTokensToAddableNode(List<Token> tokens)
+        private Result<IAddable> TransformTokensToAddableNode(List<Token> tokens, IExpressionFactory expressionFactory)
         {
             if (tokens.Count == 1)
             {
                 return TransformTokenToAddableNode(tokens[0]);
             }
-
-            //TTODO Use DI Conatainer:
-            ExpressionFactory expressionFactory = new(new AdditionNodeFactory(), new MultiplicationNodeFactory());
 
             return expressionFactory.Create(tokens).Convert<IAddable>();
         }

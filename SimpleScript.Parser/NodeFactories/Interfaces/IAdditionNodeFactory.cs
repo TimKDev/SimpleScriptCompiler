@@ -6,6 +6,6 @@ namespace SimpleScript.Parser.NodeFactories.Interfaces
 {
     public interface IAdditionNodeFactory
     {
-        Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand);
+        Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand, IExpressionFactory expressionFactory);
     }
 }

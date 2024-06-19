@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class NumberNode : IPrintableNode, IAddable, IMultiplyable
+    public class NumberNode : IExpression, IMultiplyable
     {
         public int Value { get; set; }
 
