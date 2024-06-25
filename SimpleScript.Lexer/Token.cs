@@ -18,7 +18,7 @@ namespace SimpleScript.Lexer
         public Error CreateError(string message, int? endLine = null)
         {
             string errorMessage = $"Error Line {Line}: {message}";
-            if (endLine != null)
+            if (endLine != null && Line != endLine)
             {
                 errorMessage = $"Error Lines {Line} - {endLine}: {message}";
             }

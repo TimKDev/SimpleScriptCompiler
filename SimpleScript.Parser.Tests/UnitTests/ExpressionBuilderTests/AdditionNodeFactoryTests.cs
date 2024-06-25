@@ -50,6 +50,17 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             AssertExpressionFactoryCreateReceived(secondArg);
         }
 
+        [Fact]
+        public void ShouldReturnError_GivenIncompatilbleStringAndNumberType()
+        {
+            List<Token> firstArg = [TF.Num(1)];
+            List<Token> secondArg = [TF.Str("Hello World")];
+            EntertainingErrors.Result<AddNode> result = _sut.Create(firstArg, secondArg, _expressionFactory);
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Count().Should().Be(1);
+            result.Errors[0].Message.Should().Be("Error Line 1: Addition between types Number and String is not allowed.");
+        }
+
         private void AssertExpressionFactoryCreateReceived(List<Token> tokens)
         {
             _expressionFactory.Received(1).Create(

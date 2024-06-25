@@ -41,7 +41,7 @@ namespace SimpleScript.Parser.NodeFactories
             }
             else if (operantToken.TokenType == TokenType.MULTIPLY)
             {
-                return _multiplicationNodeFactory.Create(firstOperant, secondOperant).Convert<IExpression>();
+                return _multiplicationNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>();
             }
 
             return Error.Create("Unknown Error happend.");

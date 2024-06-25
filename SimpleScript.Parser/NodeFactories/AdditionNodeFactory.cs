@@ -23,10 +23,10 @@ namespace SimpleScript.Parser.NodeFactories
                 return secondValueResult.Convert<AddNode>();
             }
 
-            //if (!AreTypesCompatibleForAddition(firstOperand, secondOperand, out Error? error) && error != null)
-            //{
-            //    return error;
-            //}
+            if (firstOperand.Count == 1 && secondOperand.Count == 1 && !AreTypesCompatibleForAddition(firstOperand[0], secondOperand[0], out Error? error) && error != null)
+            {
+                return error;
+            }
 
             AddNode addNode = new()
             {

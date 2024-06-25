@@ -9,24 +9,24 @@ namespace SimpleScript.Parser.NodeFactories
 {
     public class MultiplicationNodeFactory : IMultiplicationNodeFactory
     {
-        public Result<MultiplyNode> Create(List<Token> firstOperand, List<Token> secondOperand)
+        public Result<MultiplyNode> Create(List<Token> firstOperand, List<Token> secondOperand, IExpressionFactory expressionFactory)
         {
-            Result<IMultiplyable> firstValueResult = TransformTokensToMultiplyableNode(firstOperand);
+            Result<IMultiplyable> firstValueResult = TransformTokensToMultiplyableNode(firstOperand, expressionFactory);
             if (!firstValueResult.IsSuccess)
             {
                 return firstValueResult.Convert<MultiplyNode>();
             }
 
-            Result<IMultiplyable> secondValueResult = TransformTokensToMultiplyableNode(secondOperand);
+            Result<IMultiplyable> secondValueResult = TransformTokensToMultiplyableNode(secondOperand, expressionFactory);
             if (!secondValueResult.IsSuccess)
             {
                 return secondValueResult.Convert<MultiplyNode>();
             }
 
-            //if (!AreTypesCompatibleForMultiplication(firstOperand, secondOperand, out Error? error) && error != null)
-            //{
-            //    return error;
-            //}
+            if (firstOperand.Count == 1 && secondOperand.Count == 1 && !AreTypesCompatibleForMultiplication(firstOperand[0], secondOperand[0], out Error? error) && error != null)
+            {
+                return error;
+            }
 
             MultiplyNode multiplyNode = new()
             {
@@ -36,15 +36,12 @@ namespace SimpleScript.Parser.NodeFactories
             return multiplyNode;
         }
 
-        private Result<IMultiplyable> TransformTokensToMultiplyableNode(List<Token> tokens)
+        private Result<IMultiplyable> TransformTokensToMultiplyableNode(List<Token> tokens, IExpressionFactory expressionFactory)
         {
             if (tokens.Count == 1)
             {
                 return TransformTokenToMultiplyableNode(tokens[0]);
             }
-
-            //TTODO Use DI Conatainer:
-            ExpressionFactory expressionFactory = new(new AdditionNodeFactory(), new MultiplicationNodeFactory());
 
             return expressionFactory.Create(tokens).Convert<IMultiplyable>();
         }
@@ -55,7 +52,7 @@ namespace SimpleScript.Parser.NodeFactories
             {
                 TokenType.Number => new NumberNode(int.Parse(token.Value!)),
                 TokenType.Variable => new VariableNode(token.Value!),
-                _ => Error.Create($"Token type {token.TokenType} is not supported for multiplication.")
+                _ => token.CreateError($"Token type {token.TokenType} is not supported for multiplication.")
             };
         }
 
