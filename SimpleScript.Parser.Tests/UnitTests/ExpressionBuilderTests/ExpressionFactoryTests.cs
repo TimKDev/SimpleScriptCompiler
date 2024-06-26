@@ -5,7 +5,6 @@ using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Tests.Helper;
-using TF = SimpleScript.Parser.Tests.Helper.Factories.TokenFactory;
 
 namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
 {

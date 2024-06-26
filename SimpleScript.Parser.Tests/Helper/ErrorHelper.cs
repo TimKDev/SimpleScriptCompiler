@@ -10,5 +10,11 @@ namespace SimpleScript.Parser.Tests.Helper
             result.IsSuccess.Should().BeTrue();
             return result.Value;
         }
+
+        public static void AssertErrors<TValue>(Result<TValue> result, string[] expectedErrorMessages)
+        {
+            result.IsSuccess.Should().BeFalse();
+            result.Errors.Select(error => error.Message).Should().BeEquivalentTo(expectedErrorMessages, options => options.WithoutStrictOrdering());
+        }
     }
 }

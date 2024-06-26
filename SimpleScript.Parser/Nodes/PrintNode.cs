@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class PrintNode
+    public class PrintNode : IProgramRootNodes
     {
         public List<IPrintableNode> ChildNodes = [];
     }

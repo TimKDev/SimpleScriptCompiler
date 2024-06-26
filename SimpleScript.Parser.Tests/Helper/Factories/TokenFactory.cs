@@ -61,5 +61,15 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         {
             return new Token(TokenType.PRINT, 1);
         }
+
+        public static Token Let()
+        {
+            return new Token(TokenType.LET, 1);
+        }
+
+        public static Token Assign()
+        {
+            return new Token(TokenType.ASSIGN, 1);
+        }
     }
 }

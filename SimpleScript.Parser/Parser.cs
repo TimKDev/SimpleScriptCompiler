@@ -18,24 +18,25 @@ namespace SimpleScript.Parser
         public Result<ProgramNode> ParseTokens(List<Token> inputTokens)
         {
             ProgramNode programNode = new();
-            PrintNode printNode = new();
-            if (inputTokens.Select(token => token.TokenType).Contains(TokenType.PLUS))
+            if (inputTokens[0].TokenType == TokenType.LET)
             {
-                List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
-                Result<IExpression> addNodeResult = _expressionFactory.Create(tokensOfExpression);
-
-                if (!addNodeResult.IsSuccess)
+                string? variableName = inputTokens[1].Value;
+                if (variableName == null)
                 {
-                    return addNodeResult.Convert<ProgramNode>();
+                    //TTODO Error Handeling
+                    throw new ArgumentException();
                 }
-
-                printNode.ChildNodes.Add(addNodeResult.Value);
-                programNode.ChildNodes.Add(printNode);
+                VariableDeclarationNode variableDeklarationNode = new(variableName);
+                programNode.ChildNodes.Add(variableDeklarationNode);
             }
-            else
+            else if (inputTokens[0].TokenType == TokenType.PRINT)
             {
-                printNode.ChildNodes.Add(new StringNode(inputTokens[1].Value!));
+                PrintNode printNode = new();
                 programNode.ChildNodes.Add(printNode);
+                List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
+                Result<IExpression> printExpression = _expressionFactory.Create(tokensOfExpression);
+                //TTODO Error Handeling
+                printNode.ChildNodes.Add(printExpression.Value);
             }
 
             return programNode;

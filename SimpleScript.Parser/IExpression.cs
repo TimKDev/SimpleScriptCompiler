@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser
 {
-    public interface IExpression : IPrintableNode, IAddable
+    public interface IExpression : IPrintableNode, IAddable, IMultiplyable
     {
     }
 }
