@@ -20,11 +20,14 @@ namespace SimpleScript.Parser
             ProgramNode programNode = new();
             if (inputTokens[0].TokenType == TokenType.LET)
             {
+                if (inputTokens.Count < 2 || inputTokens[1].TokenType != TokenType.Variable)
+                {
+                    return inputTokens[0].CreateError("Invalid usage of Let keyword. Let should be followed by a variable name.");
+                }
                 string? variableName = inputTokens[1].Value;
                 if (variableName == null)
                 {
-                    //TTODO Error Handeling
-                    throw new ArgumentException();
+                    return inputTokens[0].CreateError("Invalid usage of Let keyword. Let should be followed by a variable name not equals to null.");
                 }
                 VariableDeclarationNode variableDeklarationNode = new(variableName);
                 programNode.ChildNodes.Add(variableDeklarationNode);

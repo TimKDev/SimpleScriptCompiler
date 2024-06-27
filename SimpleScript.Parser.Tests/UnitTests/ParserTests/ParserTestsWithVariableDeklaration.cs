@@ -21,11 +21,24 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         }
 
         [Fact]
-        public void ParseTokens_ShouldGenerateError_GivenLetWithoutVariable()
+        public void ParseTokens_ShouldGenerateError_GivenLetWithoutAnyThing()
         {
             List<Token> programTokens = [TF.Let()];
-            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), ["XXXXXXX"]);
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Invalid usage of Let keyword. Let should be followed by a variable name.", 1)]);
+        }
 
+        [Fact]
+        public void ParseTokens_ShouldGenerateError_GivenLetWithoutVariable()
+        {
+            List<Token> programTokens = [TF.Let(), TF.Num(33)];
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Invalid usage of Let keyword. Let should be followed by a variable name.", 1)]);
+        }
+
+        [Fact]
+        public void ParseTokens_ShouldGenerateError_GivenLetWithVariableNameEqualsNull()
+        {
+            List<Token> programTokens = [TF.Let(), TF.Var(null)];
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Invalid usage of Let keyword. Let should be followed by a variable name not equals to null.", 1)]);
         }
     }
 }

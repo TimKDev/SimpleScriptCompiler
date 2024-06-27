@@ -19,6 +19,13 @@ namespace SimpleScript.Parser.Tests.Helper
             return firstChild;
         }
 
+        public static TFirstChildNode AssertAssignVariableNode<TFirstChildNode>(VariableDeclarationNode variableDeclarationNode)
+        {
+            variableDeclarationNode.InitialValue.Should().NotBeNull();
+            TFirstChildNode firstChild = TH.ConvertTo<TFirstChildNode>(variableDeclarationNode.InitialValue!);
+            return firstChild;
+        }
+
         public static (TFirstChildNode, TSecondChildNode) AssertAddNode<TFirstChildNode, TSecondChildNode>(IExpression expression)
         {
             AddNode addNode = TH.ConvertTo<AddNode>(expression);

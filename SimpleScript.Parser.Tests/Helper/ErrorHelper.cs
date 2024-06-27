@@ -16,5 +16,15 @@ namespace SimpleScript.Parser.Tests.Helper
             result.IsSuccess.Should().BeFalse();
             result.Errors.Select(error => error.Message).Should().BeEquivalentTo(expectedErrorMessages, options => options.WithoutStrictOrdering());
         }
+
+        public static string CreateErrorMessage(string message, int lineNumber)
+        {
+            return $"Error Line {lineNumber}: {message}";
+        }
+
+        public static string CreateErrorMessage(string message, int lineNumberStart, int lineNumberEnd)
+        {
+            return $"Error Line {lineNumberStart} - {lineNumberEnd}: {message}";
+        }
     }
 }
