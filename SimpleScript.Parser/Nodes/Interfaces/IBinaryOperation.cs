@@ -1,6 +1,8 @@
 ﻿namespace SimpleScript.Parser.Nodes.Interfaces
 {
-    internal interface IBinaryOperation
+    public interface IBinaryOperation<TArgument>
     {
+        TArgument FirstArgument { get; }
+        TArgument SecondArgument { get; }
     }
 }

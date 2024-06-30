@@ -18,9 +18,7 @@ namespace SimpleScript.Parser.Tests.ComponentTests.ExpressionFactoryTests
             List<Token> inputTokens = [TF.Num(2), TF.Mul(), TF.Num(5)];
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             MultiplyNode multiplyNode = TH.ConvertTo<MultiplyNode>(result);
-            multiplyNode.ChildNodes.Count.Should().Be(2);
-            NumberNode firstNumber = TH.ConvertTo<NumberNode>(multiplyNode.ChildNodes[0]);
-            NumberNode secondNumber = TH.ConvertTo<NumberNode>(multiplyNode.ChildNodes[1]);
+            (NumberNode? firstNumber, NumberNode? secondNumber) = NH.AssertMultiplyNode<NumberNode, NumberNode>(multiplyNode);
             firstNumber.Value.Should().Be(2);
             secondNumber.Value.Should().Be(5);
         }
@@ -31,9 +29,7 @@ namespace SimpleScript.Parser.Tests.ComponentTests.ExpressionFactoryTests
             List<Token> inputTokens = [TF.Var("test"), TF.Add(), TF.Num(0)];
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             AddNode addNode = TH.ConvertTo<AddNode>(result);
-            addNode.ChildNodes.Count.Should().Be(2);
-            VariableNode variable = TH.ConvertTo<VariableNode>(addNode.ChildNodes[0]);
-            NumberNode number = TH.ConvertTo<NumberNode>(addNode.ChildNodes[1]);
+            (VariableNode? variable, NumberNode? number) = NH.AssertAddNode<VariableNode, NumberNode>(addNode);
             variable.Name.Should().Be("test");
             number.Value.Should().Be(0);
         }
@@ -44,9 +40,7 @@ namespace SimpleScript.Parser.Tests.ComponentTests.ExpressionFactoryTests
             List<Token> inputTokens = [TF.Num(43), TF.Mul(), TF.Var("name")];
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             MultiplyNode multiplyNode = TH.ConvertTo<MultiplyNode>(result);
-            multiplyNode.ChildNodes.Count.Should().Be(2);
-            NumberNode number = TH.ConvertTo<NumberNode>(multiplyNode.ChildNodes[0]);
-            VariableNode variable = TH.ConvertTo<VariableNode>(multiplyNode.ChildNodes[1]);
+            (NumberNode? number, VariableNode? variable) = NH.AssertMultiplyNode<NumberNode, VariableNode>(multiplyNode);
             number.Value.Should().Be(43);
             variable.Name.Should().Be("name");
         }
@@ -65,9 +59,7 @@ namespace SimpleScript.Parser.Tests.ComponentTests.ExpressionFactoryTests
             List<Token> inputTokens = [TF.Num(43), TF.Mul(), TF.Var("name"), TF.Add(), TF.Num(2)];
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             AddNode addNode = TH.ConvertTo<AddNode>(result);
-            addNode.ChildNodes.Count.Should().Be(2);
-            addNode.ChildNodes[0].Should().BeOfType<MultiplyNode>();
-            addNode.ChildNodes[1].Should().BeOfType<NumberNode>();
+            NH.AssertAddNode<MultiplyNode, NumberNode>(addNode);
         }
 
         [Fact]
@@ -75,11 +67,9 @@ namespace SimpleScript.Parser.Tests.ComponentTests.ExpressionFactoryTests
         {
             List<Token> inputTokens = [TF.Num(43), TF.Mul(), TF.Var("name"), TF.Add(), TF.Num(2)];
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
-            AddNode addNode = TH.ConvertTo<AddNode>(result);
-            MultiplyNode mulNode = TH.ConvertTo<MultiplyNode>(addNode.ChildNodes[0]);
-            mulNode.ChildNodes.Count.Should().Be(2);
-            NumberNode numberNode = TH.ConvertTo<NumberNode>(mulNode.ChildNodes[0]);
-            VariableNode variableNode = TH.ConvertTo<VariableNode>(mulNode.ChildNodes[1]);
+            (MultiplyNode? multiplyNode, NumberNode? addNumberNode) = NH.AssertAddNode<MultiplyNode, NumberNode>(result);
+            addNumberNode.Value.Should().Be(2);
+            (NumberNode? numberNode, VariableNode? variableNode) = NH.AssertMultiplyNode<NumberNode, VariableNode>(multiplyNode);
             numberNode.Value.Should().Be(43);
             variableNode.Name.Should().Be("name");
         }

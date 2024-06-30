@@ -28,10 +28,7 @@ namespace SimpleScript.Parser.NodeFactories
                 return error;
             }
 
-            AddNode addNode = new()
-            {
-                ChildNodes = { firstValueResult.Value, secondValueResult.Value }
-            };
+            AddNode addNode = new(firstValueResult.Value, secondValueResult.Value);
 
             return addNode;
         }

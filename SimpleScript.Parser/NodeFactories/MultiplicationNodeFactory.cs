@@ -28,10 +28,7 @@ namespace SimpleScript.Parser.NodeFactories
                 return error;
             }
 
-            MultiplyNode multiplyNode = new()
-            {
-                ChildNodes = { firstValueResult.Value, secondValueResult.Value }
-            };
+            MultiplyNode multiplyNode = new(firstValueResult.Value, secondValueResult.Value);
 
             return multiplyNode;
         }

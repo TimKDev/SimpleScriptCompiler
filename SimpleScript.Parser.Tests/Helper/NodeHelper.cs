@@ -29,18 +29,20 @@ namespace SimpleScript.Parser.Tests.Helper
         public static (TFirstChildNode, TSecondChildNode) AssertAddNode<TFirstChildNode, TSecondChildNode>(IExpression expression)
         {
             AddNode addNode = TH.ConvertTo<AddNode>(expression);
-            addNode.ChildNodes.Count.Should().Be(2);
-            TFirstChildNode? firstChild = TH.ConvertTo<TFirstChildNode>(addNode.ChildNodes[0]);
-            TSecondChildNode? secondChild = TH.ConvertTo<TSecondChildNode>(addNode.ChildNodes[1]);
+            addNode.FirstArgument.Should().NotBeNull();
+            addNode.SecondArgument.Should().NotBeNull();
+            TFirstChildNode? firstChild = TH.ConvertTo<TFirstChildNode>(addNode.FirstArgument);
+            TSecondChildNode? secondChild = TH.ConvertTo<TSecondChildNode>(addNode.SecondArgument);
             return (firstChild, secondChild);
         }
 
         public static (TFirstChildNode, TSecondChildNode) AssertMultiplyNode<TFirstChildNode, TSecondChildNode>(IExpression expression)
         {
-            MultiplyNode addNode = TH.ConvertTo<MultiplyNode>(expression);
-            addNode.ChildNodes.Count.Should().Be(2);
-            TFirstChildNode? firstChild = TH.ConvertTo<TFirstChildNode>(addNode.ChildNodes[0]);
-            TSecondChildNode? secondChild = TH.ConvertTo<TSecondChildNode>(addNode.ChildNodes[1]);
+            MultiplyNode multiplyNode = TH.ConvertTo<MultiplyNode>(expression);
+            multiplyNode.FirstArgument.Should().NotBeNull();
+            multiplyNode.SecondArgument.Should().NotBeNull();
+            TFirstChildNode? firstChild = TH.ConvertTo<TFirstChildNode>(multiplyNode.FirstArgument);
+            TSecondChildNode? secondChild = TH.ConvertTo<TSecondChildNode>(multiplyNode.SecondArgument);
             return (firstChild, secondChild);
         }
     }

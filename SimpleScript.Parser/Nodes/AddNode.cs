@@ -2,8 +2,15 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class AddNode : IBinaryOperation, IExpression
+    public class AddNode : IBinaryOperation<IAddable>, IExpression
     {
-        public List<IAddable> ChildNodes { get; set; } = [];
+        public IAddable FirstArgument { get; private set; }
+        public IAddable SecondArgument { get; private set; }
+
+        public AddNode(IAddable firstArgument, IAddable secondArgument)
+        {
+            FirstArgument = firstArgument;
+            SecondArgument = secondArgument;
+        }
     }
 }
