@@ -10,13 +10,12 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
 {
     public class ExpressionFactoryTests
     {
-        private readonly IAdditionNodeFactory _additionNodeFactory = Substitute.For<IAdditionNodeFactory>();
-        private readonly IMultiplicationNodeFactory _multiplicationNodeFactory = Substitute.For<IMultiplicationNodeFactory>();
+        private readonly IAdditionNodeFactory _additionNodeFactory = new AdditionNodeFactory();
+        private readonly IMultiplicationNodeFactory _multiplicationNodeFactory = new MultiplicationNodeFactory();
         private readonly ExpressionFactory _sut;
 
         public ExpressionFactoryTests()
         {
-            _additionNodeFactory.Create(Arg.Any<List<Token>>(), Arg.Any<List<Token>>(), Arg.Any<IExpressionFactory>()).Returns(new AddNode());
             _sut = new(_additionNodeFactory, _multiplicationNodeFactory);
         }
 

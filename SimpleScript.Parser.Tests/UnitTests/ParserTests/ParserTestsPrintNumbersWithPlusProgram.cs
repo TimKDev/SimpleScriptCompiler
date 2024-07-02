@@ -19,7 +19,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             programmingNode.ChildNodes.Count.Should().Be(1);
             programmingNode.ChildNodes[0].Should().BeOfType<PrintNode>();
-            PrintNode printNode = programmingNode.ChildNodes[0] as PrintNode;
+            PrintNode printNode = TH.ConvertTo<PrintNode>(programmingNode.ChildNodes[0]);
             printNode.ChildNodes.Count().Should().Be(1);
             printNode.ChildNodes[0].Should().BeOfType<AddNode>();
         }
@@ -28,21 +28,20 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_AddNodeShouldHaveTwoChildNodes()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = programmingNode.ChildNodes[0] as PrintNode;
-            AddNode? addNode = printNode.ChildNodes[0] as AddNode;
-            addNode!.ChildNodes.Count.Should().Be(2);
+            PrintNode printNode = TH.ConvertTo<PrintNode>(programmingNode.ChildNodes[0]);
+            AddNode addNode = TH.ConvertTo<AddNode>(printNode.ChildNodes[0]);
+            addNode.FirstArgument.Should().NotBeNull();
         }
 
         [Fact]
         public void ParserTests_NumbersShouldHaveValues1And2()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = programmingNode.ChildNodes[0] as PrintNode;
-            AddNode addNode = (printNode.ChildNodes[0] as AddNode)!;
-            NumberNode? firstNumber = addNode.ChildNodes[0] as NumberNode;
-            NumberNode? secondNumber = addNode.ChildNodes[1] as NumberNode;
-            firstNumber!.Value.Should().Be(num1);
-            secondNumber!.Value.Should().Be(num2);
+            PrintNode printNode = TH.ConvertTo<PrintNode>(programmingNode.ChildNodes[0]);
+            AddNode addNode = TH.ConvertTo<AddNode>(printNode.ChildNodes[0]);
+            (NumberNode firstNumber, NumberNode secondNumber) = NH.AssertAddNode<NumberNode, NumberNode>(addNode);
+            firstNumber.Value.Should().Be(num1);
+            secondNumber.Value.Should().Be(num2);
         }
     }
 }

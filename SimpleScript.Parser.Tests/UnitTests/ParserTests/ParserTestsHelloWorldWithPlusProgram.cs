@@ -17,32 +17,28 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_PrintNodeShouldHaveAddNodeAsChild_GivenProgramTokens()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            programmingNode.ChildNodes.Count.Should().Be(1);
-            programmingNode.ChildNodes[0].Should().BeOfType<PrintNode>();
-            PrintNode printNode = programmingNode.ChildNodes[0] as PrintNode;
-            printNode.ChildNodes.Count().Should().Be(1);
-            printNode.ChildNodes[0].Should().BeOfType<AddNode>();
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            NH.AssertPrintNode<AddNode>(printNode);
         }
 
         [Fact]
         public void ParserTests_AddNodeShouldHaveTwoStringsAsChildren()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = programmingNode.ChildNodes[0] as PrintNode;
-            AddNode? addNode = printNode.ChildNodes[0] as AddNode;
-            addNode!.ChildNodes.Count.Should().Be(2);
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
+            NH.AssertAddNode<StringNode, StringNode>(addNode);
         }
 
         [Fact]
         public void ParserTests_StringsShouldHaveValuesHelloAndWorld()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = programmingNode.ChildNodes[0] as PrintNode;
-            AddNode addNode = (printNode.ChildNodes[0] as AddNode)!;
-            StringNode? firstString = addNode.ChildNodes[0] as StringNode;
-            StringNode? secondString = addNode.ChildNodes[1] as StringNode;
-            firstString!.Value.Should().Be(Hello);
-            secondString!.Value.Should().Be(World);
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
+            (StringNode firstString, StringNode secondString) = NH.AssertAddNode<StringNode, StringNode>(addNode);
+            firstString.Value.Should().Be(Hello);
+            secondString.Value.Should().Be(World);
         }
     }
 }
