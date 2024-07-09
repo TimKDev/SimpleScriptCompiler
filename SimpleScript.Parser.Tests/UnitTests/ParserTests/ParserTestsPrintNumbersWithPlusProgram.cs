@@ -17,19 +17,16 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_PrintNodeShouldHaveAddNodeAsChild_GivenProgramTokens()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            programmingNode.ChildNodes.Count.Should().Be(1);
-            programmingNode.ChildNodes[0].Should().BeOfType<PrintNode>();
-            PrintNode printNode = TH.ConvertTo<PrintNode>(programmingNode.ChildNodes[0]);
-            printNode.ChildNodes.Count().Should().Be(1);
-            printNode.ChildNodes[0].Should().BeOfType<AddNode>();
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            NH.AssertPrintNode<AddNode>(printNode);
         }
 
         [Fact]
         public void ParserTests_AddNodeShouldHaveTwoChildNodes()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = TH.ConvertTo<PrintNode>(programmingNode.ChildNodes[0]);
-            AddNode addNode = TH.ConvertTo<AddNode>(printNode.ChildNodes[0]);
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
             addNode.FirstArgument.Should().NotBeNull();
         }
 
@@ -37,8 +34,8 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_NumbersShouldHaveValues1And2()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = TH.ConvertTo<PrintNode>(programmingNode.ChildNodes[0]);
-            AddNode addNode = TH.ConvertTo<AddNode>(printNode.ChildNodes[0]);
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
             (NumberNode firstNumber, NumberNode secondNumber) = NH.AssertAddNode<NumberNode, NumberNode>(addNode);
             firstNumber.Value.Should().Be(num1);
             secondNumber.Value.Should().Be(num2);

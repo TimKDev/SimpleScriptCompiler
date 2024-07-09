@@ -44,5 +44,13 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             string[] expectedErrorMessages = [ErrorHelper.CreateErrorMessage("Missing Assert Value: No value given after the assert symbol.", 1)];
             ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), expectedErrorMessages);
         }
+
+        [Fact]
+        public void ParseTokens_ShouldCreateError_WhenGivenInvalidExpression()
+        {
+            List<Token> programTokens = [TF.Let(), TF.Var(""), TF.Assign(), TF.Add(), TF.Num(23)];
+            string[] expectedErrorMessages = [ErrorHelper.CreateErrorMessage($"Invalid Expression: {ErrorHelper.CreateErrorMessage("Binary Operation is missing operant.", 1)}", 1)];
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), expectedErrorMessages);
+        }
     }
 }

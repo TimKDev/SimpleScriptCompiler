@@ -14,8 +14,8 @@ namespace SimpleScript.Parser.Tests.Helper
 
         public static TFirstChildNode AssertPrintNode<TFirstChildNode>(PrintNode printNode)
         {
-            printNode.ChildNodes.Count.Should().Be(1);
-            TFirstChildNode firstChild = TH.ConvertTo<TFirstChildNode>(printNode.ChildNodes[0]);
+            printNode.NodeToPrint.Should().NotBeNull();
+            TFirstChildNode firstChild = TH.ConvertTo<TFirstChildNode>(printNode.NodeToPrint);
             return firstChild;
         }
 

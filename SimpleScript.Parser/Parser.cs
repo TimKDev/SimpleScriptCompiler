@@ -9,30 +9,42 @@ namespace SimpleScript.Parser
     public class Parser
     {
         private IExpressionFactory _expressionFactory;
+        private IStatementCombiner _statementCombiner;
 
-        public Parser(IExpressionFactory expressionFactory)
+        public Parser(IExpressionFactory expressionFactory, IStatementCombiner statementCombiner)
         {
             _expressionFactory = expressionFactory;
+            _statementCombiner = statementCombiner;
         }
 
         public Result<ProgramNode> ParseTokens(List<Token> inputTokens)
         {
             List<Error> errors = [];
             ProgramNode programNode = new();
-            if (inputTokens[0].TokenType == TokenType.LET)
+            Result<List<Statement>> statementResult = _statementCombiner.CreateStatements(inputTokens);
+            if (!statementResult.IsSuccess)
             {
-                Result addVariableAssignmentResult = AddVariableAssignmentToProgramNode(programNode, inputTokens);
-                if (!addVariableAssignmentResult.IsSuccess)
-                {
-                    errors.AddRange(addVariableAssignmentResult.Errors);
-                }
+                return statementResult.Errors;
             }
-            else if (inputTokens[0].TokenType == TokenType.PRINT)
+            List<Statement> statements = statementResult.Value;
+            foreach (Statement statement in statements)
             {
-                Result addPrintResult = AddPrintToProgramNode(inputTokens, programNode); //TTODO Analog
-                if (!addPrintResult.IsSuccess)
+                Token firstTokenOfStatements = statement.Tokens[0];
+                if (firstTokenOfStatements.TokenType == TokenType.LET)
                 {
-                    errors.AddRange(addPrintResult.Errors);
+                    Result addVariableAssignmentResult = AddVariableAssignmentToProgramNode(programNode, statement.Tokens);
+                    if (!addVariableAssignmentResult.IsSuccess)
+                    {
+                        errors.AddRange(addVariableAssignmentResult.Errors);
+                    }
+                }
+                else if (firstTokenOfStatements.TokenType == TokenType.PRINT)
+                {
+                    Result addPrintResult = AddPrintToProgramNode(programNode, statement.Tokens);
+                    if (!addPrintResult.IsSuccess)
+                    {
+                        errors.AddRange(addPrintResult.Errors);
+                    }
                 }
             }
 
@@ -66,13 +78,13 @@ namespace SimpleScript.Parser
                 Result<IExpression> initialValueExpression = _expressionFactory.Create(tokensOfExpression);
                 if (!initialValueExpression.IsSuccess)
                 {
-                    return initialValueExpression.Convert();
+                    string errorMessage = $"Invalid Expression: {string.Join(", ", initialValueExpression.Errors.Select(e => e.Message))}";
+                    return inputTokens[2].CreateError(errorMessage);
                 }
                 variableDeklarationNode = new(variableName, initialValueExpression.Value);
             }
             else
             {
-
                 variableDeklarationNode = new(variableName);
             }
             programNode.ChildNodes.Add(variableDeklarationNode);
@@ -80,14 +92,14 @@ namespace SimpleScript.Parser
             return Result.Success();
         }
 
-        private Result AddPrintToProgramNode(List<Token> inputTokens, ProgramNode programNode)
+        private Result AddPrintToProgramNode(ProgramNode programNode, List<Token> inputTokens)
         {
-            PrintNode printNode = new();
-            programNode.ChildNodes.Add(printNode);
+
             List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
             Result<IExpression> printExpression = _expressionFactory.Create(tokensOfExpression);
             //TTODO Error Handeling
-            printNode.ChildNodes.Add(printExpression.Value);
+            PrintNode printNode = new(printExpression.Value);
+            programNode.ChildNodes.Add(printNode);
 
             return Result.Success();
         }

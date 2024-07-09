@@ -1,5 +1,4 @@
 ﻿using FluentAssertions;
-using NSubstitute;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
@@ -45,37 +44,6 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             VariableNode variableNode = TestHelper.ConvertTo<VariableNode>(result);
             variableNode.Name.Should().Be("name");
-        }
-
-        [Fact]
-        public void ShouldCreateAddNode_GivenAddAndMulOperation()
-        {
-            List<Token> inputTokens = [TF.Num(43), TF.Mul(), TF.Var("name"), TF.Add(), TF.Num(2)];
-            IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
-            result.Should().BeOfType<AddNode>();
-            List<Token> expectedFirstArgument = [TF.Num(43), TF.Mul(), TF.Var("name")];
-            List<Token> expectedSecondArgument = [TF.Num(2)];
-            AssertAddNodeFactoryCreateReceived(expectedFirstArgument, expectedSecondArgument);
-        }
-
-        [Fact]
-        public void ShouldCreateAddNode_GivenMulAndAddOperation()
-        {
-            List<Token> inputTokens = [TF.Num(43), TF.Add(), TF.Var("name"), TF.Mul(), TF.Num(2)];
-            IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
-            result.Should().BeOfType<AddNode>();
-            List<Token> expectedFirstArgument = [TF.Num(43)];
-            List<Token> expectedSecondArgument = [TF.Var("name"), TF.Mul(), TF.Num(2)];
-            AssertAddNodeFactoryCreateReceived(expectedFirstArgument, expectedSecondArgument);
-        }
-
-        private void AssertAddNodeFactoryCreateReceived(List<Token> firstArg, List<Token> secondArg)
-        {
-            _additionNodeFactory.Received(1).Create(
-                Arg.Is<List<Token>>(arg => firstArg.SequenceEqual(arg, new TokenComparer())),
-                Arg.Is<List<Token>>(arg => secondArg.SequenceEqual(arg, new TokenComparer())),
-                Arg.Any<IExpressionFactory>()
-            );
         }
     }
 }

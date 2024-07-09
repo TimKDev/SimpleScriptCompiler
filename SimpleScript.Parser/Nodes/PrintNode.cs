@@ -4,6 +4,10 @@ namespace SimpleScript.Parser.Nodes
 {
     public class PrintNode : IProgramRootNodes
     {
-        public List<IPrintableNode> ChildNodes = [];
+        public IPrintableNode NodeToPrint { get; private set; }
+        public PrintNode(IPrintableNode printableNode)
+        {
+            NodeToPrint = printableNode;
+        }
     }
 }

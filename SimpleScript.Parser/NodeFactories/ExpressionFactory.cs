@@ -28,7 +28,7 @@ namespace SimpleScript.Parser.NodeFactories
 
             if (positionOfNextBinaryExpression == 0 || positionOfNextBinaryExpression == inputTokens.Count - 1)
             {
-                return Error.Create("Binary Operation is missing operant.");
+                return inputTokens[positionOfNextBinaryExpression].CreateError("Binary Operation is missing operant.");
             }
 
             Token operantToken = inputTokens[positionOfNextBinaryExpression];

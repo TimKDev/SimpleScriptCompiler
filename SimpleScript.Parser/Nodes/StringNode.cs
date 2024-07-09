@@ -2,7 +2,7 @@
 {
     public class StringNode : IExpression
     {
-        public string Value { get; set; }
+        public string Value { get; private set; }
 
         public StringNode(string value)
         {

@@ -40,5 +40,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             List<Token> programTokens = [TF.Let(), TF.Var(null)];
             ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Invalid usage of Let keyword. Let should be followed by a variable name not equals to null.", 1)]);
         }
+
+
     }
 }

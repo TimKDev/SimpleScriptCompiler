@@ -7,8 +7,10 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         public static Parser Create()
         {
             ExpressionFactory expressionFactory = ExpressionFactoryFactory.Create();
+            StatementCombiner statementCombiner = StatementCombinerFactory.Create();
 
-            return new Parser(expressionFactory);
+
+            return new Parser(expressionFactory, statementCombiner);
         }
     }
 }

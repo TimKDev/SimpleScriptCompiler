@@ -16,9 +16,9 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParseTokens_StringNodeShouldHaveValueHelloSimpleScript_GivenProgramTokens()
         {
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode? printNode = programNode.ChildNodes[0] as PrintNode;
-            StringNode? stringNode = printNode.ChildNodes[0] as StringNode;
-            stringNode!.Value.Should().Be(HelloMessage);
+            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programNode);
+            StringNode stringNode = NH.AssertPrintNode<StringNode>(printNode);
+            stringNode.Value.Should().Be(HelloMessage);
         }
     }
 }
