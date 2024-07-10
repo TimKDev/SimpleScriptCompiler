@@ -49,8 +49,18 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         [Fact]
         public void ShouldReturnError_WhenPrintArgumentIsMissing()
         {
-            List<Token> programTokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Add(), TF.Print()];
+            List<Token> programTokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print()];
             ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage($"Invalid usage of Print keyword. Print should be followed by expression to print.", 1)]);
+        }
+
+        [Fact]
+        public void ShouldReturnError_WhenVariableDeklarationHasInvalidExpression_And_WhenPrintArgumentIsMissing()
+        {
+            List<Token> programTokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Add(), TF.Print()];
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [
+                ErrorHelper.CreateErrorMessage($"Invalid usage of Print keyword. Print should be followed by expression to print.", 1),
+                ErrorHelper.CreateErrorMessage($"Invalid Expression: {ErrorHelper.CreateErrorMessage("Binary Operation is missing operant.", 1)}", 1)
+            ]);
         }
     }
 }

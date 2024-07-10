@@ -1,16 +1,10 @@
-﻿using SimpleScript.Parser.NodeFactories;
-
-namespace SimpleScript.Parser.Tests.Helper.Factories
+﻿namespace SimpleScript.Parser.Tests.Helper.Factories
 {
     internal static class ParserFactory
     {
         public static Parser Create()
         {
-            ExpressionFactory expressionFactory = ExpressionFactoryFactory.Create();
-            StatementCombiner statementCombiner = StatementCombinerFactory.Create();
-
-
-            return new Parser(expressionFactory, statementCombiner);
+            return new Parser(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(), PrintNodeFactoryFactory.Create());
         }
     }
 }

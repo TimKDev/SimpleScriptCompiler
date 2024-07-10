@@ -19,6 +19,10 @@ namespace SimpleScript.Parser.NodeFactories
 
         public Result<IExpression> Create(List<Token> inputTokens)
         {
+            if (!inputTokens.Any())
+            {
+                Error.Create("Expression is empty.");
+            }
             int positionOfNextBinaryExpression = FindIndexOfNextBinaryOperator(inputTokens);
 
             if (positionOfNextBinaryExpression == -1)
