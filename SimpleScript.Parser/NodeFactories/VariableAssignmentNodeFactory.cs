@@ -26,28 +26,25 @@ namespace SimpleScript.Parser.NodeFactories
             {
                 return inputTokens[0].CreateError("Invalid usage of Let keyword. Let should be followed by a variable name not equals to null.");
             }
-            VariableDeclarationNode variableDeklarationNode;
-            if (inputTokens.Count > 2 && inputTokens[2].TokenType == TokenType.ASSIGN)
+
+            return inputTokens.Count > 2 && inputTokens[2].TokenType == TokenType.ASSIGN ? CreateVariableDeklarationWithInitialValue(inputTokens, variableName) : new VariableDeclarationNode(variableName);
+        }
+
+        private Result<VariableDeclarationNode> CreateVariableDeklarationWithInitialValue(List<Token> inputTokens, string variableName)
+        {
+            if (inputTokens.Count < 4)
             {
-                if (inputTokens.Count < 4)
-                {
-                    return inputTokens[2].CreateError("Missing Assert Value: No value given after the assert symbol.");
-                }
-                List<Token> tokensOfExpression = inputTokens.Skip(3).ToList();
-                Result<IExpression> initialValueExpression = _expressionFactory.Create(tokensOfExpression);
-                if (!initialValueExpression.IsSuccess)
-                {
-                    string errorMessage = $"Invalid Expression: {string.Join(", ", initialValueExpression.Errors.Select(e => e.Message))}";
-                    return inputTokens[2].CreateError(errorMessage);
-                }
-                variableDeklarationNode = new(variableName, initialValueExpression.Value);
+                return inputTokens[2].CreateError("Missing Assert Value: No value given after the assert symbol.");
             }
-            else
+            List<Token> tokensOfExpression = inputTokens.Skip(3).ToList();
+            Result<IExpression> initialValueExpression = _expressionFactory.Create(tokensOfExpression);
+            if (!initialValueExpression.IsSuccess)
             {
-                variableDeklarationNode = new(variableName);
+                string errorMessage = $"Invalid Expression: {string.Join(", ", initialValueExpression.Errors.Select(e => e.Message))}";
+                return inputTokens[2].CreateError(errorMessage);
             }
 
-            return variableDeklarationNode;
+            return new VariableDeclarationNode(variableName, initialValueExpression.Value);
         }
     }
 }
