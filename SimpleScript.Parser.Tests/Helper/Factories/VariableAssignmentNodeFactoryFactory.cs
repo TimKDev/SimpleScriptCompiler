@@ -4,9 +4,9 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
 {
     internal static class VariableAssignmentNodeFactoryFactory
     {
-        public static VariableAssignmentNodeFactory Create()
+        public static VariableDeclarationNodeFactory Create()
         {
-            return new VariableAssignmentNodeFactory(ExpressionFactoryFactory.Create());
+            return new VariableDeclarationNodeFactory(ExpressionFactoryFactory.Create());
         }
     }
 }

@@ -1,12 +1,14 @@
-﻿using SimpleScript.Parser.Nodes.Interfaces;
+﻿using SimpleScript.Parser.Interfaces;
+using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class NumberNode : IExpression, IMultiplyable
+    public class NumberNode : NodeBase, IExpression, IPrintableNode, IAddable, IMultiplyable
     {
-        public int Value { get; set; }
+        public static string TypeName = "Number";
+        public int Value { get; private set; }
 
-        public NumberNode(int value)
+        public NumberNode(int value, int startLine, int endLine) : base(startLine, endLine)
         {
             Value = value;
         }

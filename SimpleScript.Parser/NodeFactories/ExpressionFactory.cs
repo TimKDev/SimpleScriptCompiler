@@ -1,5 +1,6 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScriptCompiler.LexicalAnalysis;
@@ -27,7 +28,7 @@ namespace SimpleScript.Parser.NodeFactories
 
             if (positionOfNextBinaryExpression == -1)
             {
-                return TransformTokenToExpressionNode(inputTokens[0]);
+                return TransformSingleTokenToExpression(inputTokens[0]);
             }
 
             if (positionOfNextBinaryExpression == 0 || positionOfNextBinaryExpression == inputTokens.Count - 1)
@@ -39,16 +40,12 @@ namespace SimpleScript.Parser.NodeFactories
             List<Token> firstOperant = inputTokens.Take(positionOfNextBinaryExpression).ToList();
             List<Token> secondOperant = inputTokens.Skip(positionOfNextBinaryExpression + 1).ToList();
 
-            if (operantToken.TokenType == TokenType.PLUS)
+            return operantToken.TokenType switch
             {
-                return _additionNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>();
-            }
-            else if (operantToken.TokenType == TokenType.MULTIPLY)
-            {
-                return _multiplicationNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>();
-            }
-
-            return Error.Create("Unknown Error happend.");
+                TokenType.PLUS => _additionNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>(),
+                TokenType.MULTIPLY => _multiplicationNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>(),
+                _ => Error.Create("Unknown Error happend.")
+            };
         }
 
         private int FindIndexOfNextBinaryOperator(List<Token> inputTokens)
@@ -59,13 +56,13 @@ namespace SimpleScript.Parser.NodeFactories
             return indexOfNextAddition != -1 ? indexOfNextAddition : indexOfNextMultiplication;
         }
 
-        private Result<IExpression> TransformTokenToExpressionNode(Token operand)
+        private Result<IExpression> TransformSingleTokenToExpression(Token operand)
         {
             return operand.TokenType switch
             {
-                TokenType.String => new StringNode(operand.Value!),
-                TokenType.Number => new NumberNode(int.Parse(operand.Value!)),
-                TokenType.Variable => new VariableNode(operand.Value!),
+                TokenType.String => new StringNode(operand.Value!, operand.Line, operand.Line),
+                TokenType.Number => new NumberNode(int.Parse(operand.Value!), operand.Line, operand.Line),
+                TokenType.Variable => new VariableNode(operand.Value!, operand.Line, operand.Line),
                 _ => Error.Create($"Token type {operand.TokenType} is not supported for addition.")
             };
         }

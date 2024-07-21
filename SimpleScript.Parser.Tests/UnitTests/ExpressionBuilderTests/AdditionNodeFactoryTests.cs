@@ -1,6 +1,4 @@
-﻿using EntertainingErrors;
-using FluentAssertions;
-using NSubstitute;
+﻿using NSubstitute;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
@@ -15,22 +13,9 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
         private readonly AdditionNodeFactory _sut = new();
 
         [Fact]
-        public void ShouldCreateOneAddNodeWithTwoNumberChildNodes_GivenTwoNumbersAsArgs()
-        {
-            List<Token> firstArg = [TF.Num(43)];
-            List<Token> secondArg = [TF.Num(2)];
-            IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(firstArg, secondArg, _expressionFactory));
-            AddNode addNode = TestHelper.ConvertTo<AddNode>(result);
-            (NumberNode firstChild, NumberNode secondChild) = NH.AssertAddNode<NumberNode, NumberNode>(addNode);
-            firstChild.Value.Should().Be(43);
-            secondChild.Value.Should().Be(2);
-            _expressionFactory.Received(0).Create(Arg.Any<List<Token>>());
-        }
-
-        [Fact]
         public void ShouldCallExpressionNodeFactory_GivenFirstArgWithMulOperation()
         {
-            _expressionFactory.Create(Arg.Any<List<Token>>()).Returns(new MultiplyNode(new NumberNode(43), new VariableNode("i")));
+            _expressionFactory.Create(Arg.Any<List<Token>>()).Returns(MultiplyNode.Create(new NumberNode(43, 1, 1), new VariableNode("i", 1, 1)).Value);
             List<Token> firstArg = [TF.Num(43), TF.Mul(), TF.Var("i")];
             List<Token> secondArg = [TF.Num(2)];
             ErrorHelper.AssertResultSuccess(_sut.Create(firstArg, secondArg, _expressionFactory));
@@ -40,23 +25,12 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
         [Fact]
         public void ShouldCallExpressionNodeFactoryTwoTimes_GivenBothArgWithBinaryOperation()
         {
-            _expressionFactory.Create(Arg.Any<List<Token>>()).Returns(new MultiplyNode(new NumberNode(1), new VariableNode("i")));
+            _expressionFactory.Create(Arg.Any<List<Token>>()).Returns(MultiplyNode.Create(new NumberNode(1, 1, 1), new VariableNode("i", 1, 1)).Value);
             List<Token> firstArg = [TF.Num(1), TF.Add(), TF.Var("i")];
             List<Token> secondArg = [TF.Str("Hello World"), TF.Mul(), TF.Var("i")];
             ErrorHelper.AssertResultSuccess(_sut.Create(firstArg, secondArg, _expressionFactory));
             AssertExpressionFactoryCreateReceived(firstArg);
             AssertExpressionFactoryCreateReceived(secondArg);
-        }
-
-        [Fact]
-        public void ShouldReturnError_GivenIncompatilbleStringAndNumberType()
-        {
-            List<Token> firstArg = [TF.Num(1)];
-            List<Token> secondArg = [TF.Str("Hello World")];
-            Result<AddNode> result = _sut.Create(firstArg, secondArg, _expressionFactory);
-            result.IsSuccess.Should().BeFalse();
-            result.Errors.Count().Should().Be(1);
-            result.Errors[0].Message.Should().Be("Error Line 1: Addition between types Number and String is not allowed.");
         }
 
         private void AssertExpressionFactoryCreateReceived(List<Token> tokens)

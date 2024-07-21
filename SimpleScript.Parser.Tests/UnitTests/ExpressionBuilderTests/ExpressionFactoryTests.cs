@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;

@@ -1,4 +1,5 @@
-﻿using SimpleScript.Parser.Nodes.Interfaces;
+﻿using SimpleScript.Parser.Interfaces;
+using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes
 {

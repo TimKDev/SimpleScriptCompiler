@@ -1,6 +1,7 @@
 ﻿using EntertainingErrors;
 using FluentAssertions;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
@@ -34,7 +35,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             Result<MultiplyNode> result = _sut.Create(firstArg, secondArg, _expressionFactory);
             result.IsSuccess.Should().BeFalse();
             result.Errors.Count().Should().Be(1);
-            result.Errors[0].Message.Should().Be("Error Line 1: Token type String is not supported for multiplication.");
+            result.Errors[0].Message.Should().Be("Error Line 1: Expression is not supported for multiplication.");
         }
     }
 }

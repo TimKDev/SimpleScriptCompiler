@@ -17,10 +17,15 @@ namespace SimpleScript.Lexer
 
         public Error CreateError(string message, int? endLine = null)
         {
-            string errorMessage = $"Error Line {Line}: {message}";
-            if (endLine != null && Line != endLine)
+            return CreateError(message, Line, endLine);
+        }
+
+        public static Error CreateError(string message, int startLine, int? endLine = null)
+        {
+            string errorMessage = $"Error Line {startLine}: {message}";
+            if (endLine != null && startLine != endLine)
             {
-                errorMessage = $"Error Lines {Line} - {endLine}: {message}";
+                errorMessage = $"Error Lines {startLine} - {endLine}: {message}";
             }
             return Error.Create(errorMessage);
         }

@@ -1,5 +1,6 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Nodes.Interfaces;
@@ -10,10 +11,10 @@ namespace SimpleScript.Parser
     public class Parser
     {
         private readonly IStatementCombiner _statementCombiner;
-        private readonly IVariableAssignmentNodeFactory _variableAssignmentFactory;
+        private readonly IVariableDeclarartionNodeFactory _variableAssignmentFactory;
         private readonly IPrintNodeFactory _printNodeFactory;
 
-        public Parser(IStatementCombiner statementCombiner, IVariableAssignmentNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory)
+        public Parser(IStatementCombiner statementCombiner, IVariableDeclarartionNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory)
         {
             _statementCombiner = statementCombiner;
             _variableAssignmentFactory = variableAssignmentFactory;

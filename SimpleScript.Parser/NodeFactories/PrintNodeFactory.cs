@@ -1,5 +1,6 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
+using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 
@@ -29,7 +30,7 @@ namespace SimpleScript.Parser.NodeFactories
             List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
             Result<IExpression> printExpression = _expressionFactory.Create(tokensOfExpression);
 
-            return printExpression.IsSuccess ? new PrintNode(printExpression.Value) : printExpression.Errors;
+            return printExpression.IsSuccess ? PrintNode.Create(printExpression.Value) : printExpression.Errors;
         }
     }
 }

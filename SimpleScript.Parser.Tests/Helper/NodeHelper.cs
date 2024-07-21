@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Parser.Tests.Helper
