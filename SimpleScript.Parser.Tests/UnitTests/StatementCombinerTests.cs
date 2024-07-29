@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.Tests.Helper;
+using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Parser.Tests.UnitTests
 {

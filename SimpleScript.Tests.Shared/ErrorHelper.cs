@@ -1,9 +1,9 @@
 ﻿using EntertainingErrors;
 using FluentAssertions;
 
-namespace SimpleScript.Parser.Tests.Helper
+namespace SimpleScript.Tests.Shared
 {
-    internal static class ErrorHelper
+    public static class ErrorHelper
     {
         public static TValue AssertResultSuccess<TValue>(Result<TValue> result)
         {

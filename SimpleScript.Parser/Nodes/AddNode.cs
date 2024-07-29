@@ -14,6 +14,8 @@ namespace SimpleScript.Parser.Nodes
             SecondArgument = secondArgument;
         }
 
+        public
+
         public static Result<AddNode> Create(IAddable firstArgument, IAddable secondArgument)
         {
             int startLine = firstArgument.StartLine;

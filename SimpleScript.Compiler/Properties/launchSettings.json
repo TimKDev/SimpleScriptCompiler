@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SimpleScript.Compiler": {
+      "commandName": "Project",
+      "commandLineArgs": "execute helloWorld.simple"
+    }
+  }
+}

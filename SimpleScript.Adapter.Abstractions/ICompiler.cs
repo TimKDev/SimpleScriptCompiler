@@ -1,7 +1,7 @@
-﻿namespace SimpleScript.Converter.Abstractions
+﻿namespace SimpleScript.Adapter.Abstractions
 {
     public interface ICompiler
     {
-        void CompileAndExecute(string code);
+        bool Compile(string fileName, string code);
     }
 }

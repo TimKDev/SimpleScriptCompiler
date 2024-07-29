@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using SimpleScript.Parser.Nodes;
 
-namespace SimpleScript.Converter.Abstractions
+namespace SimpleScript.Adapter.Abstractions
 {
-    internal class IConverter
+    public interface IConverter
     {
+        string ConvertToCCode(ProgramNode helloWorldProgramNode);
     }
 }

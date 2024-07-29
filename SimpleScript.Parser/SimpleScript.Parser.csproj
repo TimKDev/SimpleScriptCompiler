@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="EntertainingErrors" Version="0.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SimpleScript.Lexer\SimpleScript.Lexer.csproj" />
   </ItemGroup>
 

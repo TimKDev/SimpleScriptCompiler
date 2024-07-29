@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Tests.Helper.Factories
 {
-    internal class PrintNodeFactoryFactory
+    public class PrintNodeFactoryFactory
     {
         public static PrintNodeFactory Create()
         {

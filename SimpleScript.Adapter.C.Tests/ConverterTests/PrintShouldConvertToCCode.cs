@@ -1,0 +1,134 @@
+using SimpleScript.Adapter.C.Tests.Helper.Extensions;
+using SimpleScript.Adapter.C.Tests.Helper.Factories;
+using SimpleScript.Parser.Nodes;
+
+namespace SimpleScript.Adapter.C.Tests.ConverterTests
+{
+    public class PrintShouldConvertToCCode
+    {
+        private readonly ConverterToCCode _sut = new();
+
+        [Fact]
+        public void GivenHelloWorldAst()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(StringNodeFactory.Create("Hello Simple Script Compiler", 1, 1))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf(\"Hello Simple Script Compiler\");"
+            ]);
+        }
+
+        [Fact]
+        public void GivenPrintForNumber()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(NumberNodeFactory.Create(3, 1, 1))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf(3);"
+            ]);
+        }
+
+        [Fact]
+        public void GivenPrintForVariable()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(VariableNodeFactory.Create("test", 1, 1))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf(test);"
+            ]);
+        }
+
+        [Fact]
+        public void GivenAddOperationBetweenNumbers()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(AddNodeFactory.Create(
+                    NumberNodeFactory.Create(1, 1, 1),
+                    NumberNodeFactory.Create(2, 1, 1)
+                ))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf((1 + 2));"
+            ]);
+        }
+
+        [Fact]
+        public void GivenAddOperationBetweenStrings()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(AddNodeFactory.Create(
+                    StringNodeFactory.Create("Hello ", 1, 1),
+                    StringNodeFactory.Create("World", 1, 1)
+                ))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf((\"Hello \" + \"World\"));"
+            ]);
+        }
+
+        [Fact]
+        public void GivenAddAndMultiplyOperationBetweenNumbers()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(AddNodeFactory.Create(
+                    MultiplyNodeFactory.Create(
+                        NumberNodeFactory.Create(1, 1, 1),
+                        NumberNodeFactory.Create(2, 1, 1)
+                    ),
+                    NumberNodeFactory.Create(3, 1, 1)
+                ))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf(((1 * 2) + 3));"
+            ]);
+        }
+
+        [Fact]
+        public void GivenMultiplyAndAddOperationBetweenNumbersWithDist()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(MultiplyNodeFactory.Create(
+                    AddNodeFactory.Create(
+                        NumberNodeFactory.Create(1, 1, 1),
+                        NumberNodeFactory.Create(2, 1, 1)
+                    ),
+                    NumberNodeFactory.Create(3, 1, 1)
+                ))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf(((1 + 2) * 3));"
+            ]);
+        }
+
+        [Fact]
+        public void GivenExpressionWith2AddAnd1MulOperationBetweenNumbers()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                PrintNodeFactory.Create(MultiplyNodeFactory.Create(
+                    AddNodeFactory.Create(
+                        NumberNodeFactory.Create(1, 1, 1),
+                        NumberNodeFactory.Create(2, 1, 1)
+                    ),
+                    AddNodeFactory.Create(
+                        NumberNodeFactory.Create(3, 1, 1),
+                        NumberNodeFactory.Create(4, 1, 1)
+                    )
+                ))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "printf(((1 + 2) * (3 + 4)));"
+            ]);
+        }
+    }
+}

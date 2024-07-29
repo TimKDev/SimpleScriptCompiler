@@ -1,6 +1,6 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.Interfaces;
+using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.NodeFactories.Interfaces
 {

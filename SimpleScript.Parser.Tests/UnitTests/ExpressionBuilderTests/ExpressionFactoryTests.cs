@@ -1,10 +1,10 @@
 ﻿using FluentAssertions;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
-using SimpleScript.Parser.Tests.Helper;
+using SimpleScript.Parser.Nodes.Interfaces;
+using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
 {

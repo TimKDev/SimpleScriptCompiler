@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 
-namespace SimpleScript.Parser.Tests.Helper
+namespace SimpleScript.Tests.Shared
 {
-    internal static class TestHelper
+    public static class TestHelper
     {
         public static T ConvertTo<T>(object input)
         {

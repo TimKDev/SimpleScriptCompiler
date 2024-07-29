@@ -1,8 +1,8 @@
 ﻿using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
-using SimpleScript.Parser.Tests.Helper;
 using SimpleScript.Parser.Tests.Helper.Extensions;
 using SimpleScript.Parser.Tests.Helper.Factories;
+using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
 {

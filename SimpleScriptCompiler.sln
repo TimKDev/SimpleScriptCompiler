@@ -9,21 +9,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Parser.Tests",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Lexer", "SimpleScript.Lexer\SimpleScript.Lexer.csproj", "{B0B6783B-1E7C-4EF6-AC5A-D5A9A489AB24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScript.Compiler", "SimpleScript.Compiler\SimpleScript.Compiler.csproj", "{FB548F53-A5D7-4E80-B435-A28A2C63A7BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Compiler", "SimpleScript.Compiler\SimpleScript.Compiler.csproj", "{FB548F53-A5D7-4E80-B435-A28A2C63A7BC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4315D673-D490-42CF-8D7C-F179E6990D76}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Src", "Src", "{67D7E8CA-17AB-4AA0-BB50-8FC04DC50C95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScript.Compiler.Tests", "SimpleScript.Compiler.Tests\SimpleScript.Compiler.Tests.csproj", "{C3467CE1-FF49-495D-9327-99E23F59F697}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Compiler.Tests", "SimpleScript.Compiler.Tests\SimpleScript.Compiler.Tests.csproj", "{C3467CE1-FF49-495D-9327-99E23F59F697}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScript.Lexer.Tests", "SimpleScript.Lexer.Tests\SimpleScript.Lexer.Tests.csproj", "{05BED644-BDE1-464C-9149-75053F92D93A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Lexer.Tests", "SimpleScript.Lexer.Tests\SimpleScript.Lexer.Tests.csproj", "{05BED644-BDE1-464C-9149-75053F92D93A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Adapter.Abstractions", "SimpleScript.Adapter.Abstractions\SimpleScript.Adapter.Abstractions.csproj", "{201F67E8-BCAF-438A-8892-E26FCB3A8462}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Adapter.C", "SimpleScript.Adapter.C\SimpleScript.Adapter.C.csproj", "{F065778C-C62B-4AF1-8242-1D790DC29AA0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleScript.Adapter.C.Tests", "SimpleScript.Adapter.C.Tests\SimpleScript.Adapter.C.Tests.csproj", "{3EBC6263-D843-4570-8D1C-A962B83AB386}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleScript.Tests.Shared", "SimpleScript.Tests.Shared\SimpleScript.Tests.Shared.csproj", "{CED290C6-DCF6-49EE-9A35-8E0C4BD5A637}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,6 +69,10 @@ Global
 		{3EBC6263-D843-4570-8D1C-A962B83AB386}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3EBC6263-D843-4570-8D1C-A962B83AB386}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3EBC6263-D843-4570-8D1C-A962B83AB386}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CED290C6-DCF6-49EE-9A35-8E0C4BD5A637}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CED290C6-DCF6-49EE-9A35-8E0C4BD5A637}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CED290C6-DCF6-49EE-9A35-8E0C4BD5A637}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CED290C6-DCF6-49EE-9A35-8E0C4BD5A637}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -81,6 +87,7 @@ Global
 		{201F67E8-BCAF-438A-8892-E26FCB3A8462} = {67D7E8CA-17AB-4AA0-BB50-8FC04DC50C95}
 		{F065778C-C62B-4AF1-8242-1D790DC29AA0} = {67D7E8CA-17AB-4AA0-BB50-8FC04DC50C95}
 		{3EBC6263-D843-4570-8D1C-A962B83AB386} = {4315D673-D490-42CF-8D7C-F179E6990D76}
+		{CED290C6-DCF6-49EE-9A35-8E0C4BD5A637} = {4315D673-D490-42CF-8D7C-F179E6990D76}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {878A523D-1DE5-47A3-B2E0-B41554A34228}

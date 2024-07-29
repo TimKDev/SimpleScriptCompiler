@@ -8,7 +8,7 @@ using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser
 {
-    public class Parser
+    public class Parser : IParser
     {
         private readonly IStatementCombiner _statementCombiner;
         private readonly IVariableDeclarartionNodeFactory _variableAssignmentFactory;

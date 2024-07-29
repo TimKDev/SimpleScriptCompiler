@@ -1,7 +1,5 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.Extensions;
-using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Nodes.Interfaces;
@@ -10,6 +8,7 @@ namespace SimpleScript.Parser.NodeFactories
 {
     public class MultiplicationNodeFactory : IMultiplicationNodeFactory
     {
+        public MultiplicationNodeFactory() { }
         public Result<MultiplyNode> Create(List<Token> firstOperand, List<Token> secondOperand, IExpressionFactory expressionFactory)
         {
             List<Error> errors = [];
@@ -27,6 +26,6 @@ namespace SimpleScript.Parser.NodeFactories
             return errors.Any() ? errors : MultiplyNode.Create(firstValueResult.Value, secondValueResult.Value);
         }
 
-        private static Result<IMultiplyable> ConvertToMultiplyable(IExpression expression) => expression is IMultiplyable multiplyable ? ResultExtensions.ConvertTypeToResult(multiplyable) : expression.CreateError("Expression is not supported for multiplication.");
+        private static Result<IMultiplyable> ConvertToMultiplyable(IExpression expression) => expression is IMultiplyable multiplyable ? Result.ToResult(multiplyable) : expression.CreateError("Expression is not supported for multiplication.");
     }
 }

@@ -1,8 +1,9 @@
-﻿using SimpleScript.Lexer;
+﻿using SimpleScript.Lexer.Interfaces;
+using SimpleScriptCompiler.LexicalAnalysis;
 
-namespace SimpleScriptCompiler.LexicalAnalysis
+namespace SimpleScript.Lexer
 {
-    public class Lexer
+    public class Lexer : ILexer
     {
         private readonly char[] dividerChars = [' ', '\n', '\t'];
         private readonly char[] numberChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
@@ -32,16 +33,36 @@ namespace SimpleScriptCompiler.LexicalAnalysis
         };
         public List<Token> ConvertToTokens(string input, int lineNumber)
         {
-            List<Token> result = new List<Token>();
+            List<Token> result = [];
 
             int i = 0;
             while (i < input.Length)
             {
-                if (CheckForWhiteSpace(input, ref i, lineNumber)) continue;
-                if (CheckForKeywordsAndOperators(input, result, ref i, lineNumber)) continue;
-                if (CheckForString(input, result, ref i, lineNumber)) continue;
-                if (CheckForNumber(input, result, ref i, lineNumber)) continue;
-                if (CreateNewVariableToken(input, result, ref i, lineNumber)) continue;
+                if (CheckForWhiteSpace(input, ref i, lineNumber))
+                {
+                    continue;
+                }
+
+                if (CheckForKeywordsAndOperators(input, result, ref i, lineNumber))
+                {
+                    continue;
+                }
+
+                if (CheckForString(input, result, ref i, lineNumber))
+                {
+                    continue;
+                }
+
+                if (CheckForNumber(input, result, ref i, lineNumber))
+                {
+                    continue;
+                }
+
+                if (CreateNewVariableToken(input, result, ref i, lineNumber))
+                {
+                    continue;
+                }
+
                 throw new Exception("Unknown Lexer Error");
             }
 
@@ -50,7 +71,7 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private bool CheckForWhiteSpace(string input, ref int i, int lineNumber)
         {
-            var currentChar = input[i];
+            char currentChar = input[i];
             if (dividerChars.Contains(currentChar))
             {
                 i++;
@@ -61,11 +82,11 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private bool CheckForKeywordsAndOperators(string input, List<Token> result, ref int i, int lineNumber)
         {
-            foreach (var keywordAndOperatorTokenType in keywordAndOperatorTokenTypes)
+            foreach (KeyValuePair<string, TokenType> keywordAndOperatorTokenType in keywordAndOperatorTokenTypes)
             {
                 if (CheckIfTheFollowingStringFollows(input, i, keywordAndOperatorTokenType.Key))
                 {
-                    var newToken = new Token(keywordAndOperatorTokenType.Value, lineNumber);
+                    Token newToken = new(keywordAndOperatorTokenType.Value, lineNumber);
                     result.Add(newToken);
                     i += keywordAndOperatorTokenType.Key.Length;
                     return true;
@@ -76,10 +97,10 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private bool CheckForString(string input, List<Token> result, ref int i, int lineNumber)
         {
-            var currentChar = input[i];
+            char currentChar = input[i];
             if (currentChar == '"')
             {
-                var stringTokenValue = GetStringTokenValue(input, i + 1, lineNumber);
+                string stringTokenValue = GetStringTokenValue(input, i + 1, lineNumber);
                 result.Add(new Token(TokenType.String, lineNumber, stringTokenValue));
                 i += stringTokenValue.Length + 2; //2 because there are two "" missing in the string value
                 return true;
@@ -89,10 +110,10 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private bool CheckForNumber(string input, List<Token> result, ref int i, int lineNumber)
         {
-            var currentChar = input[i];
+            char currentChar = input[i];
             if (numberChars.Contains(currentChar))
             {
-                var numberTokenValue = GetNumberTokenValue(input, i, lineNumber);
+                string numberTokenValue = GetNumberTokenValue(input, i, lineNumber);
                 result.Add(new Token(TokenType.Number, lineNumber, numberTokenValue));
                 i += numberTokenValue.Length;
                 return true;
@@ -103,7 +124,7 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private bool CreateNewVariableToken(string input, List<Token> result, ref int i, int lineNumber)
         {
-            var variableValue = GetVariableTokenValue(input, i);
+            string variableValue = GetVariableTokenValue(input, i);
             result.Add(new Token(TokenType.Variable, lineNumber, variableValue));
             i += variableValue.Length;
             return true;
@@ -111,20 +132,27 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private bool CheckIfTheFollowingStringFollows(string input, int startPositionOfString, string stringToFollow)
         {
-            if (input.Length - startPositionOfString < stringToFollow.Length) return false;
+            if (input.Length - startPositionOfString < stringToFollow.Length)
+            {
+                return false;
+            }
+
             for (int j = 0; j < stringToFollow.Length; j++)
             {
-                if (input[startPositionOfString + j] != stringToFollow[j]) return false;
+                if (input[startPositionOfString + j] != stringToFollow[j])
+                {
+                    return false;
+                }
             }
             return true;
         }
 
         private string GetStringTokenValue(string input, int startPositionOfString, int lineNumber)
         {
-            var stringResult = "";
-            for (var j = startPositionOfString; j < input.Length; j++)
+            string stringResult = "";
+            for (int j = startPositionOfString; j < input.Length; j++)
             {
-                var currentChar = input[j];
+                char currentChar = input[j];
                 if (currentChar == '"')
                 {
                     return stringResult;
@@ -136,10 +164,10 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private string GetNumberTokenValue(string input, int startPositionOfNumber, int lineNumber)
         {
-            var numberResult = "";
-            for (var j = startPositionOfNumber; j < input.Length; j++)
+            string numberResult = "";
+            for (int j = startPositionOfNumber; j < input.Length; j++)
             {
-                var currentChar = input[j];
+                char currentChar = input[j];
                 if (!numberChars.Contains(currentChar))
                 {
                     return numberResult;
@@ -151,10 +179,10 @@ namespace SimpleScriptCompiler.LexicalAnalysis
 
         private string GetVariableTokenValue(string input, int startPositionOfVariable)
         {
-            var variableResult = string.Empty;
-            for (var j = startPositionOfVariable; j < input.Length; j++)
+            string variableResult = string.Empty;
+            for (int j = startPositionOfVariable; j < input.Length; j++)
             {
-                var currentChar = input[j];
+                char currentChar = input[j];
                 if (dividerChars.Contains(currentChar) || forbiddenVariableNameChars.Contains(currentChar.ToString()))
                 {
                     return variableResult;

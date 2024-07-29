@@ -4,6 +4,7 @@ using SimpleScript.Parser.NodeFactories;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Tests.Helper;
+using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
 {

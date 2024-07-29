@@ -1,16 +1,17 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Nodes.Interfaces;
 using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser.NodeFactories
 {
     public class VariableDeclarationNodeFactory : IVariableDeclarartionNodeFactory
     {
-        private static readonly string NoVariableNameAfterLetErrorMessage = "Invalid usage of Let keyword. Let should be followed by a variable name.";
+        private static readonly string NoVariableNameAfterLetErrorMessage = "Invalid usage of Let keyword. Let should be followed by a variable name and an initial value.";
         private static readonly string InvalidVariableNameAfterLetErrorMessage = "Invalid usage of Let keyword. Let should be followed by a variable name not equals to null.";
+        private static readonly string NoInitialValueErrorMessage = "Invalid usage of Let keyword. Let should be followed by a assign to define an initial value.";
         private static readonly string NoValueAfterAssertErrorMessage = "Missing Assert Value: No value given after the assert symbol.";
         private static readonly string UnknownErrorMessage = "Unknown Error occured.";
 
@@ -23,9 +24,11 @@ namespace SimpleScript.Parser.NodeFactories
 
         public Result<VariableDeclarationNode> Create(List<Token> inputTokens) => inputTokens switch
         {
-        [{ TokenType: TokenType.LET }, { TokenType: TokenType.Variable, Value: var variableName }] when variableName is not null => new VariableDeclarationNode(variableName),
-
         [{ TokenType: TokenType.LET }, { TokenType: TokenType.Variable, Value: var variableName }, { TokenType: TokenType.ASSIGN } assignToken, .. var initialValueExpression] when variableName is not null && initialValueExpression.Count > 0 => CreateWithInitialValue(variableName, initialValueExpression, assignToken),
+
+        [{ TokenType: TokenType.LET, Line: var line }, { TokenType: TokenType.Variable, Value: var variableName }, not { TokenType: TokenType.ASSIGN }, ..] when variableName is not null => Token.CreateError(NoInitialValueErrorMessage, line),
+
+        [{ TokenType: TokenType.LET, Line: var line }, { TokenType: TokenType.Variable, Value: var variableName }] when variableName is not null => Token.CreateError(NoInitialValueErrorMessage, line),
 
         [{ TokenType: TokenType.LET, Line: var line }] => Token.CreateError(NoVariableNameAfterLetErrorMessage, line),
 

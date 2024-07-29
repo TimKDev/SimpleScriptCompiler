@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
-using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Tests.Helper
 {

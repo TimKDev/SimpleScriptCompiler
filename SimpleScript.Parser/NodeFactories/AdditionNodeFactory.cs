@@ -1,7 +1,5 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
-using SimpleScript.Parser.Extensions;
-using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Nodes.Interfaces;
@@ -10,6 +8,7 @@ namespace SimpleScript.Parser.NodeFactories
 {
     public class AdditionNodeFactory : IAdditionNodeFactory
     {
+        public AdditionNodeFactory() { }
         public Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand, IExpressionFactory expressionFactory)
         {
             List<Error> errors = [];
@@ -22,6 +21,6 @@ namespace SimpleScript.Parser.NodeFactories
             return errors.Any() ? errors : AddNode.Create(firstValueResult.Value, secondValueResult.Value);
         }
 
-        private static Result<IAddable> ConvertToAddable(IExpression expression) => expression is IAddable addable ? ResultExtensions.ConvertTypeToResult(addable) : expression.CreateError("Expression is not supported for addition.");
+        private static Result<IAddable> ConvertToAddable(IExpression expression) => expression is IAddable addable ? Result.ToResult(addable) : expression.CreateError("Expression is not supported for addition.");
     }
 }
