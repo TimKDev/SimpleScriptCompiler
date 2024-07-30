@@ -1,4 +1,6 @@
-﻿using SimpleScript.Adapter.Abstractions;
+﻿using EntertainingErrors;
+using SimpleScript.Adapter.Abstractions;
+using SimpleScript.Parser;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Nodes.Interfaces;
 
@@ -17,18 +19,28 @@ namespace SimpleScript.Adapter.C
 
         public string ConvertToCCode(ProgramNode helloWorldProgramNode)
         {
-            List<string> mainScopeStatements = [];
+            List<string> cMainScopeStatements = [];
+            List<Error> errors = [];
+            Scope mainScope = new();
             foreach (IProgramRootNodes directProgramChild in helloWorldProgramNode.ChildNodes)
             {
-                mainScopeStatements.Add(directProgramChild switch
+                Result<string> createStatementResult = (directProgramChild switch
                 {
-                    PrintNode printNode => $"printf({ConvertPrintableNode(printNode.NodeToPrint)});",
-                    VariableDeclarationNode variableDeclarationNode => ConvertVariableDeklarationNode(variableDeclarationNode),
+                    PrintNode printNode => ConvertPrintNode(printNode),
+                    VariableDeclarationNode variableDeclarationNode => ConvertVariableDeklarationNode(variableDeclarationNode, mainScope),
                     _ => throw new NotImplementedException()
                 });
+
+                if (!createStatementResult.IsSuccess)
+                {
+                    errors.AddRange(createStatementResult.Errors);
+                    continue;
+                }
+
+                cMainScopeStatements.Add(createStatementResult.Value);
             }
 
-            return ReplaceTemplateVariable(MainCTemplate, MainBodyTemplateVariable, string.Join('\n', mainScopeStatements));
+            return ReplaceTemplateVariable(MainCTemplate, MainBodyTemplateVariable, string.Join('\n', cMainScopeStatements));
         }
 
         private string ReplaceTemplateVariable(string template, string templateVariableName, string templateVariableValue)
@@ -36,14 +48,25 @@ namespace SimpleScript.Adapter.C
             return template.Replace("{" + templateVariableName + "}", templateVariableValue);
         }
 
-        private string ConvertVariableDeklarationNode(VariableDeclarationNode variableDeclarationNode)
+        private Result<string> ConvertVariableDeklarationNode(VariableDeclarationNode variableDeclarationNode, Scope scope)
         {
-            return variableDeclarationNode.InitialValue switch
+            Result<ValueTypes> getVariableTypeResult = scope.AddVariable(variableDeclarationNode);
+            if (!getVariableTypeResult.IsSuccess)
             {
-                StringNode stringNode => $"char {variableDeclarationNode.VariableName}[] = {ConvertPrintableNode(stringNode)};",
-                NumberNode numberNode => $"int {variableDeclarationNode.VariableName} = {numberNode.Value};",
+                return getVariableTypeResult.Errors;
+            }
+
+            return getVariableTypeResult.Value switch
+            {
+                ValueTypes.String => $"char {variableDeclarationNode.VariableName}[] = {ConvertPrintableNode(variableDeclarationNode.InitialValue)};",
+                ValueTypes.Number => $"int {variableDeclarationNode.VariableName} = {ConvertPrintableNode(variableDeclarationNode.InitialValue)};",
                 _ => throw new NotImplementedException(),
             };
+        }
+
+        private Result<string> ConvertPrintNode(PrintNode printNode)
+        {
+            return $"printf({ConvertPrintableNode(printNode.NodeToPrint)});";
         }
 
         private string ConvertPrintableNode(IPrintableNode printableNode)

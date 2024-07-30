@@ -14,8 +14,6 @@ namespace SimpleScript.Parser.Nodes
             SecondArgument = secondArgument;
         }
 
-        public
-
         public static Result<AddNode> Create(IAddable firstArgument, IAddable secondArgument)
         {
             int startLine = firstArgument.StartLine;
@@ -37,6 +35,6 @@ namespace SimpleScript.Parser.Nodes
             _ => null,
         };
 
-        private static string GetStaticTypError(string type1, string type2) => $"Addition between types {type1} and {type2} is not allowed.";
+        private static string GetStaticTypError(ValueTypes type1, ValueTypes type2) => $"Addition between types {type1} and {type2} is not allowed.";
     }
 }
