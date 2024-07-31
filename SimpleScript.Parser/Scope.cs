@@ -4,34 +4,32 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser
 {
+    public record ScopeVariableEntry(ValueTypes ValueType, int Lenght = 0);
     public class Scope
     {
-        private Dictionary<string, ValueTypes> _variables = [];
-        private Scope? _parentScope;
+        private readonly Dictionary<string, ScopeVariableEntry> _variables = [];
+        private readonly Scope? _parentScope;
 
-        public Scope(Scope? parentScope = null)
-        {
-            _parentScope = parentScope;
-        }
+        public Scope(Scope? parentScope = null) => _parentScope = parentScope;
 
-        public Result<ValueTypes> GetValueType(string variableName)
+        public Result<ScopeVariableEntry> GetScopeEntry(string variableName)
         {
-            if (_variables.TryGetValue(variableName, out ValueTypes value))
+            if (_variables.TryGetValue(variableName, out ScopeVariableEntry? value) && value != null)
             {
                 return value;
             }
 
             if (_parentScope != null)
             {
-                return _parentScope.GetValueType(variableName);
+                return _parentScope.GetScopeEntry(variableName);
             }
 
             return Error.Create($"Variable {variableName} not found in scope.");
         }
 
-        public Result<ValueTypes> AddVariable(VariableDeclarationNode variableDeclarationNode)
+        public Result<ScopeVariableEntry> AddVariable(VariableDeclarationNode variableDeclarationNode)
         {
-            Result<ValueTypes> scopeVariableEntryResult = GetScopeForExpression(variableDeclarationNode.InitialValue);
+            Result<ScopeVariableEntry> scopeVariableEntryResult = GetScopeForExpression(variableDeclarationNode.InitialValue);
 
             if (!scopeVariableEntryResult.IsSuccess)
             {
@@ -43,9 +41,22 @@ namespace SimpleScript.Parser
             return scopeVariableEntryResult;
         }
 
-        protected Result<ValueTypes> EvaluateVariable(VariableNode variableNode)
+        public Result<ScopeVariableEntry> GetScopeForExpression(IExpression expression)
         {
-            if (_variables.TryGetValue(variableNode.Name, out ValueTypes scopeVariableEntry))
+            return expression switch
+            {
+                StringNode stringNode => new ScopeVariableEntry(StringNode.TypeName, stringNode.Value.Length),
+                NumberNode => new ScopeVariableEntry(NumberNode.TypeName),
+                VariableNode variableNode => EvaluateVariable(variableNode),
+                AddNode addNode => EvaluateBinaryOperation(addNode),
+                MultiplyNode multiplyNode => EvaluateBinaryOperation(multiplyNode),
+                _ => throw new NotImplementedException()
+            };
+        }
+
+        protected Result<ScopeVariableEntry> EvaluateVariable(VariableNode variableNode)
+        {
+            if (_variables.TryGetValue(variableNode.Name, out ScopeVariableEntry? scopeVariableEntry) && scopeVariableEntry != null)
             {
                 return scopeVariableEntry;
             }
@@ -56,35 +67,23 @@ namespace SimpleScript.Parser
             return variableNode.CreateError($"Unknown Variable {variableNode.Name} cannot be used in expression");
         }
 
-        private Result<ValueTypes> EvaluateBinaryOperation<T>(IBinaryOperation<T> node) where T : IExpression
+        private Result<ScopeVariableEntry> EvaluateBinaryOperation<T>(IBinaryOperation<T> node) where T : IExpression
         {
-            Result<ValueTypes> variableScopeFirstArg = GetScopeForExpression(node.FirstArgument);
-            Result<ValueTypes> variableScopeSecondArg = GetScopeForExpression(node.SecondArgument);
+            Result<ScopeVariableEntry> variableScopeFirstArg = GetScopeForExpression(node.FirstArgument);
+            Result<ScopeVariableEntry> variableScopeSecondArg = GetScopeForExpression(node.SecondArgument);
 
             if (variableScopeFirstArg.IsSuccess && variableScopeSecondArg.IsSuccess)
             {
-                if (variableScopeFirstArg.Value == variableScopeSecondArg.Value)
+                //Check for type compatibility:
+                if (variableScopeFirstArg.Value.ValueType == variableScopeSecondArg.Value.ValueType)
                 {
-                    return variableScopeFirstArg.Value;
+                    return new ScopeVariableEntry(variableScopeFirstArg.Value.ValueType, variableScopeFirstArg.Value.Lenght + variableScopeSecondArg.Value.Lenght);
                 }
 
                 return node.CreateError($"Types {variableScopeFirstArg.Value} and {variableScopeSecondArg.Value} are not compatible.");
             }
 
             return variableScopeFirstArg.Merge(variableScopeSecondArg);
-        }
-
-        private Result<ValueTypes> GetScopeForExpression(IExpression expression)
-        {
-            return expression switch
-            {
-                StringNode => StringNode.TypeName,
-                NumberNode => NumberNode.TypeName,
-                VariableNode variableNode => EvaluateVariable(variableNode),
-                AddNode addNode => EvaluateBinaryOperation(addNode),
-                MultiplyNode multiplyNode => EvaluateBinaryOperation(multiplyNode),
-                _ => throw new NotImplementedException()
-            };
         }
     }
 }
