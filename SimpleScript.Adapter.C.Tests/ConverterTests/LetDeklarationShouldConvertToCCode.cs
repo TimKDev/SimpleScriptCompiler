@@ -6,7 +6,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
 {
     public class LetDeklarationShouldConvertToCCode
     {
-        private readonly ConverterToCCode _sut = new();
+        private readonly ProgramConverterToC _sut = new();
 
         [Fact]
         public void GivenLetDeklarationWithStringInitialValue()
@@ -16,7 +16,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "char name[] = \"Tim\";"
+                "char *name = \"Tim\";"
             ]);
         }
 
@@ -52,7 +52,10 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "char name[] = (\"Hello \" + \"World\");"
+                "char temp_1[11];",
+                "strcpy(temp_1, \"Hello \");",
+                "strcat(temp_1, \"World\");",
+                "char *name = temp_1;"
             ]);
         }
 
@@ -65,8 +68,94 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "char name[] = \"Tim\";",
-                "char message[] = (name + \" ist mein Name\");"
+                "char *name = \"Tim\";",
+                "char temp_1[17];",
+                "strcpy(temp_1,  name);",
+                "strcat(temp_1, \" ist mein Name\");",
+                "char *message = temp_1;"
+            ]);
+        }
+
+        [Fact]
+        public void GivenDeklarationAndReassign_ForString()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Tim", 1, 1)),
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Caro", 1, 1))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "char *name = \"Tim\";",
+                "name = \"Caro\";"
+            ]);
+        }
+
+        [Fact]
+        public void GivenDeklarationAndReassign_ForInt()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("age", NumberNodeFactory.Create(12, 1, 1)),
+                VariableDeclarationNodeFactory.Create("age", NumberNodeFactory.Create(17, 1, 1))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "int age = 12;",
+                "age = 17;"
+            ]);
+        }
+
+
+        [Fact]
+        public void GivenDeklarationAndReassign_ForStringAddInitialValue()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("name", AddNodeFactory.Create(StringNodeFactory.Create("Tim", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2))),
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Caro", 1, 1))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "char temp_1[17];",
+                "strcpy(temp_1, \"Tim\");",
+                "strcat(temp_1, \" ist mein Name\");",
+                "char *name = temp_1;",
+                "name = \"Caro\";"
+            ]);
+        }
+
+        [Fact]
+        public void GivenDeklarationAndReassign_ForStringAddReassignValue()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Tim", 1, 1)),
+                VariableDeclarationNodeFactory.Create("name", AddNodeFactory.Create(StringNodeFactory.Create("Tim", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2)))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "char *name = \"Tim\";",
+                "char temp_1[17];",
+                "strcpy(temp_1, \"Tim\");",
+                "strcat(temp_1, \" ist mein Name\");",
+                "name = temp_1;",
+            ]);
+        }
+
+
+        [Fact]
+        public void GivenDeklarationReassignAndAddition_ForString_ShouldUseNewLengthForTempVariable()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Tim", 1, 1)),
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Carolin", 1, 1)),
+                VariableDeclarationNodeFactory.Create("message", AddNodeFactory.Create(VariableNodeFactory.Create("name", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2)))
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "char *name = \"Tim\";",
+                "name = \"Carolin\";",
+                "char temp_1[21];",
+                "strcpy(temp_1,  name);",
+                "strcat(temp_1, \" ist mein Name\");",
+                "char *message = temp_1;"
             ]);
         }
     }

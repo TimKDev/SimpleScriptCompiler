@@ -7,7 +7,7 @@ namespace SimpleScript.Compiler.Tests.Helper.Factories
     {
         public static IConverter Create()
         {
-            return new ConverterToCCode();
+            return new ProgramConverterToC();
         }
     }
 }

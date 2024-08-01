@@ -1,0 +1,4 @@
+﻿LET firstName = "Tim"
+PRINT firstName + " Kempkens"
+LET firstName = "Caro"
+PRINT firstName + " Kempkens"

@@ -10,12 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ExamplePrograms\ChangeVariableValue.simple" />
     <None Remove="ExamplePrograms\Fibonacci.simple" />
     <None Remove="ExamplePrograms\HelloSimpleScript.simple" />
     <None Remove="ExamplePrograms\SimpleVariableDeklarationAndPrint.simple" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ExamplePrograms\ChangeVariableValue.simple">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExamplePrograms\Fibonacci.simple">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

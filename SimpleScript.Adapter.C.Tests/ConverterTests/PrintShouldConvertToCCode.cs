@@ -1,3 +1,5 @@
+using EntertainingErrors;
+using FluentAssertions;
 using SimpleScript.Adapter.C.Tests.Helper.Extensions;
 using SimpleScript.Adapter.C.Tests.Helper.Factories;
 using SimpleScript.Parser.Nodes;
@@ -6,7 +8,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
 {
     public class PrintShouldConvertToCCode
     {
-        private readonly ConverterToCCode _sut = new();
+        private readonly ProgramConverterToC _sut = new();
 
         [Fact]
         public void GivenHelloWorldAst()
@@ -33,15 +35,14 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         }
 
         [Fact]
-        public void GivenPrintForVariable()
+        public void GivenPrintForVariableWithoutDeklaration_ShouldReturnError()
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
                 PrintNodeFactory.Create(VariableNodeFactory.Create("test", 1, 1))
             ]);
 
-            _sut.AssertConverterToCCode(programNode, [
-                "printf(test);"
-            ]);
+            Result<string> result = _sut.ConvertToCCode(programNode);
+            result.IsSuccess.Should().BeFalse();
         }
 
         [Fact]
@@ -70,7 +71,10 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf((\"Hello \" + \"World\"));"
+                "char temp_1[11];",
+                "strcpy(temp_1, \"Hello \");",
+                "strcat(temp_1, \"World\");",
+                "printf(temp_1);",
             ]);
         }
 

@@ -6,6 +6,7 @@
         {
             return @$"
                 #include <stdio.h>
+                #include <string.h>
                 int main() {{
                     {string.Join("\n", expectedBody)}
                     return 0;

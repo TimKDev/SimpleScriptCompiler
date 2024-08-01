@@ -1,8 +1,8 @@
-﻿namespace SimpleScript.Parser.Nodes
+﻿namespace SimpleScript.Parser
 {
     public enum ValueTypes
     {
-        String, 
+        String,
         Number
     }
 }

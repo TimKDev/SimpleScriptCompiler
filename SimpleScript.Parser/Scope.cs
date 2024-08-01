@@ -9,8 +9,24 @@ namespace SimpleScript.Parser
     {
         private readonly Dictionary<string, ScopeVariableEntry> _variables = [];
         private readonly Scope? _parentScope;
+        private int currentTempVariableNumber = 0;
 
         public Scope(Scope? parentScope = null) => _parentScope = parentScope;
+
+        public bool DoesVariableNameExists(string variableName)
+        {
+            if (_variables.ContainsKey(variableName))
+            {
+                return true;
+            }
+
+            if (_parentScope is not null && _parentScope.DoesVariableNameExists(variableName))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         public Result<ScopeVariableEntry> GetScopeEntry(string variableName)
         {
@@ -27,7 +43,7 @@ namespace SimpleScript.Parser
             return Error.Create($"Variable {variableName} not found in scope.");
         }
 
-        public Result<ScopeVariableEntry> AddVariable(VariableDeclarationNode variableDeclarationNode)
+        public Result<ScopeVariableEntry> AddOrUpdateVariableScopeEntry(VariableDeclarationNode variableDeclarationNode)
         {
             Result<ScopeVariableEntry> scopeVariableEntryResult = GetScopeForExpression(variableDeclarationNode.InitialValue);
 
@@ -52,6 +68,18 @@ namespace SimpleScript.Parser
                 MultiplyNode multiplyNode => EvaluateBinaryOperation(multiplyNode),
                 _ => throw new NotImplementedException()
             };
+        }
+
+        public string GetTempVariableName()
+        {
+            currentTempVariableNumber++;
+            string result = $"temp_{currentTempVariableNumber}";
+            while (DoesVariableNameExists(result))
+            {
+                currentTempVariableNumber++;
+                result = $"temp_{currentTempVariableNumber}";
+            }
+            return result;
         }
 
         protected Result<ScopeVariableEntry> EvaluateVariable(VariableNode variableNode)

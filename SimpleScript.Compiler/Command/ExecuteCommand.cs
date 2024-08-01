@@ -57,9 +57,14 @@ namespace SimpleScript.Compiler.Command
                 return programNodeResult.Errors;
             }
 
-            string convertedCode = _converter.ConvertToCCode(programNodeResult.Value);
+            Result<string> convertedCode = _converter.ConvertToCCode(programNodeResult.Value);
 
-            if (!_compiler.Compile(programName, convertedCode))
+            if (!convertedCode.IsSuccess)
+            {
+                return convertedCode.Errors;
+            }
+
+            if (!_compiler.Compile(programName, convertedCode.Value))
             {
                 return Error.Create("Compilation failed");
             }

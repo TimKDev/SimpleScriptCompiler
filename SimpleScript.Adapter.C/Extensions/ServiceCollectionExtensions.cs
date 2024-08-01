@@ -8,7 +8,7 @@ namespace SimpleScript.Adapter.C.Extensions
         public static IServiceCollection RegisterCAdapterService(this IServiceCollection services)
         {
             services.AddTransient<ICompiler, CompileCCode>();
-            services.AddTransient<IConverter, ConverterToCCode>();
+            services.AddTransient<IConverter, ProgramConverterToC>();
 
             return services;
         }
