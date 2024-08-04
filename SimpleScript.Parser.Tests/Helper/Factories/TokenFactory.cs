@@ -71,5 +71,10 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         {
             return new Token(TokenType.ASSIGN, 1);
         }
+
+        public static Token Input()
+        {
+            return new Token(TokenType.INPUT, 1);
+        }
     }
 }

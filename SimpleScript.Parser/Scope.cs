@@ -4,7 +4,6 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser
 {
-    public record ScopeVariableEntry(ValueTypes ValueType, int Lenght = 0);
     public class Scope
     {
         private readonly Dictionary<string, ScopeVariableEntry> _variables = [];
@@ -57,11 +56,19 @@ namespace SimpleScript.Parser
             return scopeVariableEntryResult;
         }
 
+        public Result<ScopeVariableEntry> AddVariableScopeEntry(InputNode inputNode)
+        {
+            ScopeVariableEntry scopeVariableEntryResult = new(ValueTypes.String, InputNode.CharLength);
+            _variables[inputNode.VariableName] = scopeVariableEntryResult;
+
+            return scopeVariableEntryResult;
+        }
+
         public Result<ScopeVariableEntry> GetScopeForExpression(IExpression expression)
         {
             return expression switch
             {
-                StringNode stringNode => new ScopeVariableEntry(StringNode.TypeName, stringNode.Value.Length),
+                StringNode stringNode => new ScopeVariableEntry(StringNode.TypeName, stringNode.Value.Length + 1), // + 1 is necessary to also include the \0 Null Character! 
                 NumberNode => new ScopeVariableEntry(NumberNode.TypeName),
                 VariableNode variableNode => EvaluateVariable(variableNode),
                 AddNode addNode => EvaluateBinaryOperation(addNode),
@@ -95,6 +102,7 @@ namespace SimpleScript.Parser
             return variableNode.CreateError($"Unknown Variable {variableNode.Name} cannot be used in expression");
         }
 
+        //TTODO Wie soll das für Multiply funktionieren und warum sollte es überhaupt dafür verwendet werden????
         private Result<ScopeVariableEntry> EvaluateBinaryOperation<T>(IBinaryOperation<T> node) where T : IExpression
         {
             Result<ScopeVariableEntry> variableScopeFirstArg = GetScopeForExpression(node.FirstArgument);
@@ -105,7 +113,8 @@ namespace SimpleScript.Parser
                 //Check for type compatibility:
                 if (variableScopeFirstArg.Value.ValueType == variableScopeSecondArg.Value.ValueType)
                 {
-                    return new ScopeVariableEntry(variableScopeFirstArg.Value.ValueType, variableScopeFirstArg.Value.Lenght + variableScopeSecondArg.Value.Lenght);
+                    //For numbers the Length is calculated but it has no meaning!
+                    return new ScopeVariableEntry(variableScopeFirstArg.Value.ValueType, variableScopeFirstArg.Value.Lenght + variableScopeSecondArg.Value.Lenght - 1); // -1 because the null character is only needed once for each string. 
                 }
 
                 return node.CreateError($"Types {variableScopeFirstArg.Value} and {variableScopeSecondArg.Value} are not compatible.");

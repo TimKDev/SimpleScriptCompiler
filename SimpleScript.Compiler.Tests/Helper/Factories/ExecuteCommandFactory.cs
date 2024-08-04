@@ -4,7 +4,7 @@
     {
         public static Command.ExecuteCommand Create()
         {
-            return new Command.ExecuteCommand(CompilerFactory.Create(), LexerFactory.Create(), ParserFactory.Create(), ConverterFactory.Create());
+            return new Command.ExecuteCommand(CompilerFactory.Create(), LexerFactory.Create(), ParserFactory.Create(), ConverterFactory.Create(), ExecuterFactory.CreateMock());
         }
     }
 }

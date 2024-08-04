@@ -9,60 +9,56 @@ namespace SimpleScript.Adapter.C
     {
         public static Result<string> Convert(string variableName, AddNode addNode, ScopeVariableEntry initialValueScope)
         {
-            (List<StringNode> stringNodes, List<VariableNode> variableNodes) = GetChildNodesForStringAddition(addNode);
+            List<IAddable> variableOrStringNodes = GetChildNodesForStringAddition(addNode);
             string result = $"char {variableName}[{initialValueScope.Lenght}];\n";
             bool appendedString = false;
-            foreach (StringNode stringNode in stringNodes)
+            foreach (IAddable node in variableOrStringNodes)
             {
                 if (!appendedString)
                 {
-                    result += $"strcpy({variableName}, \"{stringNode.Value}\");\n";
+                    result += $"strcpy({variableName}, {TransformStringOrVariableNode(node)});\n";
                     appendedString = true;
                     continue;
                 }
-                result += $"strcat({variableName}, \"{stringNode.Value}\");\n";
-            }
-
-            foreach (VariableNode variableNode in variableNodes)
-            {
-                if (!appendedString)
-                {
-                    result += $"strcpy({variableName}, {variableNode.Name});\n";
-                    appendedString = true;
-                    continue;
-                }
-                result += $"strcat({variableName}, {variableNode.Name});\n";
+                result += $"strcat({variableName}, {TransformStringOrVariableNode(node)});\n";
             }
 
             return result.TrimEnd();
         }
 
-        private static (List<StringNode> StringNodes, List<VariableNode> VariableNodes) GetChildNodesForStringAddition(IAddable node)
+        private static string TransformStringOrVariableNode(IAddable node)
         {
-            List<StringNode> stringNodes = [];
-            List<VariableNode> variableNodes = [];
+            return node switch
+            {
+                VariableNode variableNode => $"{variableNode.Name}",
+                StringNode stringNode => $"\"{stringNode.Value}\"",
+                _ => throw new NotImplementedException(),
+            };
+        }
+
+        private static List<IAddable> GetChildNodesForStringAddition(IAddable node)
+        {
+            List<IAddable> variableOrStringNodes = [];
 
             switch (node)
             {
                 case StringNode stringNode:
-                    stringNodes.Add(stringNode);
+                    variableOrStringNodes.Add(stringNode);
                     break;
                 case VariableNode variableNode:
-                    variableNodes.Add(variableNode);
+                    variableOrStringNodes.Add(variableNode);
                     break;
                 case AddNode addNode:
-                    (List<StringNode> firstStringNodes, List<VariableNode> firstVariableNodes) = GetChildNodesForStringAddition(addNode.FirstArgument);
-                    (List<StringNode> secondStringNodes, List<VariableNode> secondVariableNodes) = GetChildNodesForStringAddition(addNode.SecondArgument);
-                    stringNodes.AddRange(firstStringNodes);
-                    variableNodes.AddRange(firstVariableNodes);
-                    stringNodes.AddRange(secondStringNodes);
-                    variableNodes.AddRange(secondVariableNodes);
+                    List<IAddable> firstArgResult = GetChildNodesForStringAddition(addNode.FirstArgument);
+                    List<IAddable> secondArgResult = GetChildNodesForStringAddition(addNode.SecondArgument);
+                    variableOrStringNodes.AddRange(firstArgResult);
+                    variableOrStringNodes.AddRange(secondArgResult);
                     break;
                 default:
                     throw new ArgumentException();
             }
 
-            return (stringNodes, variableNodes);
+            return variableOrStringNodes;
         }
     }
 }

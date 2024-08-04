@@ -5,6 +5,6 @@ namespace SimpleScript.Adapter.Abstractions
 {
     public interface IConverter
     {
-        Result<string> ConvertToCCode(ProgramNode helloWorldProgramNode);
+        Result<string> ConvertToCCode(ProgramNode programNode);
     }
 }

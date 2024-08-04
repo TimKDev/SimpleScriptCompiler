@@ -7,7 +7,7 @@ namespace SimpleScript.Compiler.Tests.Helper.Factories
     {
         public static IParser Create()
         {
-            return new Parser.Parser(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(), PrintNodeFactoryFactory.Create());
+            return new Parser.Parser(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(), PrintNodeFactoryFactory.Create(), InputNodeFactoryFactory.Create());
         }
     }
 }

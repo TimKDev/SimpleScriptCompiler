@@ -71,7 +71,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "char temp_1[11];",
+                "char temp_1[12];",
                 "strcpy(temp_1, \"Hello \");",
                 "strcat(temp_1, \"World\");",
                 "printf(temp_1);",

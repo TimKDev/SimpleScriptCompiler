@@ -16,13 +16,15 @@ namespace SimpleScript.Compiler.Command
         private readonly IParser _parser;
         private readonly ICompiler _compiler;
         private readonly IConverter _converter;
+        private readonly IExecuter _executer;
 
-        public ExecuteCommand(ICompiler compiler, ILexer lexer, IParser parser, IConverter converter)
+        public ExecuteCommand(ICompiler compiler, ILexer lexer, IParser parser, IConverter converter, IExecuter executer)
         {
             _compiler = compiler;
             _lexer = lexer;
             _parser = parser;
             _converter = converter;
+            _executer = executer;
         }
 
         public Result Execute(string[] args)
@@ -69,7 +71,7 @@ namespace SimpleScript.Compiler.Command
                 return Error.Create("Compilation failed");
             }
 
-            Executer.RunExecutable(programName);
+            _executer.RunExecutable(programName);
 
             return Result.Success();
         }

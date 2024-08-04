@@ -9,6 +9,7 @@ namespace SimpleScript.Adapter.C.Extensions
         {
             services.AddTransient<ICompiler, CompileCCode>();
             services.AddTransient<IConverter, ProgramConverterToC>();
+            services.AddTransient<IExecuter, Executer>();
 
             return services;
         }

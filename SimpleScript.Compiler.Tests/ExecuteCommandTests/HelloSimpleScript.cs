@@ -24,7 +24,7 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
             ]);
             _sut.Execute([_programPath]);
             string resultingCCode = File.ReadAllText("HelloSimpleScript.c");
-            resultingCCode.Should().Be(expectedCCode);
+            CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
         }
     }
 }

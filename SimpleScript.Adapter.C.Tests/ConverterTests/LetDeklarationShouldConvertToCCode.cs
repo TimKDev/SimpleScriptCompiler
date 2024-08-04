@@ -52,7 +52,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "char temp_1[11];",
+                "char temp_1[12];",
                 "strcpy(temp_1, \"Hello \");",
                 "strcat(temp_1, \"World\");",
                 "char *name = temp_1;"
@@ -69,8 +69,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
 
             _sut.AssertConverterToCCode(programNode, [
                 "char *name = \"Tim\";",
-                "char temp_1[17];",
-                "strcpy(temp_1,  name);",
+                "char temp_1[18];",
+                "strcpy(temp_1, name);",
                 "strcat(temp_1, \" ist mein Name\");",
                 "char *message = temp_1;"
             ]);
@@ -114,7 +114,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "char temp_1[17];",
+                "char temp_1[18];",
                 "strcpy(temp_1, \"Tim\");",
                 "strcat(temp_1, \" ist mein Name\");",
                 "char *name = temp_1;",
@@ -132,7 +132,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
 
             _sut.AssertConverterToCCode(programNode, [
                 "char *name = \"Tim\";",
-                "char temp_1[17];",
+                "char temp_1[18];",
                 "strcpy(temp_1, \"Tim\");",
                 "strcat(temp_1, \" ist mein Name\");",
                 "name = temp_1;",
@@ -152,8 +152,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             _sut.AssertConverterToCCode(programNode, [
                 "char *name = \"Tim\";",
                 "name = \"Carolin\";",
-                "char temp_1[21];",
-                "strcpy(temp_1,  name);",
+                "char temp_1[22];",
+                "strcpy(temp_1, name);",
                 "strcat(temp_1, \" ist mein Name\");",
                 "char *message = temp_1;"
             ]);

@@ -7,7 +7,7 @@ namespace SimpleScript.Parser
 {
     public class StatementCombiner : IStatementCombiner
     {
-        private TokenType[] TokensTypesToSplit = [TokenType.LET, TokenType.PRINT];
+        private TokenType[] TokensTypesToSplit = [TokenType.LET, TokenType.PRINT, TokenType.INPUT];
         public Result<List<Statement>> CreateStatements(List<Token> tokens)
         {
             List<Statement> result = [];

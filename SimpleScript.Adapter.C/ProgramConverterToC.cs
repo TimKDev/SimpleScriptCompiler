@@ -29,6 +29,7 @@ namespace SimpleScript.Adapter.C
                 {
                     PrintNode printNode => ConvertPrintNodeToC.Convert(printNode, mainScope),
                     VariableDeclarationNode variableDeclarationNode => ConvertVariableDeklarationToC.Convert(variableDeclarationNode, mainScope),
+                    InputNode inputNode => ConvertInputNodeToC.Convert(inputNode, mainScope),
                     _ => throw new NotImplementedException()
                 };
 

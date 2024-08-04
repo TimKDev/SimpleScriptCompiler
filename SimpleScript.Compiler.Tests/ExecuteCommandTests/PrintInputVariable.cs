@@ -5,9 +5,9 @@ using SimpleScript.Compiler.Tests.Helper.Factories;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class ChangeVariableValue
+    public class PrintInputVariable
     {
-        private string _programPath = "ExamplePrograms/ChangeVariableValue.simple";
+        private string _programPath = "ExamplePrograms/PrintInputVariable.simple";
         private ExecuteCommand _sut = ExecuteCommandFactory.Create();
 
         [Fact]
@@ -21,20 +21,23 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         public void ShouldCreateCorrectCCode()
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode([
-                "char *firstName = \"Tim\";",
-                "char temp_1[13];",
-                "strcpy(temp_1, firstName);",
-                "strcat(temp_1, \" Kempkens\");",
-                "printf(temp_1);",
-                "firstName = \"Caro\";",
-                "char temp_2[14];",
-                "strcpy(temp_2, firstName);",
-                "strcat(temp_2, \" Kempkens\");",
-                "printf(temp_2);"
-
+                "printf(\"Enter your name:\");",
+                "char temp_1[200];",
+                "fgets(temp_1, sizeof(temp_1), stdin);",
+                "size_t temp_2 = strlen(temp_1);",
+                "if (temp_2 > 0 && temp_1[temp_2 - 1] == '\\n')",
+                "{",
+                " temp_1[temp_2 - 1] = '\\0';",
+                "}",
+                "char *name = temp_1;",
+                "char temp_3[231];",
+                "strcpy(temp_3, \"Hello \");",
+                "strcat(temp_3, name);",
+                "strcat(temp_3, \"! My name is SimpleScript\");",
+                "printf(temp_3);"
             ]);
             _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("ChangeVariableValue.c");
+            string resultingCCode = File.ReadAllText("PrintInputVariable.c");
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
         }
     }
