@@ -2,7 +2,6 @@
 using SimpleScript.Lexer;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
-using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser.NodeFactories
 {

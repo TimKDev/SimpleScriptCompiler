@@ -1,5 +1,6 @@
 ﻿PRINT "How many fibonacci numbers do you want?"
-INPUT nums
+INPUT numsInput
+LET nums = ToNumber(numsInput)
 
 IF nums < 0
 	PRINT "Number should be greater or equal to zero!"

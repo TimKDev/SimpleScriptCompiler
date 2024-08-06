@@ -1,4 +1,4 @@
-﻿namespace SimpleScriptCompiler.LexicalAnalysis
+﻿namespace SimpleScript.Lexer
 {
     public enum TokenType
     {
@@ -26,5 +26,9 @@
         WHILE,
         REPEAT,
         ENDWHILE,
+        FUNC,
+        BODY,
+        ENDBODY,
+        RETURN
     }
 }

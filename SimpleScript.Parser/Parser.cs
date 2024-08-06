@@ -4,7 +4,6 @@ using SimpleScript.Parser.Interfaces;
 using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 using SimpleScript.Parser.Nodes.Interfaces;
-using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser
 {

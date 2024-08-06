@@ -1,0 +1,8 @@
+﻿FUNC add(int num_1, int num_2) 
+BODY
+	LET result = num_1 + num_2
+	RETURN result
+ENDBODY 
+
+PRINT "Result of 23 + 55 is "
+PRINT add(23, 55)

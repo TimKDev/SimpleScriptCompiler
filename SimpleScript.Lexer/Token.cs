@@ -1,5 +1,4 @@
 ﻿using EntertainingErrors;
-using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Lexer
 {

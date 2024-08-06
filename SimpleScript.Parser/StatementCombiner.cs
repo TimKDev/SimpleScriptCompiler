@@ -1,7 +1,6 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Interfaces;
-using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Parser
 {

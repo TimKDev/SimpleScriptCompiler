@@ -1,5 +1,4 @@
 ﻿using SimpleScript.Lexer.Interfaces;
-using SimpleScriptCompiler.LexicalAnalysis;
 
 namespace SimpleScript.Lexer
 {
