@@ -6,7 +6,7 @@ namespace SimpleScript.Lexer
     {
         private readonly char[] dividerChars = [' ', '\n', '\t'];
         private readonly char[] numberChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
-        private readonly string[] forbiddenVariableNameChars = ["=", "==", "<=", ">=", "<", ">", "+", "-", "*", "/", "**", "(", ")"];
+        private readonly string[] forbiddenVariableNameChars = ["=", "==", "<=", ">=", "<", ">", "+", "-", "*", "/", "**", "(", ")", ","];
         private readonly Dictionary<string, TokenType> keywordAndOperatorTokenTypes = new() {
             { "LET", TokenType.LET },
             { "PRINT", TokenType.PRINT},
@@ -16,6 +16,13 @@ namespace SimpleScript.Lexer
             { "REPEAT", TokenType.REPEAT},
             { "ENDWHILE", TokenType.ENDWHILE },
             { "INPUT", TokenType.INPUT },
+            { "FUNC", TokenType.FUNC },
+            { "int", TokenType.INT },
+            { "string", TokenType.STRING },
+            { ",", TokenType.COMMA },
+            { "BODY", TokenType.BODY},
+            { "RETURN", TokenType.RETURN },
+            { "ENDBODY", TokenType.ENDBODY },
             { "=", TokenType.ASSIGN },
             { "==", TokenType.EQUAL },
             { "<=", TokenType.SMALLER_OR_EQUAL },

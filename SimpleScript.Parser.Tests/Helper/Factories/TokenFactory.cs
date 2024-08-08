@@ -75,5 +75,60 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         {
             return new Token(TokenType.INPUT, 1);
         }
+
+        public static Token Func()
+        {
+            return new Token(TokenType.FUNC, 1);
+        }
+
+        public static Token Body()
+        {
+            return new Token(TokenType.BODY, 1);
+        }
+
+        public static Token EndBody()
+        {
+            return new Token(TokenType.ENDBODY, 1);
+        }
+
+        public static Token Return()
+        {
+            return new Token(TokenType.RETURN, 1);
+        }
+
+        public static Token If()
+        {
+            return new Token(TokenType.IF, 1);
+        }
+
+        public static Token EndIf()
+        {
+            return new Token(TokenType.ENDIF, 1);
+        }
+
+        public static Token While()
+        {
+            return new Token(TokenType.WHILE, 1);
+        }
+
+        public static Token EndWhile()
+        {
+            return new Token(TokenType.ENDWHILE, 1);
+        }
+
+        public static Token Int()
+        {
+            return new Token(TokenType.INT, 1);
+        }
+
+        public static Token String()
+        {
+            return new Token(TokenType.STRING, 1);
+        }
+
+        public static Token Comma()
+        {
+            return new Token(TokenType.COMMA, 1);
+        }
     }
 }

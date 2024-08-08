@@ -29,6 +29,9 @@
         FUNC,
         BODY,
         ENDBODY,
-        RETURN
+        RETURN,
+        INT,
+        STRING,
+        COMMA
     }
 }
