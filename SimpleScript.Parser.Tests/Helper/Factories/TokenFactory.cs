@@ -118,12 +118,12 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
 
         public static Token Int()
         {
-            return new Token(TokenType.INT, 1);
+            return new Token(TokenType.INTARG, 1);
         }
 
         public static Token String()
         {
-            return new Token(TokenType.STRING, 1);
+            return new Token(TokenType.STRINGARG, 1);
         }
 
         public static Token Comma()

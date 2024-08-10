@@ -13,13 +13,15 @@ namespace SimpleScript.Parser
         private readonly IVariableDeclarartionNodeFactory _variableAssignmentFactory;
         private readonly IPrintNodeFactory _printNodeFactory;
         private readonly IInputNodeFactory _inputNodeFactory;
+        private readonly IFunctionNodeFactory _functionNodeFactory;
 
-        public Parser(IStatementCombiner statementCombiner, IVariableDeclarartionNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory, IInputNodeFactory inputNodeFactory)
+        public Parser(IStatementCombiner statementCombiner, IVariableDeclarartionNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory, IInputNodeFactory inputNodeFactory, IFunctionNodeFactory functionNodeFactory)
         {
             _statementCombiner = statementCombiner;
             _variableAssignmentFactory = variableAssignmentFactory;
             _printNodeFactory = printNodeFactory;
             _inputNodeFactory = inputNodeFactory;
+            _functionNodeFactory = functionNodeFactory;
         }
 
         public Result<ProgramNode> ParseTokens(List<Token> inputTokens)
@@ -40,6 +42,7 @@ namespace SimpleScript.Parser
                     TokenType.LET => _variableAssignmentFactory.Create(statement.Tokens).Convert<IProgramRootNodes>(),
                     TokenType.PRINT => _printNodeFactory.Create(statement.Tokens).Convert<IProgramRootNodes>(),
                     TokenType.INPUT => _inputNodeFactory.Create(statement.Tokens).Convert<IProgramRootNodes>(),
+                    TokenType.FUNC => _functionNodeFactory.Create(statement.Tokens).Convert<IProgramRootNodes>(),
                     _ => Error.Create("Compiler Error: Unknown Statement Type.")
                 };
                 errors.AddRange(result.Errors);

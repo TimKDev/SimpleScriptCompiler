@@ -30,8 +30,8 @@
         BODY,
         ENDBODY,
         RETURN,
-        INT,
-        STRING,
+        INTARG,
+        STRINGARG,
         COMMA
     }
 }
