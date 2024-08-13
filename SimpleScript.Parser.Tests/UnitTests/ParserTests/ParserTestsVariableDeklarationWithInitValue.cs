@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Tests.Helper.Extensions;
 using SimpleScript.Parser.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
@@ -16,8 +17,8 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             string variableName = "name";
             string variableValue = "Tim";
             List<Token> programTokens = [TF.Let(), TF.Var(variableName), TF.Assign(), TF.Str(variableValue)];
-            ProgramNode result = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            VariableDeclarationNode variableDeklarationNode = NH.AssertProgramNode<VariableDeclarationNode>(result);
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
+            VariableDeclarationNode variableDeklarationNode = programNode.AssertProgramNode<VariableDeclarationNode>();
             variableDeklarationNode.VariableName.Should().Be(variableName);
             StringNode initValue = NH.AssertAssignVariableNode<StringNode>(variableDeklarationNode);
             initValue.Value.Should().Be(variableValue);
@@ -28,8 +29,8 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         {
             string variableName = "name";
             List<Token> programTokens = [TF.Let(), TF.Var(variableName), TF.Assign(), TF.Num(3), TF.Add(), TF.Num(4)];
-            ProgramNode result = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            VariableDeclarationNode variableDeklarationNode = NH.AssertProgramNode<VariableDeclarationNode>(result);
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
+            VariableDeclarationNode variableDeklarationNode = programNode.AssertProgramNode<VariableDeclarationNode>();
             variableDeklarationNode.VariableName.Should().Be(variableName);
             AddNode initValue = NH.AssertAssignVariableNode<AddNode>(variableDeklarationNode);
             (NumberNode num1, NumberNode num2) = NH.AssertAddNode<NumberNode, NumberNode>(initValue);

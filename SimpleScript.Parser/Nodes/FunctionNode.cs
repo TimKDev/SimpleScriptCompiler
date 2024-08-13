@@ -2,14 +2,16 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class FunctionNode : NodeBase, IProgramRootNodes
+    public class FunctionNode : NodeBase, IBodyNode
     {
         public string Name { get; }
         public List<FunctionArgumentNode> Arguments { get; }
-        public FunctionNode(string name, List<FunctionArgumentNode> arguments, int startLine, int endLine) : base(startLine, endLine)
+        public BodyNode Body { get; }
+        public FunctionNode(string name, List<FunctionArgumentNode> arguments, BodyNode body, int startLine, int endLine) : base(startLine, endLine)
         {
             Name = name;
             Arguments = arguments;
+            Body = body;
         }
     }
 }

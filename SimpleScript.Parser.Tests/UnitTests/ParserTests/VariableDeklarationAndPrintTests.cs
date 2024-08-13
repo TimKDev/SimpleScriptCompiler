@@ -16,15 +16,15 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         {
             List<Token> programTokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print(), TF.Var("hello")];
             ProgramNode result = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            result.ChildNodes.Should().HaveCount(2);
+            result.Body.ChildNodes.Should().HaveCount(2);
         }
 
         [Fact]
         public void ShouldCreateVariableWithCorrectValue_And_PrintOfThisVariable()
         {
             List<Token> programTokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print(), TF.Var("hello")];
-            ProgramNode result = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            (VariableDeclarationNode variableDeklarationNode, PrintNode printNode) = NH.AssertProgramNode<VariableDeclarationNode, PrintNode>(result);
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
+            (VariableDeclarationNode variableDeklarationNode, PrintNode printNode) = programNode.Assert<VariableDeclarationNode, PrintNode>();
             StringNode stringNode = NH.AssertAssignVariableNode<StringNode>(variableDeklarationNode);
             VariableNode variableToPrint = NH.AssertPrintNode<VariableNode>(printNode);
             variableDeklarationNode.VariableName.Should().Be("hello");

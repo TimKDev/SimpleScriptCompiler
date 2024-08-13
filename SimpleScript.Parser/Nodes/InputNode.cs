@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class InputNode : NodeBase, IProgramRootNodes
+    public class InputNode : NodeBase, IBodyNode
     {
         public static int CharLength => 200;
         public string VariableName { get; private set; }

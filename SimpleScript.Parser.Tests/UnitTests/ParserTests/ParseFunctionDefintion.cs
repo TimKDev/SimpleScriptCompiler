@@ -21,7 +21,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             List<Token> programTokens = [TF.Func(), TF.Var("add"), TF.Open(), TF.Int(), TF.Var("num_1"), TF.Comma(), TF.Int(), TF.Var("num_2"), TF.Close(), TF.Body(), TF.Let(), TF.Var("result"), TF.Assign(), TF.Var("num_1"), TF.Add(), TF.Var("num_2"), TF.Return(), TF.Var("result"), TF.EndBody()];
 
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            NH.AssertProgramNode<FunctionNode>(programNode);
+            programNode.AssertProgramNode<FunctionNode>();
         }
 
         [Fact]
@@ -30,8 +30,9 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             List<Token> programTokens = [TF.Func(), TF.Var("add"), TF.Open(), TF.Int(), TF.Var("num_1"), TF.Comma(), TF.Int(), TF.Var("num_2"), TF.Close(), TF.Body(), TF.Let(), TF.Var("result"), TF.Assign(), TF.Var("num_1"), TF.Add(), TF.Var("num_2"), TF.Return(), TF.Var("result"), TF.EndBody()];
 
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            FunctionNode functionNode = NH.AssertProgramNode<FunctionNode>(programNode);
-            functionNode.Assert("add", [(ArgumentType.Int, "num_1"), (ArgumentType.Int, "num_2")]);
+            programNode
+                .AssertProgramNode<FunctionNode>()
+                .AssertFunctionNode("add", [(ArgumentType.Int, "num_1"), (ArgumentType.Int, "num_2")]);
         }
 
         [Fact]
@@ -40,8 +41,21 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             List<Token> programTokens = [TF.Func(), TF.Var("returnString"), TF.Open(), TF.String(), TF.Var("myString"), TF.Close(), TF.Body(), TF.Return(), TF.Var("myString"), TF.EndBody()];
 
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
-            FunctionNode functionNode = NH.AssertProgramNode<FunctionNode>(programNode);
-            functionNode.Assert("returnString", [(ArgumentType.String, "myString")]);
+            programNode
+                .AssertProgramNode<FunctionNode>()
+                .AssertFunctionNode("returnString", [(ArgumentType.String, "myString")]);
+        }
+
+        [Fact]
+        public void ParseTokens_ShouldCreateBody_GivenTokens()
+        {
+            List<Token> programTokens = [TF.Func(), TF.Var("add"), TF.Open(), TF.Int(), TF.Var("num_1"), TF.Comma(), TF.Int(), TF.Var("num_2"), TF.Close(), TF.Body(), TF.Let(), TF.Var("result"), TF.Assign(), TF.Var("num_1"), TF.Add(), TF.Var("num_2"), TF.Return(), TF.Var("result"), TF.EndBody()];
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
+
+            programNode
+                .AssertProgramNode<FunctionNode>()
+                .AssertFunctionNode("add")
+                .AssertBodyNode<VariableDeclarationNode, ReturnNode>();
         }
     }
 }

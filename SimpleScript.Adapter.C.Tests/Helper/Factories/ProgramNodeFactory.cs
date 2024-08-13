@@ -5,15 +5,11 @@ namespace SimpleScript.Adapter.C.Tests.Helper.Factories
 {
     internal static class ProgramNodeFactory
     {
-        public static ProgramNode Create(IProgramRootNodes[] programRootNodes)
+        public static ProgramNode Create(IBodyNode[] programRootNodes)
         {
-            ProgramNode programNode = new();
-            foreach (IProgramRootNodes node in programRootNodes)
-            {
-                programNode.ChildNodes.Add(node);
-            }
+            BodyNode bodyNode = new(programRootNodes.ToList(), 1, 1);
 
-            return programNode;
+            return new ProgramNode(bodyNode);
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Tests.Helper.Extensions;
 using SimpleScript.Parser.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
@@ -17,7 +18,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_PrintNodeShouldHaveAddNodeAsChild_GivenProgramTokens()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            PrintNode printNode = programmingNode.AssertProgramNode<PrintNode>();
             NH.AssertPrintNode<AddNode>(printNode);
         }
 
@@ -25,7 +26,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_AddNodeShouldHaveTwoChildNodes()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            PrintNode printNode = programmingNode.AssertProgramNode<PrintNode>();
             AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
             addNode.FirstArgument.Should().NotBeNull();
         }
@@ -34,7 +35,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_NumbersShouldHaveValues1And2()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            PrintNode printNode = programmingNode.AssertProgramNode<PrintNode>();
             AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
             (NumberNode firstNumber, NumberNode secondNumber) = NH.AssertAddNode<NumberNode, NumberNode>(addNode);
             firstNumber.Value.Should().Be(num1);

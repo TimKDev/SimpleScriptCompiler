@@ -1,9 +1,12 @@
-﻿using SimpleScript.Parser.Nodes.Interfaces;
-
-namespace SimpleScript.Parser.Nodes
+﻿namespace SimpleScript.Parser.Nodes
 {
     public class ProgramNode
     {
-        public List<IProgramRootNodes> ChildNodes = [];
+        public BodyNode Body { get; }
+
+        public ProgramNode(BodyNode body)
+        {
+            Body = body;
+        }
     }
 }

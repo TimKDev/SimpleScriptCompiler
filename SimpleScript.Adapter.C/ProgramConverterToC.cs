@@ -23,7 +23,7 @@ namespace SimpleScript.Adapter.C
             List<string> cMainScopeStatements = [];
             List<Error> errors = [];
             Scope mainScope = new();
-            foreach (IProgramRootNodes directProgramChild in helloWorldProgramNode.ChildNodes)
+            foreach (IBodyNode directProgramChild in helloWorldProgramNode.Body.ChildNodes)
             {
                 Result<string> createStatementResult = directProgramChild switch
                 {

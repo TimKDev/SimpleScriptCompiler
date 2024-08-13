@@ -18,6 +18,8 @@ namespace SimpleScript.Parser.Extensions
             services.AddTransient<IVariableDeclarartionNodeFactory, VariableDeclarationNodeFactory>();
             services.AddTransient<IInputNodeFactory, InputNodeFactory>();
             services.AddTransient<IFunctionNodeFactory, FunctionNodeFactory>();
+            services.AddTransient<IBodyNodeFactory, BodyNodeFactory>();
+            services.AddTransient<IReturnNodeFactory, ReturnNodeFactory>();
 
             return services;
         }

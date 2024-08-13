@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Tests.Helper.Extensions;
 using SimpleScript.Parser.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
@@ -17,7 +18,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_PrintNodeShouldHaveAddNodeAsChild_GivenProgramTokens()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            PrintNode printNode = programmingNode.AssertProgramNode<PrintNode>();
             NH.AssertPrintNode<AddNode>(printNode);
         }
 
@@ -25,7 +26,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_AddNodeShouldHaveTwoStringsAsChildren()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            PrintNode printNode = programmingNode.AssertProgramNode<PrintNode>();
             AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
             NH.AssertAddNode<StringNode, StringNode>(addNode);
         }
@@ -34,7 +35,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParserTests_StringsShouldHaveValuesHelloAndWorld()
         {
             ProgramNode programmingNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programmingNode);
+            PrintNode printNode = programmingNode.AssertProgramNode<PrintNode>();
             AddNode addNode = NH.AssertPrintNode<AddNode>(printNode);
             (StringNode firstString, StringNode secondString) = NH.AssertAddNode<StringNode, StringNode>(addNode);
             firstString.Value.Should().Be(Hello);

@@ -1,6 +1,6 @@
-﻿using FluentAssertions;
-using SimpleScript.Lexer;
+﻿using SimpleScript.Lexer;
 using SimpleScript.Parser.Nodes;
+using SimpleScript.Parser.Tests.Helper.Extensions;
 using SimpleScript.Parser.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
@@ -16,9 +16,10 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         public void ParseTokens_StringNodeShouldHaveValueHelloSimpleScript_GivenProgramTokens()
         {
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
-            PrintNode printNode = NH.AssertProgramNode<PrintNode>(programNode);
-            StringNode stringNode = NH.AssertPrintNode<StringNode>(printNode);
-            stringNode.Value.Should().Be(HelloMessage);
+            programNode
+                .AssertProgramNode<PrintNode>()
+                .Assert<StringNode>()
+                .Assert(HelloMessage);
         }
     }
 }

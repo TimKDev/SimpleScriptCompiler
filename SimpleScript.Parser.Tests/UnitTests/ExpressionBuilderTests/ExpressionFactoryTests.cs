@@ -46,5 +46,26 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             VariableNode variableNode = TestHelper.ConvertTo<VariableNode>(result);
             variableNode.Name.Should().Be("name");
         }
+
+        [Fact]
+        public void ShouldCreateFunctionInvocation_GivenSingleFunctionCallWithoutArguments()
+        {
+            List<Token> inputTokens = [TF.Var("getName"), TF.Open(), TF.Close()];
+            IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
+            VariableNode variableNode = TestHelper.ConvertTo<VariableNode>(result);
+            variableNode.Name.Should().Be("name");
+        }
+
+        [Fact]
+        public void ShouldCreateFunctionInvocation_GivenSingleFunctionCallWithOneArgument()
+        {
+
+        }
+
+        [Fact]
+        public void ShouldCreateFunctionInvocation_GivenSingleFunctionCallWithTwoArguments()
+        {
+
+        }
     }
 }

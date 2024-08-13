@@ -1,13 +1,14 @@
 ﻿using EntertainingErrors;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Interfaces;
+using SimpleScript.Parser.NodeFactories.Interfaces;
 using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Parser.NodeFactories
 {
     public class FunctionNodeFactory : IFunctionNodeFactory
     {
-        public Result<FunctionNode> Create(List<Token> inputTokens)
+        public Result<FunctionNode> Create(List<Token> inputTokens, IBodyNodeFactory bodyNodeFactory)
         {
             Token? firstToken = inputTokens.FirstOrDefault();
             if (firstToken is null)
@@ -50,7 +51,13 @@ namespace SimpleScript.Parser.NodeFactories
                 return argumentResult.Errors;
             }
 
-            return new FunctionNode(functionName, argumentResult.Value, startLine, endLine);
+            Result<BodyNode> bodyResult = bodyNodeFactory.Create(bodyDefinitionTokens);
+            if (!bodyResult.IsSuccess)
+            {
+                return bodyResult.Errors;
+            }
+
+            return new FunctionNode(functionName, argumentResult.Value, bodyResult.Value, startLine, endLine);
         }
 
         private Result<List<FunctionArgumentNode>> CreateFunctionArgumentNode(List<Token> tokens)

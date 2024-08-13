@@ -3,7 +3,7 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class PrintNode : IProgramRootNodes
+    public class PrintNode : IBodyNode
     {
         public IPrintableNode NodeToPrint { get; private set; }
         private PrintNode(IPrintableNode printableNode)

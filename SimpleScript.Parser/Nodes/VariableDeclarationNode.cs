@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class VariableDeclarationNode : IProgramRootNodes
+    public class VariableDeclarationNode : IBodyNode
     {
         public string VariableName { get; private set; }
         public IExpression InitialValue { get; private set; }

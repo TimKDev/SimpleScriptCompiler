@@ -4,7 +4,7 @@
     {
         public static Parser Create()
         {
-            return new Parser(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(), PrintNodeFactoryFactory.Create(), InputNodeFactoryFactory.Create(), FunctionNodeFactoryFactory.Create());
+            return new Parser(BodyNodeFactoryFactory.Create());
         }
     }
 }
