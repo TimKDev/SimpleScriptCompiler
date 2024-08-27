@@ -10,19 +10,27 @@ namespace SimpleScript.Parser.NodeFactories
     {
         private readonly IAdditionNodeFactory _additionNodeFactory;
         private readonly IMultiplicationNodeFactory _multiplicationNodeFactory;
+        private readonly IFunctionInvocationNodeFactory _functionInvocationNodeFactory;
 
-        public ExpressionFactory(IAdditionNodeFactory additionNodeFactory, IMultiplicationNodeFactory multiplicationNodeFactory)
+        public ExpressionFactory(IAdditionNodeFactory additionNodeFactory, IMultiplicationNodeFactory multiplicationNodeFactory, IFunctionInvocationNodeFactory functionInvocationNodeFactory)
         {
             _additionNodeFactory = additionNodeFactory;
             _multiplicationNodeFactory = multiplicationNodeFactory;
+            _functionInvocationNodeFactory = functionInvocationNodeFactory;
         }
 
         public Result<IExpression> Create(List<Token> inputTokens)
         {
             if (!inputTokens.Any())
             {
-                Error.Create("Expression is empty.");
+                return Error.Create("Expression is empty.");
             }
+
+            if (inputTokens is [{ TokenType: TokenType.Variable }, { TokenType: TokenType.OPEN_BRACKET }, .., { TokenType: TokenType.CLOSED_BRACKET }])
+            {
+                return (_functionInvocationNodeFactory.Create(inputTokens, this)).Convert<IExpression>();
+            }
+
             int positionOfNextBinaryExpression = FindIndexOfNextBinaryOperator(inputTokens);
 
             if (positionOfNextBinaryExpression == -1)

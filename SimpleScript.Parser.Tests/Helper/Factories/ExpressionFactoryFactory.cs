@@ -6,7 +6,7 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
     {
         public static ExpressionFactory Create()
         {
-            return new ExpressionFactory(new AdditionNodeFactory(), new MultiplicationNodeFactory());
+            return new ExpressionFactory(new AdditionNodeFactory(), new MultiplicationNodeFactory(), FunctionInvocationNodeFactoryFactory.Create());
         }
     }
 }
