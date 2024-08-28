@@ -31,7 +31,7 @@ namespace SimpleScript.Parser.NodeFactories
                 return (_functionInvocationNodeFactory.Create(inputTokens, this)).Convert<IExpression>();
             }
 
-            int positionOfNextBinaryExpression = FindIndexOfNextBinaryOperator(inputTokens);
+            int positionOfNextBinaryExpression = FindIndexOfOperationWithSmallestSpeficity(inputTokens);
 
             if (positionOfNextBinaryExpression == -1)
             {
@@ -55,12 +55,35 @@ namespace SimpleScript.Parser.NodeFactories
             };
         }
 
-        private int FindIndexOfNextBinaryOperator(List<Token> inputTokens)
+        private int FindIndexOfOperationWithSmallestSpeficity(List<Token> inputTokens)
         {
-            int indexOfNextMultiplication = inputTokens.FindIndex(token => token.TokenType == TokenType.MULTIPLY);
-            int indexOfNextAddition = inputTokens.FindIndex(token => token.TokenType == TokenType.PLUS);
+            int indexOfNextOperation = -1;
+            int currentSpecificity = 0;
+            int currentLowestSpecificity = int.MaxValue;
+            for (int i = 0; i < inputTokens.Count; i++)
+            {
+                Token currentToken = inputTokens[i];
+                if (currentToken.TokenType == TokenType.OPEN_BRACKET)
+                {
+                    currentSpecificity += 10;
+                }
+                if (currentToken.TokenType == TokenType.CLOSED_BRACKET)
+                {
+                    currentSpecificity -= 10;
+                }
+                if (currentToken.TokenType == TokenType.MULTIPLY && currentSpecificity + 1 < currentLowestSpecificity)
+                {
+                    indexOfNextOperation = i;
+                    currentLowestSpecificity = currentSpecificity + 1;
+                }
+                if (currentToken.TokenType == TokenType.PLUS && currentSpecificity < currentLowestSpecificity)
+                {
+                    indexOfNextOperation = i;
+                    currentLowestSpecificity = currentSpecificity;
+                }
+            }
 
-            return indexOfNextAddition != -1 ? indexOfNextAddition : indexOfNextMultiplication;
+            return indexOfNextOperation;
         }
 
         private Result<IExpression> TransformSingleTokenToExpression(Token operand)

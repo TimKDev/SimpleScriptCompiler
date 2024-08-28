@@ -44,14 +44,52 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             addNodeNumber2.Assert(6);
             num2.Assert(2);
         }
-        //Test with two Backets which are multiplied: (2 + 5) * (4 + 9)
 
-        //Test with Function inside a Bracket of add operation: (test() + 5) * 3
+        [Fact]
+        public void ExpressionWithFunctionInsideABracket()
+        {
 
-        //Test with redundant Brackets: ((1 + 1)) * 5
+            List<Token> programTokens = [TF.Print(), TF.Open(), TF.Var("test"), TF.Open(), TF.Close(), TF.Add(), TF.Num(5), TF.Close(), TF.Mul(), TF.Num(3)];
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
+            (AddNode? addNode, NumberNode? numberNode) = programNode
+                .AssertProgramNode<PrintNode>()
+                .Assert<MultiplyNode>()
+                .Assert<AddNode, NumberNode>();
+            numberNode.Assert(3);
+            (FunctionInvocationNode functionInvokation, NumberNode numberNodeInsideBracket) = addNode.Assert<FunctionInvocationNode, NumberNode>();
+            numberNodeInsideBracket.Assert(5);
+            functionInvokation.Assert("test");
+        }
 
-        //Test that an error is thrown when a Number of opening brackets does not match Number of closing Brackets: (((3 + 3)) 
+        [Fact]
+        public void ExpressionWithRedundantBrackets()
+        {
 
-        //Test that an error is thrown when a empty bracket is not a function call for example 2() + 5
+            List<Token> programTokens = [TF.Print(), TF.Open(), TF.Open(), TF.Num(1), TF.Add(), TF.Num(1), TF.Close(), TF.Close(), TF.Mul(), TF.Num(5)];
+            ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
+            (AddNode? addNode, NumberNode? numberNode) = programNode
+                .AssertProgramNode<PrintNode>()
+                .Assert<MultiplyNode>()
+                .Assert<AddNode, NumberNode>();
+            numberNode.Assert(5);
+            (NumberNode numberNodeInAdd1, NumberNode numberNodeInAdd2) = addNode.Assert<NumberNode, NumberNode>();
+            numberNodeInAdd1.Assert(1);
+            numberNodeInAdd2.Assert(1);
+        }
+
+        [Fact]
+        public void ErrorShouldBeThrownWhenNumberOfOpeningAndClosedBracketsDiffer()
+        {
+
+            List<Token> programTokens = [TF.Print(), TF.Open(), TF.Open(), TF.Open(), TF.Num(3), TF.Add(), TF.Num(3), TF.Close(), TF.Close()];
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Number of Brackets are not equal", 1)]);
+        }
+
+        [Fact]
+        public void ErrorShouldBeThrownWhenEmptyBracketIsNotAFunctionInvocation()
+        {
+            List<Token> programTokens = [TF.Print(), TF.Num(2), TF.Open(), TF.Close(), TF.Add(), TF.Num(5)];
+            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Unneccessary empty brackets.", 1)]);
+        }
     }
 }
