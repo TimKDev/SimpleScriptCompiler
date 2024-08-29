@@ -44,8 +44,8 @@ namespace SimpleScript.Parser.NodeFactories
             }
 
             Token operantToken = inputTokens[positionOfNextBinaryExpression];
-            List<Token> firstOperant = inputTokens.Take(positionOfNextBinaryExpression).ToList();
-            List<Token> secondOperant = inputTokens.Skip(positionOfNextBinaryExpression + 1).ToList();
+            List<Token> firstOperant = RemoveRedundantBrackets(inputTokens.Take(positionOfNextBinaryExpression).ToList());
+            List<Token> secondOperant = RemoveRedundantBrackets(inputTokens.Skip(positionOfNextBinaryExpression + 1).ToList());
 
             return operantToken.TokenType switch
             {
@@ -86,6 +86,24 @@ namespace SimpleScript.Parser.NodeFactories
             return indexOfNextOperation;
         }
 
+        private List<Token> RemoveRedundantBrackets(List<Token> inputTokens)
+        {
+            int numberBracketsAtStart = inputTokens.TakeWhile(token => token.TokenType == TokenType.OPEN_BRACKET).ToList().Count;
+            int numberRedundantBrackets = 0;
+            for (int i = inputTokens.Count - 1; i >= inputTokens.Count - numberBracketsAtStart; i--)
+            {
+                if (inputTokens[i].TokenType != TokenType.CLOSED_BRACKET)
+                {
+                    break;
+                }
+                numberRedundantBrackets++;
+            }
+
+            inputTokens.RemoveRange(0, numberRedundantBrackets);
+            inputTokens.RemoveRange(inputTokens.Count - numberRedundantBrackets, numberRedundantBrackets);
+
+            return inputTokens;
+        }
         private Result<IExpression> TransformSingleTokenToExpression(Token operand)
         {
             return operand.TokenType switch
