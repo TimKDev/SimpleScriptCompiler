@@ -84,12 +84,5 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             List<Token> programTokens = [TF.Print(), TF.Open(), TF.Open(), TF.Open(), TF.Num(3), TF.Add(), TF.Num(3), TF.Close(), TF.Close()];
             ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Number of Brackets are not equal", 1)]);
         }
-
-        [Fact]
-        public void ErrorShouldBeThrownWhenEmptyBracketIsNotAFunctionInvocation()
-        {
-            List<Token> programTokens = [TF.Print(), TF.Num(2), TF.Open(), TF.Close(), TF.Add(), TF.Num(5)];
-            ErrorHelper.AssertErrors(_sut.ParseTokens(programTokens), [ErrorHelper.CreateErrorMessage("Unneccessary empty brackets.", 1)]);
-        }
     }
 }

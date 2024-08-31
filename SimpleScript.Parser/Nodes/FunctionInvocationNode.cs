@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class FunctionInvocationNode : NodeBase, IExpression
+    public class FunctionInvocationNode : NodeBase, IExpression, IAddable, IMultiplyable
     {
         public string FunctionName { get; private set; }
         public IExpression[] FunctionArguments { get; private set; }

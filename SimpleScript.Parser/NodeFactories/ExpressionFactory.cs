@@ -26,6 +26,11 @@ namespace SimpleScript.Parser.NodeFactories
                 return Error.Create("Expression is empty.");
             }
 
+            if (inputTokens.Where(token => token.TokenType == TokenType.OPEN_BRACKET).Count() != inputTokens.Where(token => token.TokenType == TokenType.CLOSED_BRACKET).Count())
+            {
+                return inputTokens.First().CreateError("Number of Brackets are not equal", inputTokens.Last().Line);
+            }
+
             if (inputTokens is [{ TokenType: TokenType.Variable }, { TokenType: TokenType.OPEN_BRACKET }, .., { TokenType: TokenType.CLOSED_BRACKET }])
             {
                 return (_functionInvocationNodeFactory.Create(inputTokens, this)).Convert<IExpression>();
