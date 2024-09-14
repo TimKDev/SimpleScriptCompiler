@@ -1,6 +1,8 @@
-﻿namespace SimpleScript.Parser.Nodes
+﻿using SimpleScript.Parser.Nodes.Interfaces;
+
+namespace SimpleScript.Parser.Nodes
 {
-    public class ProgramNode
+    public class ProgramNode : IHasBodyNode
     {
         public BodyNode Body { get; }
 

@@ -8,9 +8,12 @@ namespace SimpleScript.Parser
     {
         private readonly Dictionary<string, ScopeVariableEntry> _variables = [];
         private readonly Scope? _parentScope;
-        private int currentTempVariableNumber = 0;
+        private int currentTempVariableNumber;
 
-        public Scope(Scope? parentScope = null) => _parentScope = parentScope;
+        public Scope(Scope? parentScope = null)
+        {
+            _parentScope = parentScope;
+        }
 
         public bool DoesVariableNameExists(string variableName)
         {
@@ -60,6 +63,14 @@ namespace SimpleScript.Parser
         {
             ScopeVariableEntry scopeVariableEntryResult = new(ValueTypes.String, InputNode.CharLength);
             _variables[inputNode.VariableName] = scopeVariableEntryResult;
+
+            return scopeVariableEntryResult;
+        }
+
+        public Result<ScopeVariableEntry> AddVariableScopeEntry(FunctionNode functionNode)
+        {
+            ScopeVariableEntry scopeVariableEntryResult = new(ValueTypes.Function, 0);
+            _variables[functionNode.Name] = scopeVariableEntryResult;
 
             return scopeVariableEntryResult;
         }

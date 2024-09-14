@@ -10,4 +10,8 @@
     <ProjectReference Include="..\SimpleScript.Lexer\SimpleScript.Lexer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="JWT" Version="10.1.1" />
+  </ItemGroup>
+
 </Project>

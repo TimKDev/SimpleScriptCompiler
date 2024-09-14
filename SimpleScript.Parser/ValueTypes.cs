@@ -3,6 +3,7 @@
     public enum ValueTypes
     {
         String,
-        Number
+        Number,
+        Function
     }
 }

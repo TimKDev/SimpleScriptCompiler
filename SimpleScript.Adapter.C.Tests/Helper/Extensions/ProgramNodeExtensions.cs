@@ -5,20 +5,33 @@ namespace SimpleScript.Adapter.C.Tests.Helper.Extensions
 {
     internal static class ConverterToCCodeExtensions
     {
-        public static void AssertConverterToCCode(this ProgramConverterToC converter, ProgramNode programNode, string[] expectedBody)
+        public static void AssertConverterToCCode(this ProgramConverterToC converter, ProgramNode programNode, string[] expectedBody, string[] functionDeclarations)
         {
-            string expectedResult = @$"
+            string expectedResult = functionDeclarations.Length != 0 ? @$"
+                #include <stdio.h>
+                #include <string.h>
+                {string.Join("\n", functionDeclarations)}
+                int main() {{
+                    {string.Join("\n", expectedBody)}
+                    return 0;
+                }}
+            " : @$"
                 #include <stdio.h>
                 #include <string.h>
                 int main() {{
-                    {string.Join("\n", expectedBody)}
+                    {string.Join("\n", expectedBody)} 
                     return 0;
                 }}
             ";
 
             EntertainingErrors.Result<string> result = converter.ConvertToCCode(programNode);
-            result.IsSuccess.Should().BeTrue();
-            result.Value.Should().Be(expectedResult);
+            _ = result.IsSuccess.Should().BeTrue();
+            result.Value.AssertWithoutWhitespace(expectedResult);
+        }
+
+        public static void AssertConverterToCCode(this ProgramConverterToC converter, ProgramNode programNode, string[] expectedMainBody)
+        {
+            AssertConverterToCCode(converter, programNode, expectedMainBody, []);
         }
     }
 }

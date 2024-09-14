@@ -7,7 +7,7 @@ namespace SimpleScript.Adapter.C
 {
     public static class ConvertPrintNodeToC
     {
-        public static Result<string> Convert(PrintNode printNode, Scope scope)
+        public static Result<string[]> Convert(PrintNode printNode, Scope scope)
         {
             if (printNode.NodeToPrint is not IExpression nodeToPrint)
             {
@@ -19,13 +19,19 @@ namespace SimpleScript.Adapter.C
                 return nodeToPrintScope.Errors;
             }
 
-            return nodeToPrintScope.Value.ValueType switch
+            if (nodeToPrintScope.Value.ValueType is ValueTypes.String && nodeToPrint is AddNode addNodeToPrint)
             {
-                ValueTypes.String when nodeToPrint is AddNode addNodeToPrint => ConvertPrintOfStringAddNode(addNodeToPrint, nodeToPrintScope.Value, scope),
+                return ConvertPrintOfStringAddNode(addNodeToPrint, nodeToPrintScope.Value, scope).Convert(item => new string[] { item });
+            }
+
+            var printNodeExpression = nodeToPrintScope.Value.ValueType switch
+            {
                 ValueTypes.String => ConvertPrintOfString(nodeToPrint),
                 ValueTypes.Number => ConvertPrintOfNumber(nodeToPrint),
                 _ => throw new NotImplementedException(),
             };
+
+            return new string[] { printNodeExpression };
         }
 
         private static string ConvertPrintOfString(IExpression nodeToPrint)

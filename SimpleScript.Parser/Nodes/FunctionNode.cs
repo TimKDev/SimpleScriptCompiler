@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class FunctionNode : NodeBase, IBodyNode
+    public class FunctionNode : NodeBase, IHasBodyNode
     {
         public string Name { get; }
         public List<FunctionArgumentNode> Arguments { get; }

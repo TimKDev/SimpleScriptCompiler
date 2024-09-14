@@ -6,7 +6,7 @@ namespace SimpleScript.Adapter.C
 {
     internal static class ConvertInputNodeToC
     {
-        public static Result<string> Convert(InputNode inputNode, Scope scope)
+        public static Result<string[]> Convert(InputNode inputNode, Scope scope)
         {
             bool doesVariableExists = scope.DoesVariableNameExists(inputNode.VariableName);
             Result<ScopeVariableEntry> initialValueScope = scope.AddVariableScopeEntry(inputNode);
@@ -17,7 +17,8 @@ namespace SimpleScript.Adapter.C
 
             string tempVariableName = scope.GetTempVariableName();
 
-            return CreateCInput(tempVariableName, scope) + (doesVariableExists ? $"\n{inputNode.VariableName} = {tempVariableName};" : $"\n char *{inputNode.VariableName} = {tempVariableName};");
+            string inputExpressionString = CreateCInput(tempVariableName, scope) + (doesVariableExists ? $"\n{inputNode.VariableName} = {tempVariableName};" : $"\n char *{inputNode.VariableName} = {tempVariableName};");
+            return new string[] { inputExpressionString };
         }
 
         private static string CreateCInput(string variableName, Scope scope)

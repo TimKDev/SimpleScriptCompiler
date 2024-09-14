@@ -6,7 +6,7 @@ namespace SimpleScript.Adapter.C
 {
     public static class ConvertVariableDeklarationToC
     {
-        public static Result<string> Convert(VariableDeclarationNode variableDeclarationNode, Scope scope)
+        public static Result<string[]> Convert(VariableDeclarationNode variableDeclarationNode, Scope scope)
         {
             bool doesVariableExists = scope.DoesVariableNameExists(variableDeclarationNode.VariableName);
             Result<ScopeVariableEntry> initialValueScope = scope.AddOrUpdateVariableScopeEntry(variableDeclarationNode);
@@ -15,12 +15,14 @@ namespace SimpleScript.Adapter.C
                 return initialValueScope.Errors;
             }
 
-            return initialValueScope.Value.ValueType switch
+            var variableDeclarationExpression = initialValueScope.Value.ValueType switch
             {
                 ValueTypes.String => ConvertStringVariableDeclaration(variableDeclarationNode, initialValueScope.Value, scope, doesVariableExists),
                 ValueTypes.Number => ConvertNumberVariableDeclaration(variableDeclarationNode, doesVariableExists),
                 _ => throw new NotImplementedException(),
             };
+
+            return variableDeclarationExpression.Convert(item => new string[] { item });
         }
 
         private static Result<string> ConvertNumberVariableDeclaration(VariableDeclarationNode variableDeclarationNode, bool doesVariableExists)
