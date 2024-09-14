@@ -41,9 +41,9 @@ namespace SimpleScript.Tests.Shared
             ";
         }
 
-        public static string ConvertToCCode(string[] expectedBody, string[] functionDeclarations)
+        public static string ConvertToCCode(string[] expectedBody, string[]? functionDeclarations = null)
         {
-            return ConvertToCCode(string.Join("\n", expectedBody), string.Join("\n", functionDeclarations));
+            return ConvertToCCode(string.Join("\n", expectedBody), functionDeclarations is null ? null : string.Join("\n", functionDeclarations));
         }
 
         public static string NormalizeWhiteSpace(string input)

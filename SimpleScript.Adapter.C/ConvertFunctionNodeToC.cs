@@ -31,6 +31,7 @@ namespace SimpleScript.Adapter.C
 
 
             //Danach sollten alle Variablen in der Funktion im Scope hinterlegt sein, sodass falls die Funktion einen Returntyp besitzt, dieser aus der Expression des Returntypes bestimmt werden kann. => Damit bekommtt man den Typen für die Funktionssignatur.
+            throw new NotImplementedException();
         }
     }
 }

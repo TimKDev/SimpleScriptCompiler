@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using SimpleScript.Compiler.Command;
-using SimpleScript.Compiler.Tests.Helper;
 using SimpleScript.Compiler.Tests.Helper.Factories;
+using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {

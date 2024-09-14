@@ -13,10 +13,19 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         public void ShouldConvertFunctionDeclarationToCCode()
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
-                FunctionNodeFactory.Create("add", [FunctionArgumentFactory.Create(ArgumentType.Int, "num_1", 1, 1), FunctionArgumentFactory.Create(ArgumentType.Int, "num_2", 1, 1)], BodyNodeFactory.Create([
-                    VariableDeclarationNodeFactory.Create("result", AddNodeFactory.Create(VariableNodeFactory.Create("num_1", 2, 2), VariableNodeFactory.Create("num_2", 2, 2))),
-                   ReturnNodeFactory.Create(VariableNodeFactory.Create("result", 3, 3))
-                ], 2, 3), 1, 3)
+                FunctionNodeFactory.Create(
+                    "add",
+                    [
+                        FunctionArgumentFactory.Create(ArgumentType.Int, "num_1", 1, 1),
+                        FunctionArgumentFactory.Create(ArgumentType.Int, "num_2", 1, 1)
+                    ],
+                    BodyNodeFactory.Create(
+                        [
+                            VariableDeclarationNodeFactory.Create("result", AddNodeFactory.Create(VariableNodeFactory.Create("num_1", 2, 2), VariableNodeFactory.Create("num_2", 2, 2))),
+                            ReturnNodeFactory.Create(VariableNodeFactory.Create("result", 3, 3))
+                        ],
+                        2, 3)
+                    , 1, 3)
             ]);
 
             _sut.AssertConverterToCCode(programNode, [], [
