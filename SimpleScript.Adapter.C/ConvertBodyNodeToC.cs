@@ -7,12 +7,12 @@ namespace SimpleScript.Adapter.C
 {
     public class ConvertBodyNodeToC
     {
-        public static Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> ConvertToStatements(BodyNode nodeWithBody)
+        public static Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> ConvertToStatements(BodyNode nodeWithBody, Scope? bodyScope = null)
         {
             List<string> cMainScopeStatements = [];
             List<string> cFunctionDeclarations = [];
             List<Error> errors = [];
-            Scope mainScope = new();
+            Scope mainScope = bodyScope ?? new();
 
             foreach (IBodyNode directProgramChild in nodeWithBody.ChildNodes)
             {
@@ -24,6 +24,7 @@ namespace SimpleScript.Adapter.C
                     VariableDeclarationNode variableDeclarationNode => ConvertVariableDeklarationToC.Convert(variableDeclarationNode, mainScope),
                     InputNode inputNode => ConvertInputNodeToC.Convert(inputNode, mainScope),
                     FunctionNode functionNode => ConvertFunctionNodeToC.Convert(functionNode, mainScope),
+                    ReturnNode returnNode => ConvertReturnNodeToC.Convert(returnNode, mainScope),
                     _ => throw new NotImplementedException()
                 };
 

@@ -22,6 +22,13 @@ namespace SimpleScript.Adapter.C
             //beachte, dass Funktionsdeklarationen innerhalb einer anderen Funktion in C nicht supported wird. Daher werden ich dies in 
             //der ersten Version von SimpleScript auch nicht ermöglichen.
             var functionScope = new Scope();
+            foreach (var arg in functionNode.Arguments)
+            {
+                functionScope.AddVariableScopeEntry(arg);
+            }
+
+            var convertedFunctionBody = ConvertBodyNodeToC.ConvertToStatements(functionNode.Body, functionScope);
+
 
             //Danach sollten alle Variablen in der Funktion im Scope hinterlegt sein, sodass falls die Funktion einen Returntyp besitzt, dieser aus der Expression des Returntypes bestimmt werden kann. => Damit bekommtt man den Typen für die Funktionssignatur.
         }

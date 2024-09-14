@@ -1,0 +1,7 @@
+FUNC addString(string string_1, string string_2) 
+BODY
+	LET result = string_1 + string_2
+	RETURN result
+ENDBODY 
+
+PRINT addString("Hallo ", "String Addition")

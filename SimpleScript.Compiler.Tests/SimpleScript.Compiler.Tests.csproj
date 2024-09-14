@@ -16,9 +16,13 @@
     <None Remove="ExamplePrograms\HelloSimpleScript.simple" />
     <None Remove="ExamplePrograms\PrintInputVariable.simple" />
     <None Remove="ExamplePrograms\SimpleVariableDeklarationAndPrint.simple" />
+    <None Remove="ExamplePrograms\AddStringFunction.simple" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ExamplePrograms\AddStringFunction.simple">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExamplePrograms\ChangeVariableValue.simple">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>

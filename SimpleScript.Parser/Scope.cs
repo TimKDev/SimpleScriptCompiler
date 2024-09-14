@@ -75,6 +75,14 @@ namespace SimpleScript.Parser
             return scopeVariableEntryResult;
         }
 
+        public Result<ScopeVariableEntry> AddVariableScopeEntry(FunctionArgumentNode functionArgumentNode)
+        {
+            ScopeVariableEntry scopeVariableEntryResult = new(functionArgumentNode.ArgumentType == ArgumentType.Int ? ValueTypes.Number : ValueTypes.String, 0);
+            _variables[functionArgumentNode.ArgumentName] = scopeVariableEntryResult;
+
+            return scopeVariableEntryResult;
+        }
+
         public Result<ScopeVariableEntry> GetScopeForExpression(IExpression expression)
         {
             return expression switch
