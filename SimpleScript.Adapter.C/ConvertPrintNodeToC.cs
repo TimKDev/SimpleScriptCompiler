@@ -13,6 +13,7 @@ namespace SimpleScript.Adapter.C
             {
                 throw new NotImplementedException();
             }
+
             Result<ScopeVariableEntry> nodeToPrintScope = scope.GetScopeForExpression(nodeToPrint);
             if (!nodeToPrintScope.IsSuccess)
             {
@@ -21,7 +22,7 @@ namespace SimpleScript.Adapter.C
 
             if (nodeToPrintScope.Value.ValueType is ValueTypes.String && nodeToPrint is AddNode addNodeToPrint)
             {
-                return ConvertPrintOfStringAddNode(addNodeToPrint, nodeToPrintScope.Value, scope).Convert(item => new string[] { item });
+                return ConvertPrintOfStringAddNode(addNodeToPrint, nodeToPrintScope.Value, scope);
             }
 
             var printNodeExpression = nodeToPrintScope.Value.ValueType switch
@@ -44,18 +45,20 @@ namespace SimpleScript.Adapter.C
             return $"printf({ConvertExpressionToC.Convert(nodeToPrint)});";
         }
 
-        private static Result<string> ConvertPrintOfStringAddNode(AddNode addNode, ScopeVariableEntry nodeToPrintVariableScope, Scope scope)
+        private static Result<string[]> ConvertPrintOfStringAddNode(AddNode addNode,
+            ScopeVariableEntry nodeToPrintVariableScope, Scope scope)
         {
             string tempVariableName = scope.GetTempVariableName();
-            Result<string> stringAdditionResult = ConvertStringAdditionToC.Convert(tempVariableName, addNode, nodeToPrintVariableScope);
+            var stringAdditionResult =
+                ConvertStringAdditionToC.Convert(tempVariableName, addNode, nodeToPrintVariableScope);
             if (!stringAdditionResult.IsSuccess)
             {
                 return stringAdditionResult;
             }
 
-            return stringAdditionResult.Value + $"\nprintf({tempVariableName});"; ;
+            var result = stringAdditionResult.Value.ToList();
+            result.Add($"\nprintf({tempVariableName});");
+            return result.ToArray();
         }
     }
 }
-
-

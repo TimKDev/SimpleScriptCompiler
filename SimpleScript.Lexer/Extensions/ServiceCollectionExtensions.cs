@@ -8,7 +8,7 @@ namespace SimpleScript.Lexer.Extensions
         public static IServiceCollection RegisterLexer(this IServiceCollection services)
         {
             services.AddTransient<ILexer, Lexer>();
-
+            //Hello
             return services;
         }
     }

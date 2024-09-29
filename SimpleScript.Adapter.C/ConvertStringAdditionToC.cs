@@ -7,23 +7,36 @@ namespace SimpleScript.Adapter.C
 {
     public static class ConvertStringAdditionToC
     {
-        public static Result<string> Convert(string variableName, AddNode addNode, ScopeVariableEntry initialValueScope)
+        public static Result<string[]> Convert(string variableName, AddNode addNode, ScopeVariableEntry initialValueScope)
         {
+            var result = new List<string>()
+            {
+                 $"char {variableName}[{initialValueScope.Lenght}];\n"
+            };
             List<IAddable> variableOrStringNodes = GetChildNodesForStringAddition(addNode);
-            string result = $"char {variableName}[{initialValueScope.Lenght}];\n";
-            bool appendedString = false;
-            foreach (IAddable node in variableOrStringNodes)
+            if (initialValueScope.HeapAllocation)
+            {
+                return ConvertToStringAdditionWithHeapAllocation(variableName, variableOrStringNodes);
+            }
+            var appendedString = false;
+            foreach (var node in variableOrStringNodes)
             {
                 if (!appendedString)
                 {
-                    result += $"strcpy({variableName}, {TransformStringOrVariableNode(node)});\n";
+                    result.Add($"strcpy({variableName}, {TransformStringOrVariableNode(node)});\n");  
                     appendedString = true;
                     continue;
                 }
-                result += $"strcat({variableName}, {TransformStringOrVariableNode(node)});\n";
+
+                result.Add($"strcat({variableName}, {TransformStringOrVariableNode(node)});\n");
             }
 
-            return result.TrimEnd();
+            return result.ToArray();
+        }
+
+        private static Result<string[]> ConvertToStringAdditionWithHeapAllocation(string variableName, List<IAddable> nodesToAdd)
+        {
+            throw new NotImplementedException();
         }
 
         private static string TransformStringOrVariableNode(IAddable node)

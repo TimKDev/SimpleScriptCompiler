@@ -50,9 +50,9 @@ namespace SimpleScript.Adapter.C
                 return convertionResult.Errors;
             }
 
-            (List<string> cMainScopeStatements, List<string> cFunctionDeclaration) = convertionResult.Value;
+            (var cMainScopeStatements, List<string> cFunctionDeclaration) = convertionResult.Value;
 
-            string stringWithReplacedBody = ReplaceTemplateVariable(MainCTemplate, MainBodyTemplateVariable, string.Join('\n', cMainScopeStatements));
+            var stringWithReplacedBody = ReplaceTemplateVariable(MainCTemplate, MainBodyTemplateVariable, string.Join('\n', cMainScopeStatements));
 
             return ReplaceTemplateVariable(stringWithReplacedBody, FunctionDeclarationTemplateVariable, string.Join('\n', cFunctionDeclaration));
         }

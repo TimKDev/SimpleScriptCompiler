@@ -5,7 +5,9 @@ namespace SimpleScript.Lexer.Tests
         [Fact]
         public void Test1()
         {
-
         }
     }
 }
+
+
+
