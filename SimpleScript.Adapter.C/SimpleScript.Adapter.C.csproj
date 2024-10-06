@@ -15,4 +15,14 @@
     <ProjectReference Include="..\SimpleScript.Parser\SimpleScript.Parser.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="CCode\compiler-helper.c">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <None Remove="CCode\compiler-helper.h" />
+    <EmbeddedResource Include="CCode\compiler-helper.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

@@ -24,13 +24,16 @@ namespace SimpleScript.Parser.NodeFactories
 
             if (inputTokens.Count == 1)
             {
-                return inputTokens[0].CreateError("Invalid usage of Return keyword. Return should be followed by expression.");
+                return inputTokens[0]
+                    .CreateError("Invalid usage of Return keyword. Return should be followed by expression.");
             }
 
             List<Token> tokensOfExpression = inputTokens.Skip(1).ToList();
             Result<IExpression> returnExpression = _expressionFactory.Create(tokensOfExpression);
 
-            return returnExpression.IsSuccess ? ReturnNode.Create(returnExpression.Value) : returnExpression.Errors;
+            return returnExpression.IsSuccess
+                ? ReturnNode.Create(returnExpression.Value)
+                : returnExpression.Errors;
         }
     }
 }

@@ -7,23 +7,31 @@ namespace SimpleScript.Adapter.C
 {
     public static class ConvertStringAdditionToC
     {
-        public static Result<string[]> Convert(string variableName, AddNode addNode, ScopeVariableEntry initialValueScope)
+        public static Result<string[]> Convert(string variableName, AddNode addNode,
+            ScopeVariableEntry initialValueScope)
         {
             var result = new List<string>()
             {
-                 $"char {variableName}[{initialValueScope.Lenght}];\n"
+                $"char {variableName}[{initialValueScope.Lenght}];\n"
             };
             List<IAddable> variableOrStringNodes = GetChildNodesForStringAddition(addNode);
             if (initialValueScope.HeapAllocation)
             {
-                return ConvertToStringAdditionWithHeapAllocation(variableName, variableOrStringNodes);
+                var resultResult = ConvertToStringAdditionWithHeapAllocation(variableName, variableOrStringNodes);
+                if (!resultResult.IsSuccess)
+                {
+                    return resultResult.Errors;
+                }
+
+                result = resultResult.Value.ToList();
             }
+
             var appendedString = false;
             foreach (var node in variableOrStringNodes)
             {
                 if (!appendedString)
                 {
-                    result.Add($"strcpy({variableName}, {TransformStringOrVariableNode(node)});\n");  
+                    result.Add($"strcpy({variableName}, {TransformStringOrVariableNode(node)});\n");
                     appendedString = true;
                     continue;
                 }
@@ -34,9 +42,18 @@ namespace SimpleScript.Adapter.C
             return result.ToArray();
         }
 
-        private static Result<string[]> ConvertToStringAdditionWithHeapAllocation(string variableName, List<IAddable> nodesToAdd)
+        private static Result<IList<string>> ConvertToStringAdditionWithHeapAllocation(string variableName,
+            List<IAddable> nodesToAdd)
         {
-            throw new NotImplementedException();
+            List<string> result = new List<string>();
+            List<string> stringLength = nodesToAdd
+                .Select(addableNode => $"strlen({TransformStringOrVariableNode(addableNode)})").ToList();
+
+            result.Add(
+                $"char *{variableName} = (char *)malloc(({string.Join(" + ", stringLength)} + 1) * sizeof(char));");
+            result.Add($"{HelperFunctions.AddToGlobalFreeList(variableName)};");
+
+            return result;
         }
 
         private static string TransformStringOrVariableNode(IAddable node)
@@ -75,5 +92,3 @@ namespace SimpleScript.Adapter.C
         }
     }
 }
-
-

@@ -10,7 +10,8 @@ namespace SimpleScript.Adapter.C
         {
             if (mainScope.DoesVariableNameExists(functionNode.Name))
             {
-                return functionNode.CreateError($"The name {functionNode.Name} already exists and cannot be used again.");
+                return functionNode.CreateError(
+                    $"The name {functionNode.Name} already exists and cannot be used again.");
             }
 
             mainScope.AddVariableScopeEntry(functionNode);
@@ -21,7 +22,8 @@ namespace SimpleScript.Adapter.C
                 functionScope.AddVariableScopeEntry(arg);
             }
 
-            Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> convertedFunctionBodyResult = ConvertBodyNodeToC.ConvertToStatements(functionNode.Body, functionScope);
+            Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> convertedFunctionBodyResult =
+                ConvertBodyNodeToC.ConvertToStatements(functionNode.Body, functionScope);
             if (!convertedFunctionBodyResult.IsSuccess)
             {
                 return convertedFunctionBodyResult.Errors;
@@ -30,11 +32,50 @@ namespace SimpleScript.Adapter.C
             (List<string> mainStatements, List<string> cFunctionDeclarations) = convertedFunctionBodyResult.Value;
             if (cFunctionDeclarations.Count != 0)
             {
-                return functionNode.Body.CreateError("Functions can only be declared in the main scope of the program. Declaring function inside of other functions is not supported.");
+                return functionNode.Body.CreateError(
+                    "Functions can only be declared in the main scope of the program. Declaring function inside of other functions is not supported.");
             }
 
-            //Danach sollten alle Variablen in der Funktion im Scope hinterlegt sein, sodass falls die Funktion einen Returntyp besitzt, dieser aus der Expression des Returntypes bestimmt werden kann. => Damit bekommtt man den Typen für die Funktionssignatur.
-            throw new NotImplementedException();
+            var returnTypeResult = functionNode.GetReturnType(functionScope);
+            if (!returnTypeResult.IsSuccess)
+            {
+                return returnTypeResult.Errors;
+            }
+
+            var functionArgs = $"({string.Join(", ", functionNode.Arguments.Select(ConvertArgumentsToC))})";
+            var returnType = ConvertReturnTypeToC(returnTypeResult.Value);
+            var functionHeader = $"{returnType} {functionNode.Name}{functionArgs}";
+
+            var result = new List<string>();
+            result.Add(functionHeader);
+            result.Add("{");
+            result.AddRange(mainStatements);
+            result.Add("}");
+
+            return result.ToArray();
+        }
+
+        private static string ConvertReturnTypeToC(ReturnType returnType)
+        {
+            return returnType switch
+            {
+                ReturnType.Void => "void",
+                ReturnType.Int => "int",
+                ReturnType.String => "char[]",
+                _ => throw new ArgumentOutOfRangeException(nameof(returnType), returnType, null)
+            };
+        }
+
+        private static string ConvertArgumentsToC(FunctionArgumentNode argumentNode)
+        {
+            var type = argumentNode.ArgumentType switch
+            {
+                ArgumentType.Int => "int",
+                ArgumentType.String => "char[]",
+                _ => throw new ArgumentOutOfRangeException()
+            };
+
+            return $"{type} {argumentNode.ArgumentName}";
         }
     }
 }

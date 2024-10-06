@@ -40,9 +40,9 @@ namespace SimpleScript.Adapter.C
                 {
                     if (!doesVariableExists)
                     {
-                        return $"{result}\nchar *{variableDeclarationNode.VariableName} = {tempVariableName};";
+                        return $"{string.Join("\n", result)}\nchar *{variableDeclarationNode.VariableName} = {tempVariableName};";
                     }
-                    return $"{result}\n{variableDeclarationNode.VariableName} = {tempVariableName};";
+                    return $"{string.Join("\n", result)}\n{variableDeclarationNode.VariableName} = {tempVariableName};";
                 });
             }
 

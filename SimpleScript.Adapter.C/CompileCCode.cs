@@ -10,40 +10,39 @@ namespace SimpleScript.Adapter.C
             string cFileName = $"{fileName}.c";
             File.WriteAllText(cFileName, code);
 
-            return CompileCCodeFile(cFileName, fileName);
+            ExecuteProcessWithIoRedirect("gcc", $"-g -c {cFileName} -o build/{fileName}.o");
+            ExecuteProcessWithIoRedirect("gcc", "-g -c CCode/compiler-helper.c -o build/compiler-helper.o");
+
+            return ExecuteProcessWithIoRedirect("gcc", $"-o {fileName} build/{fileName}.o build/compiler-helper.o");
         }
 
-        private static bool CompileCCodeFile(string cFileName, string executableName)
+        private static bool ExecuteProcessWithIoRedirect(string command, string arguments)
         {
             ProcessStartInfo processStartInfo = new()
             {
-                FileName = "gcc",
-                Arguments = $"{cFileName} -o {executableName}",
+                FileName = command,
+                Arguments = arguments,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
                 CreateNoWindow = true
             };
 
-            using (Process process = new()
-            { StartInfo = processStartInfo })
-            {
-                process.Start();
-                string output = process.StandardOutput.ReadToEnd();
-                string errors = process.StandardError.ReadToEnd();
-                process.WaitForExit();
+            using Process process = new();
+            process.StartInfo = processStartInfo;
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            string errors = process.StandardError.ReadToEnd();
+            process.WaitForExit();
 
-                if (process.ExitCode == 0)
-                {
-                    return true;
-                }
-                else
-                {
-                    Console.WriteLine("Compiler Output:\n" + output);
-                    Console.WriteLine("Compiler Errors:\n" + errors);
-                    return false;
-                }
+            if (process.ExitCode == 0)
+            {
+                return true;
             }
+
+            Console.WriteLine("Compiler Output:\n" + output);
+            Console.WriteLine("Compiler Errors:\n" + errors);
+            return false;
         }
     }
 }
