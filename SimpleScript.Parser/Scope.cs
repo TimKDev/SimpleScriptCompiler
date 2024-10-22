@@ -68,9 +68,16 @@ namespace SimpleScript.Parser
             return scopeVariableEntryResult;
         }
 
-        public Result<ScopeVariableEntry> AddVariableScopeEntry(FunctionNode functionNode)
+        public Result<ScopeVariableEntry> AddVariableScopeEntry(FunctionNode functionNode, ReturnType returnValue)
         {
-            ScopeVariableEntry scopeVariableEntryResult = new(ValueTypes.Function, 0);
+            var convertedReturnValue = returnValue switch
+            {
+                ReturnType.Int => ValueTypes.Number,
+                ReturnType.String => ValueTypes.String,
+                ReturnType.Void => ValueTypes.Void,
+                _ => throw new NotImplementedException(),
+            };
+            ScopeVariableEntry scopeVariableEntryResult = new(convertedReturnValue, 0, IsFunction: true);
             _variables[functionNode.Name] = scopeVariableEntryResult;
 
             return scopeVariableEntryResult;
@@ -96,8 +103,22 @@ namespace SimpleScript.Parser
                 VariableNode variableNode => EvaluateVariable(variableNode),
                 AddNode addNode => EvaluateBinaryOperation(addNode),
                 MultiplyNode multiplyNode => EvaluateBinaryOperation(multiplyNode),
+                FunctionInvocationNode functionInvocationNode => EvaluateFunctionInvocation(functionInvocationNode),
                 _ => throw new NotImplementedException()
             };
+        }
+
+        private Result<ScopeVariableEntry> EvaluateFunctionInvocation(FunctionInvocationNode functionInvocationNode)
+        {
+            if (_variables.TryGetValue(functionInvocationNode.FunctionName, out var scopeVariableEntry))
+            {
+                return scopeVariableEntry;
+            }
+
+            return _parentScope is not null
+                ? _parentScope.EvaluateFunctionInvocation(functionInvocationNode)
+                : functionInvocationNode.CreateError(
+                    $"Unknown Variable {functionInvocationNode.FunctionName} cannot be used in expression");
         }
 
         public string GetTempVariableName()

@@ -4,6 +4,6 @@
     {
         String,
         Number,
-        Function
+        Void
     }
 }

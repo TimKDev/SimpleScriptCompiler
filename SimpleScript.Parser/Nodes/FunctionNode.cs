@@ -35,7 +35,7 @@ namespace SimpleScript.Parser.Nodes
             {
                 ValueTypes.Number => ReturnType.Int,
                 ValueTypes.String => ReturnType.String,
-                ValueTypes.Function => returnNode.CreateError("Function Node is not supported as a return type."),
+                ValueTypes.Void => returnNode.CreateError("A Void value cannot be a return type."),
                 _ => throw new NotImplementedException()
             };
         }

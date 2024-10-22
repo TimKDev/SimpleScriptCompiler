@@ -13,11 +13,20 @@ namespace SimpleScript.Adapter.C
                 NumberNode numberNode => numberNode.Value.ToString(),
                 VariableNode variableNode => variableNode.Name,
                 AddNode addNode => $"({Convert(addNode.FirstArgument)} + {Convert(addNode.SecondArgument)})",
-                MultiplyNode multiplyNode => $"({Convert(multiplyNode.FirstArgument)} * {Convert(multiplyNode.SecondArgument)})",
+                MultiplyNode multiplyNode =>
+                    $"({Convert(multiplyNode.FirstArgument)} * {Convert(multiplyNode.SecondArgument)})",
+                FunctionInvocationNode functionInvocationNode => ConvertFunctionInvocationNode(functionInvocationNode),
                 _ => throw new NotImplementedException(),
             };
         }
+
+        private static string ConvertFunctionInvocationNode(FunctionInvocationNode functionInvocationNode)
+        {
+            var result = functionInvocationNode.FunctionName + "(";
+            result += string.Join(", ", functionInvocationNode.FunctionArguments.Select(Convert));
+            result += ")";
+
+            return result;
+        }
     }
 }
-
-

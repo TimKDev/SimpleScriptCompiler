@@ -14,7 +14,6 @@ namespace SimpleScript.Adapter.C
                     $"The name {functionNode.Name} already exists and cannot be used again.");
             }
 
-            mainScope.AddVariableScopeEntry(functionNode);
 
             Scope functionScope = new();
             foreach (FunctionArgumentNode arg in functionNode.Arguments)
@@ -41,6 +40,8 @@ namespace SimpleScript.Adapter.C
             {
                 return returnTypeResult.Errors;
             }
+
+            mainScope.AddVariableScopeEntry(functionNode, returnTypeResult.Value);
 
             var functionArgs = $"({string.Join(", ", functionNode.Arguments.Select(ConvertArgumentsToC))})";
             var returnType = ConvertReturnTypeToC(returnTypeResult.Value);

@@ -20,12 +20,14 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         public void ShouldCreateCorrectCCode()
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode([
+                "printf(\"Result of 23 + 55 is \");",
+                "printf(add(23, 55));"
+            ], [
                 "int add(int num_1, int num_2)",
                 "{",
-                "int result = num_1 + num_2;",
+                "int result = (num_1 + num_2);",
                 "return result;",
                 "}",
-                "printf(\"Hello SimpleScript!\");"
             ]);
             _sut.Execute([_programPath]);
             string resultingCCode = File.ReadAllText("FunctionDefinition.c");
