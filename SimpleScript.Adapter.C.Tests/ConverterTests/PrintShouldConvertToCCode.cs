@@ -30,7 +30,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(3);"
+                "printf(\"%d\", 3);"
             ]);
         }
 
@@ -56,7 +56,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf((1 + 2));"
+                "printf(\"%d\", (1 + 2));"
             ]);
         }
 
@@ -92,7 +92,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(((1 * 2) + 3));"
+                "printf(\"%d\", ((1 * 2) + 3));"
             ]);
         }
 
@@ -110,7 +110,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(((1 + 2) * 3));"
+                "printf(\"%d\", ((1 + 2) * 3));"
             ]);
         }
 
@@ -131,7 +131,7 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(((1 + 2) * (3 + 4)));"
+                "printf(\"%d\", ((1 + 2) * (3 + 4)));"
             ]);
         }
     }

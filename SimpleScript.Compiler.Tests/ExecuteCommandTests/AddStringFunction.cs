@@ -31,7 +31,7 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
             printf(addTwoStrings(""Hallo"", ""String Addition"")); 
             ");
             _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("FunctionDefinition.c");
+            string resultingCCode = File.ReadAllText("AddStringFunction.c");
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
         }
     }

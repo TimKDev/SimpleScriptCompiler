@@ -12,7 +12,7 @@ namespace SimpleScript.Adapter.C
                 #include <stdio.h>
                 #include <string.h>
                 #include <stdlib.h>
-                #include <compiler-helper.h>
+                #include ""CCode/compiler-helper.h""
                 {{{FunctionDeclarationTemplateVariable}}}
                 int main() {{
                     {{{MainBodyTemplateVariable}}}

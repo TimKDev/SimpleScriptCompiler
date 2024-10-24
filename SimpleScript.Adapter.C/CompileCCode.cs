@@ -10,6 +10,11 @@ namespace SimpleScript.Adapter.C
             string cFileName = $"{fileName}.c";
             File.WriteAllText(cFileName, code);
 
+            if (!Directory.Exists("build"))
+            {
+                Directory.CreateDirectory("build");
+            }
+
             ExecuteProcessWithIoRedirect("gcc", $"-g -c {cFileName} -o build/{fileName}.o");
             ExecuteProcessWithIoRedirect("gcc", "-g -c CCode/compiler-helper.c -o build/compiler-helper.o");
 

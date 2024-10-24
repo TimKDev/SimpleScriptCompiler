@@ -12,7 +12,7 @@ Node* head = NULL;
 
 void add_to_list(void* data)
 {
-    auto new_node = (Node*)malloc(sizeof(Node));
+    Node* new_node = (Node*)malloc(sizeof(Node));
     new_node->data = data;
     new_node->next = head;
     head = new_node;

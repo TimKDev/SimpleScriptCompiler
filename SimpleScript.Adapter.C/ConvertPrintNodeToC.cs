@@ -42,7 +42,7 @@ namespace SimpleScript.Adapter.C
 
         private static string ConvertPrintOfNumber(IExpression nodeToPrint)
         {
-            return $"printf({ConvertExpressionToC.Convert(nodeToPrint)});";
+            return $"printf(\"%d\", {ConvertExpressionToC.Convert(nodeToPrint)});";
         }
 
         private static Result<string[]> ConvertPrintOfStringAddNode(AddNode addNode,
