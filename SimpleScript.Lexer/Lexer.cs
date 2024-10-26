@@ -6,21 +6,25 @@ namespace SimpleScript.Lexer
     {
         private readonly char[] dividerChars = [' ', '\n', '\t'];
         private readonly char[] numberChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
-        private readonly string[] forbiddenVariableNameChars = ["=", "==", "<=", ">=", "<", ">", "+", "-", "*", "/", "**", "(", ")", ","];
-        private readonly Dictionary<string, TokenType> keywordAndOperatorTokenTypes = new() {
+
+        private readonly string[] forbiddenVariableNameChars =
+            ["=", "==", "<=", ">=", "<", ">", "+", "-", "*", "/", "**", "(", ")", ","];
+
+        private readonly Dictionary<string, TokenType> keywordAndOperatorTokenTypes = new()
+        {
             { "LET", TokenType.LET },
-            { "PRINT", TokenType.PRINT},
+            { "PRINT", TokenType.PRINT },
             { "IF", TokenType.IF },
             { "ENDIF", TokenType.ENDIF },
-            { "WHILE", TokenType.WHILE},
-            { "REPEAT", TokenType.REPEAT},
+            { "WHILE", TokenType.WHILE },
+            { "REPEAT", TokenType.REPEAT },
             { "ENDWHILE", TokenType.ENDWHILE },
             { "INPUT", TokenType.INPUT },
             { "FUNC", TokenType.FUNC },
             { "int", TokenType.INTARG },
             { "string", TokenType.STRINGARG },
             { ",", TokenType.COMMA },
-            { "BODY", TokenType.BODY},
+            { "BODY", TokenType.BODY },
             { "RETURN", TokenType.RETURN },
             { "ENDBODY", TokenType.ENDBODY },
             { "=", TokenType.ASSIGN },
@@ -28,15 +32,16 @@ namespace SimpleScript.Lexer
             { "<=", TokenType.SMALLER_OR_EQUAL },
             { ">=", TokenType.GREATER_OR_EQUAL },
             { "<", TokenType.SMALLER },
-            { ">", TokenType.GREATER},
+            { ">", TokenType.GREATER },
             { "+", TokenType.PLUS },
-            { "-", TokenType.MINUS},
-            { "*", TokenType.MULTIPLY},
+            { "-", TokenType.MINUS },
+            { "*", TokenType.MULTIPLY },
             { "/", TokenType.DIVIDE },
             { "**", TokenType.POWER },
             { "(", TokenType.OPEN_BRACKET },
             { ")", TokenType.CLOSED_BRACKET },
         };
+
         public List<Token> ConvertToTokens(string input, int lineNumber)
         {
             List<Token> result = [];
@@ -83,6 +88,7 @@ namespace SimpleScript.Lexer
                 i++;
                 return true;
             }
+
             return false;
         }
 
@@ -92,13 +98,28 @@ namespace SimpleScript.Lexer
             {
                 if (CheckIfTheFollowingStringFollows(input, i, keywordAndOperatorTokenType.Key))
                 {
+                    var positionAfterNewKeyword = i + keywordAndOperatorTokenType.Key.Length;
+                    if (IsKeywordPartOfVariableName(input, positionAfterNewKeyword))
+                    {
+                        continue;
+                    }
+
                     Token newToken = new(keywordAndOperatorTokenType.Value, lineNumber);
                     result.Add(newToken);
-                    i += keywordAndOperatorTokenType.Key.Length;
+                    i = positionAfterNewKeyword;
                     return true;
                 }
             }
+
             return false;
+        }
+
+        private bool IsKeywordPartOfVariableName(string input, int positionAfterNewKeyword)
+        {
+            if (positionAfterNewKeyword == input.Length - 1) return false;
+            var charAfterNewKeyword = input[positionAfterNewKeyword];
+            return !forbiddenVariableNameChars.Contains(charAfterNewKeyword.ToString()) ||
+                   !dividerChars.Contains(charAfterNewKeyword);
         }
 
         private bool CheckForString(string input, List<Token> result, ref int i, int lineNumber)
@@ -111,6 +132,7 @@ namespace SimpleScript.Lexer
                 i += stringTokenValue.Length + 2; //2 because there are two "" missing in the string value
                 return true;
             }
+
             return false;
         }
 
@@ -150,6 +172,7 @@ namespace SimpleScript.Lexer
                     return false;
                 }
             }
+
             return true;
         }
 
@@ -163,8 +186,10 @@ namespace SimpleScript.Lexer
                 {
                     return stringResult;
                 }
+
                 stringResult += currentChar;
             }
+
             throw new Exception($"String not closed in line {lineNumber}! Missing \". ");
         }
 
@@ -178,8 +203,10 @@ namespace SimpleScript.Lexer
                 {
                     return numberResult;
                 }
+
                 numberResult += currentChar;
             }
+
             return numberResult;
         }
 
@@ -193,8 +220,10 @@ namespace SimpleScript.Lexer
                 {
                     return variableResult;
                 }
+
                 variableResult += currentChar;
             }
+
             return variableResult;
         }
     }

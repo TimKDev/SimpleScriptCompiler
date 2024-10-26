@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimpleScript.Lexer\SimpleScript.Lexer.csproj" />
+    <ProjectReference Include="..\SimpleScript.Tests.Shared\SimpleScript.Tests.Shared.csproj" />
   </ItemGroup>
 
   <ItemGroup>

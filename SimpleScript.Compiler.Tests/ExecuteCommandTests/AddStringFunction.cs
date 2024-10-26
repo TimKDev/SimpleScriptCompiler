@@ -1,4 +1,5 @@
 using FluentAssertions;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
@@ -13,7 +14,7 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         public void ShouldCompileSuccessfully()
         {
             EntertainingErrors.Result result = _sut.Execute([_programPath]);
-            result.IsSuccess.Should().BeTrue();
+            result.AssertSuccess();
         }
 
         [Fact]
