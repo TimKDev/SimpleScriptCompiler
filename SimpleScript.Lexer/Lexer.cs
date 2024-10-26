@@ -44,187 +44,100 @@ namespace SimpleScript.Lexer
 
         public List<Token> ConvertToTokens(string input, int lineNumber)
         {
-            List<Token> result = [];
+            var untypedTokens = ComputeUntypedTokens(input);
+            var tokens = new List<Token>();
+            foreach (var untypedToken in untypedTokens)
+            {
+                if (keywordAndOperatorTokenTypes.TryGetValue(untypedToken.Value, out var operatorTokenType))
+                {
+                    tokens.Add(new Token(operatorTokenType, lineNumber));
+                    continue;
+                }
 
-            int i = 0;
+                if (untypedToken.Value.StartsWith("\"") && untypedToken.Value.EndsWith("\""))
+                {
+                    tokens.Add(new Token(TokenType.String, lineNumber,
+                        untypedToken.Value.Substring(1, untypedToken.Value.Length - 2)));
+                    continue;
+                }
+
+                if (untypedToken.Value.All(v => numberChars.Contains(v)))
+                {
+                    tokens.Add(new Token(TokenType.Number, lineNumber, untypedToken.Value));
+                    continue;
+                }
+
+                tokens.Add(new Token(TokenType.Variable, lineNumber, untypedToken.Value));
+            }
+
+            return tokens;
+        }
+
+        private List<UntypedToken> ComputeUntypedTokens(string input)
+        {
+            var untypedTokens = new List<UntypedToken>();
+            var i = 0;
+            var currentTokenStringValue = string.Empty;
+            var currentTokenInStringContext = false;
             while (i < input.Length)
             {
-                if (CheckForWhiteSpace(input, ref i, lineNumber))
+                if (input[i] == '"')
                 {
-                    continue;
+                    currentTokenInStringContext = !currentTokenInStringContext;
                 }
 
-                if (CheckForKeywordsAndOperators(input, result, ref i, lineNumber))
+                if (!currentTokenInStringContext)
                 {
-                    continue;
-                }
+                    var separatorString = forbiddenVariableNameChars
+                        .FirstOrDefault(separatorString => CheckForString(input, i, separatorString));
 
-                if (CheckForString(input, result, ref i, lineNumber))
-                {
-                    continue;
-                }
-
-                if (CheckForNumber(input, result, ref i, lineNumber))
-                {
-                    continue;
-                }
-
-                if (CreateNewVariableToken(input, result, ref i, lineNumber))
-                {
-                    continue;
-                }
-
-                throw new Exception("Unknown Lexer Error");
-            }
-
-            return result;
-        }
-
-        private bool CheckForWhiteSpace(string input, ref int i, int lineNumber)
-        {
-            char currentChar = input[i];
-            if (dividerChars.Contains(currentChar))
-            {
-                i++;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool CheckForKeywordsAndOperators(string input, List<Token> result, ref int i, int lineNumber)
-        {
-            foreach (KeyValuePair<string, TokenType> keywordAndOperatorTokenType in keywordAndOperatorTokenTypes)
-            {
-                if (CheckIfTheFollowingStringFollows(input, i, keywordAndOperatorTokenType.Key))
-                {
-                    var positionAfterNewKeyword = i + keywordAndOperatorTokenType.Key.Length;
-                    if (IsKeywordPartOfVariableName(input, positionAfterNewKeyword))
+                    if (separatorString is not null)
                     {
+                        if (currentTokenStringValue != string.Empty)
+                        {
+                            untypedTokens.Add(new UntypedToken(currentTokenStringValue));
+                        }
+
+                        currentTokenStringValue = string.Empty;
+                        untypedTokens.Add(new UntypedToken(separatorString));
+                        i += separatorString.Length;
                         continue;
                     }
 
-                    Token newToken = new(keywordAndOperatorTokenType.Value, lineNumber);
-                    result.Add(newToken);
-                    i = positionAfterNewKeyword;
-                    return true;
+                    if (dividerChars.Contains(input[i]))
+                    {
+                        if (currentTokenStringValue != string.Empty)
+                        {
+                            untypedTokens.Add(new UntypedToken(currentTokenStringValue));
+                        }
+
+                        currentTokenStringValue = string.Empty;
+                        i++;
+                        continue;
+                    }
                 }
+
+                currentTokenStringValue += input[i];
+                i++;
             }
 
-            return false;
-        }
-
-        private bool IsKeywordPartOfVariableName(string input, int positionAfterNewKeyword)
-        {
-            if (positionAfterNewKeyword == input.Length - 1) return false;
-            var charAfterNewKeyword = input[positionAfterNewKeyword];
-            return !forbiddenVariableNameChars.Contains(charAfterNewKeyword.ToString()) ||
-                   !dividerChars.Contains(charAfterNewKeyword);
-        }
-
-        private bool CheckForString(string input, List<Token> result, ref int i, int lineNumber)
-        {
-            char currentChar = input[i];
-            if (currentChar == '"')
+            if (currentTokenStringValue != string.Empty)
             {
-                string stringTokenValue = GetStringTokenValue(input, i + 1, lineNumber);
-                result.Add(new Token(TokenType.String, lineNumber, stringTokenValue));
-                i += stringTokenValue.Length + 2; //2 because there are two "" missing in the string value
-                return true;
+                untypedTokens.Add(new UntypedToken(currentTokenStringValue));
             }
 
-            return false;
+            return untypedTokens;
         }
 
-        private bool CheckForNumber(string input, List<Token> result, ref int i, int lineNumber)
+        private bool CheckForString(string input, int position, string stringToCheck)
         {
-            char currentChar = input[i];
-            if (numberChars.Contains(currentChar))
-            {
-                string numberTokenValue = GetNumberTokenValue(input, i, lineNumber);
-                result.Add(new Token(TokenType.Number, lineNumber, numberTokenValue));
-                i += numberTokenValue.Length;
-                return true;
-            }
-
-            return false;
-        }
-
-        private bool CreateNewVariableToken(string input, List<Token> result, ref int i, int lineNumber)
-        {
-            string variableValue = GetVariableTokenValue(input, i);
-            result.Add(new Token(TokenType.Variable, lineNumber, variableValue));
-            i += variableValue.Length;
-            return true;
-        }
-
-        private bool CheckIfTheFollowingStringFollows(string input, int startPositionOfString, string stringToFollow)
-        {
-            if (input.Length - startPositionOfString < stringToFollow.Length)
+            if (input.Length - position < stringToCheck.Length)
             {
                 return false;
             }
 
-            for (int j = 0; j < stringToFollow.Length; j++)
-            {
-                if (input[startPositionOfString + j] != stringToFollow[j])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        private string GetStringTokenValue(string input, int startPositionOfString, int lineNumber)
-        {
-            string stringResult = "";
-            for (int j = startPositionOfString; j < input.Length; j++)
-            {
-                char currentChar = input[j];
-                if (currentChar == '"')
-                {
-                    return stringResult;
-                }
-
-                stringResult += currentChar;
-            }
-
-            throw new Exception($"String not closed in line {lineNumber}! Missing \". ");
-        }
-
-        private string GetNumberTokenValue(string input, int startPositionOfNumber, int lineNumber)
-        {
-            string numberResult = "";
-            for (int j = startPositionOfNumber; j < input.Length; j++)
-            {
-                char currentChar = input[j];
-                if (!numberChars.Contains(currentChar))
-                {
-                    return numberResult;
-                }
-
-                numberResult += currentChar;
-            }
-
-            return numberResult;
-        }
-
-        private string GetVariableTokenValue(string input, int startPositionOfVariable)
-        {
-            string variableResult = string.Empty;
-            for (int j = startPositionOfVariable; j < input.Length; j++)
-            {
-                char currentChar = input[j];
-                if (dividerChars.Contains(currentChar) || forbiddenVariableNameChars.Contains(currentChar.ToString()))
-                {
-                    return variableResult;
-                }
-
-                variableResult += currentChar;
-            }
-
-            return variableResult;
+            var subStringToCheck = input.Substring(position, stringToCheck.Length);
+            return subStringToCheck == stringToCheck;
         }
     }
 }

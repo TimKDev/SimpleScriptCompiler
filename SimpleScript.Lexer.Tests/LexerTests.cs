@@ -9,6 +9,15 @@ namespace SimpleScript.Lexer.Tests
         private readonly Lexer _lexer = LexerFactory.Create();
 
         [Fact]
+        public void InStringsAlsoKeywordsAndWhitespaceIsAllowed()
+        {
+            var stringToTokenize = "LET name = \"  +-\t Hallo FUNC\"";
+            var result = _lexer.ConvertToTokens(stringToTokenize, 0);
+
+            result.Assert(TF.Let(), TF.Var("name"), TF.Assign(), TF.Str("  +-\t Hallo FUNC"));
+        }
+
+        [Fact]
         public void FunctionHeader()
         {
             var stringToTokenize = "FUNC addString(string string_1, string string_2)";
