@@ -101,6 +101,11 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
             return new Token(TokenType.IF, 1);
         }
 
+        public static Token Do()
+        {
+            return new Token(TokenType.DO, 1);
+        }
+
         public static Token EndIf()
         {
             return new Token(TokenType.ENDIF, 1);
@@ -109,6 +114,11 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         public static Token While()
         {
             return new Token(TokenType.WHILE, 1);
+        }
+
+        public static Token Repeat()
+        {
+            return new Token(TokenType.REPEAT, 1);
         }
 
         public static Token EndWhile()
@@ -121,7 +131,7 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
             return new Token(TokenType.INTARG, 1);
         }
 
-        public static Token String()
+        public static Token StringArg()
         {
             return new Token(TokenType.STRINGARG, 1);
         }
@@ -129,6 +139,46 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         public static Token Comma()
         {
             return new Token(TokenType.COMMA, 1);
+        }
+
+        public static Token True()
+        {
+            return new Token(TokenType.TRUE, 1);
+        }
+
+        public static Token False()
+        {
+            return new Token(TokenType.FALSE, 1);
+        }
+
+        public static Token Equal()
+        {
+            return new Token(TokenType.EQUAL, 1);
+        }
+
+        public static Token NotEqual()
+        {
+            return new Token(TokenType.NOTEQUAL, 1);
+        }
+
+        public static Token Greater()
+        {
+            return new Token(TokenType.GREATER, 1);
+        }
+
+        public static Token Smaller()
+        {
+            return new Token(TokenType.SMALLER, 1);
+        }
+
+        public static Token GreaterOrEqual()
+        {
+            return new Token(TokenType.GREATER_OR_EQUAL, 1);
+        }
+
+        public static Token SmallerOrEqual()
+        {
+            return new Token(TokenType.SMALLER_OR_EQUAL, 1);
         }
     }
 }

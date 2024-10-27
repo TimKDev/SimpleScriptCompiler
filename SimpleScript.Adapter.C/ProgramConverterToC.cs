@@ -16,6 +16,7 @@ namespace SimpleScript.Adapter.C
                 {{{FunctionDeclarationTemplateVariable}}}
                 int main() {{
                     {{{MainBodyTemplateVariable}}}
+                    free_list();
                     return 0;
                 }}
             ";

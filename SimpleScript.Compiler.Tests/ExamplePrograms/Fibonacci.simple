@@ -2,7 +2,7 @@
 INPUT numsInput
 LET nums = ToNumber(numsInput)
 
-IF nums < 0
+IF nums < 0 DO
 	PRINT "Number should be greater or equal to zero!"
 ENDIF
 

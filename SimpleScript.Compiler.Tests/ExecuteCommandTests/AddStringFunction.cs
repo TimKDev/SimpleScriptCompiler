@@ -19,17 +19,20 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         [Fact]
         public void ShouldCreateCorrectCCode()
         {
-            string expectedCCode = CompilerTestHelper.ConvertToCCode(@"
-            char *addTwoStrings(char *string_1, char *string_2)
-            {{
-                char *result = (char *)malloc((strlen(string_1) + strlen(string_2) + 1) * sizeof(char));
-                strcpy(result, string_1);
-                strcat(result, string_2);
-                add_to_list(result);
-                return result;
-            }}", @"
-            printf(addTwoStrings(""Hallo"", ""String Addition"")); 
-            ");
+            string expectedCCode = CompilerTestHelper.ConvertToCCode(
+            [
+                "printf(addStrings(\"Hallo \",  \"String Addition\"));",
+            ], [
+                "char * addStrings(char string_1[], char string_2[])",
+                "{",
+                "char *temp_1 = (char *)malloc((strlen(string_1) + strlen(string_2) + 1) * sizeof(char));",
+                "add_to_list(temp_1);",
+                "strcpy(temp_1, string_1);",
+                "strcat(temp_1, string_2);",
+                "char *result = temp_1;",
+                "return result;",
+                "}",
+            ]);
             _sut.Execute([_programPath]);
             string resultingCCode = File.ReadAllText("AddStringFunction.c");
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);

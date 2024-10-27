@@ -32,6 +32,10 @@
         RETURN,
         INTARG,
         STRINGARG,
-        COMMA
+        COMMA,
+        TRUE,
+        FALSE,
+        NOTEQUAL,
+        DO
     }
 }

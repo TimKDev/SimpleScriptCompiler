@@ -4,17 +4,19 @@ namespace SimpleScript.Lexer
 {
     public class Lexer : ILexer
     {
-        private readonly char[] dividerChars = [' ', '\n', '\t'];
-        private readonly char[] numberChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
+        private readonly char[] _dividerChars = [' ', '\n', '\t'];
+        private readonly char[] _numberChars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'];
 
-        private readonly string[] forbiddenVariableNameChars =
-            ["=", "==", "<=", ">=", "<", ">", "+", "-", "*", "/", "**", "(", ")", ","];
+        //Order matters in this array otherwise "==" could be translated to "=" "="!
+        private readonly string[] _forbiddenVariableNameChars =
+            ["==", "<=", ">=", "=", "<", ">", "+", "-", "*", "/", "**", "(", ")", ","];
 
         private readonly Dictionary<string, TokenType> keywordAndOperatorTokenTypes = new()
         {
             { "LET", TokenType.LET },
             { "PRINT", TokenType.PRINT },
             { "IF", TokenType.IF },
+            { "DO", TokenType.DO },
             { "ENDIF", TokenType.ENDIF },
             { "WHILE", TokenType.WHILE },
             { "REPEAT", TokenType.REPEAT },
@@ -27,8 +29,11 @@ namespace SimpleScript.Lexer
             { "BODY", TokenType.BODY },
             { "RETURN", TokenType.RETURN },
             { "ENDBODY", TokenType.ENDBODY },
+            { "TRUE", TokenType.TRUE },
+            { "FALSE", TokenType.FALSE },
             { "=", TokenType.ASSIGN },
             { "==", TokenType.EQUAL },
+            { "!=", TokenType.NOTEQUAL },
             { "<=", TokenType.SMALLER_OR_EQUAL },
             { ">=", TokenType.GREATER_OR_EQUAL },
             { "<", TokenType.SMALLER },
@@ -61,7 +66,7 @@ namespace SimpleScript.Lexer
                     continue;
                 }
 
-                if (untypedToken.Value.All(v => numberChars.Contains(v)))
+                if (untypedToken.Value.All(v => _numberChars.Contains(v)))
                 {
                     tokens.Add(new Token(TokenType.Number, lineNumber, untypedToken.Value));
                     continue;
@@ -88,7 +93,7 @@ namespace SimpleScript.Lexer
 
                 if (!currentTokenInStringContext)
                 {
-                    var separatorString = forbiddenVariableNameChars
+                    var separatorString = _forbiddenVariableNameChars
                         .FirstOrDefault(separatorString => CheckForString(input, i, separatorString));
 
                     if (separatorString is not null)
@@ -104,7 +109,7 @@ namespace SimpleScript.Lexer
                         continue;
                     }
 
-                    if (dividerChars.Contains(input[i]))
+                    if (_dividerChars.Contains(input[i]))
                     {
                         if (currentTokenStringValue != string.Empty)
                         {

@@ -62,21 +62,19 @@ namespace SimpleScript.Adapter.C
             {
                 ReturnType.Void => "void",
                 ReturnType.Int => "int",
-                ReturnType.String => "char[]",
+                ReturnType.String => "char *",
                 _ => throw new ArgumentOutOfRangeException(nameof(returnType), returnType, null)
             };
         }
 
         private static string ConvertArgumentsToC(FunctionArgumentNode argumentNode)
         {
-            var type = argumentNode.ArgumentType switch
+            return argumentNode.ArgumentType switch
             {
-                ArgumentType.Int => "int",
-                ArgumentType.String => "char[]",
+                ArgumentType.Int => $"int {argumentNode.ArgumentName}",
+                ArgumentType.String => $"char {argumentNode.ArgumentName}[]",
                 _ => throw new ArgumentOutOfRangeException()
             };
-
-            return $"{type} {argumentNode.ArgumentName}";
         }
     }
 }

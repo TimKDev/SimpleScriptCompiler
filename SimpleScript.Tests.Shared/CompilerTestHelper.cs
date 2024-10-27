@@ -15,6 +15,7 @@ namespace SimpleScript.Tests.Shared
                 {functionDeclaration}
                 int main() {{
                     {expectedBody}
+                    free_list();
                     return 0;
                 }}
             ";

@@ -38,7 +38,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
         [Fact]
         public void ParseTokens_ShouldAddOneStringArgumentDefinitions_GivenTokens()
         {
-            List<Token> programTokens = [TF.Func(), TF.Var("returnString"), TF.Open(), TF.String(), TF.Var("myString"), TF.Close(), TF.Body(), TF.Return(), TF.Var("myString"), TF.EndBody()];
+            List<Token> programTokens = [TF.Func(), TF.Var("returnString"), TF.Open(), TF.StringArg(), TF.Var("myString"), TF.Close(), TF.Body(), TF.Return(), TF.Var("myString"), TF.EndBody()];
 
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             programNode
