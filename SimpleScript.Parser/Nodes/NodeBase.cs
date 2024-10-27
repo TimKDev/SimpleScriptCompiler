@@ -3,7 +3,7 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes
 {
-    public abstract class NodeBase : IBaseNode
+    public abstract class NodeBase : INodeBase
     {
         public int StartLine { get; private set; }
         public int EndLine { get; private set; }

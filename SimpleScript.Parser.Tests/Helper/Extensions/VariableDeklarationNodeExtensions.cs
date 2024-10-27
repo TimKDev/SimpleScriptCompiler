@@ -5,12 +5,12 @@ namespace SimpleScript.Parser.Tests.Helper.Extensions
 {
     internal static class VariableDeklarationNodeExtensions
     {
-        public static void AssertWithInit(this VariableDeclarationNode variableDeclarationNode, string variableName)
+        public static void AssertVariableDeclarationWithInit(this VariableDeclarationNode variableDeclarationNode, string variableName)
         {
             variableDeclarationNode.VariableName.Should().Be(variableName);
         }
 
-        public static TFirstChildNode AssertWithInit<TFirstChildNode>(this VariableDeclarationNode variableDeclarationNode, string variableName)
+        public static TFirstChildNode AssertVariableDeclarationWithInit<TFirstChildNode>(this VariableDeclarationNode variableDeclarationNode, string variableName)
         {
             variableDeclarationNode.VariableName.Should().Be(variableName);
             variableDeclarationNode.InitialValue.Should().NotBeNull();

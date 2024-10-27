@@ -4,6 +4,7 @@
     {
         String,
         Number,
+        Boolean,
         Void
     }
 }

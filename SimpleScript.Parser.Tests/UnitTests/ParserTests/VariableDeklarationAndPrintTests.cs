@@ -28,8 +28,8 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             StringNode stringNode = NH.AssertAssignVariableNode<StringNode>(variableDeklarationNode);
             VariableNode variableToPrint = NH.AssertPrintNode<VariableNode>(printNode);
             variableDeklarationNode.VariableName.Should().Be("hello");
-            stringNode.Assert("Hello World");
-            variableToPrint.Assert("hello");
+            stringNode.AssertString("Hello World");
+            variableToPrint.AssertVariable("hello");
         }
 
         [Fact]

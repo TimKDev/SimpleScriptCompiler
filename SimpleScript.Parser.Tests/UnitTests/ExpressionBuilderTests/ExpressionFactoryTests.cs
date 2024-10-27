@@ -58,7 +58,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             FunctionInvocationNode functionInvocation = TestHelper.ConvertTo<FunctionInvocationNode>(result);
             NumberNode numberNode = functionInvocation.Assert<NumberNode>("doubleNumber");
-            numberNode.Assert(5);
+            numberNode.AssertNumber(5);
         }
 
         [Fact]
@@ -68,9 +68,9 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             FunctionInvocationNode functionInvocation = TestHelper.ConvertTo<FunctionInvocationNode>(result);
             AddNode addNode = functionInvocation.Assert<AddNode>("doubleNumber");
-            (NumberNode numberNode1, NumberNode numberNode2) = addNode.Assert<NumberNode, NumberNode>();
-            numberNode1.Assert(5);
-            numberNode2.Assert(6);
+            (NumberNode numberNode1, NumberNode numberNode2) = addNode.AssertAddition<NumberNode, NumberNode>();
+            numberNode1.AssertNumber(5);
+            numberNode2.AssertNumber(6);
         }
 
         [Fact]
@@ -89,11 +89,11 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(inputTokens));
             FunctionInvocationNode functionInvocation = TestHelper.ConvertTo<FunctionInvocationNode>(result);
             AddNode addNode = functionInvocation.Assert<AddNode>("doubleNumber");
-            (NumberNode numberNode, MultiplyNode multiplyNode) = addNode.Assert<NumberNode, MultiplyNode>();
-            numberNode.Assert(5);
-            (NumberNode numberNode1, NumberNode numberNode2) = multiplyNode.Assert<NumberNode, NumberNode>();
-            numberNode1.Assert(6);
-            numberNode2.Assert(7);
+            (NumberNode numberNode, MultiplyNode multiplyNode) = addNode.AssertAddition<NumberNode, MultiplyNode>();
+            numberNode.AssertNumber(5);
+            (NumberNode numberNode1, NumberNode numberNode2) = multiplyNode.AssertMultiplication<NumberNode, NumberNode>();
+            numberNode1.AssertNumber(6);
+            numberNode2.AssertNumber(7);
         }
     }
 }

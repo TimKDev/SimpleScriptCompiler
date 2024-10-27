@@ -18,15 +18,15 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             (MultiplyNode? multiplyNode1, MultiplyNode? multiplyNode2) = programNode
                 .AssertProgramNode<PrintNode>()
                 .Assert<AddNode>()
-                .Assert<MultiplyNode, MultiplyNode>();
+                .AssertAddition<MultiplyNode, MultiplyNode>();
 
-            (NumberNode addNodeNumber1, NumberNode addNodeNumber2) = multiplyNode1.Assert<NumberNode, NumberNode>();
-            addNodeNumber1.Assert(1);
-            addNodeNumber2.Assert(6);
+            (NumberNode addNodeNumber1, NumberNode addNodeNumber2) = multiplyNode1.AssertMultiplication<NumberNode, NumberNode>();
+            addNodeNumber1.AssertNumber(1);
+            addNodeNumber2.AssertNumber(6);
 
-            (NumberNode addNodeNumber3, NumberNode addNodeNumber4) = multiplyNode2.Assert<NumberNode, NumberNode>();
-            addNodeNumber3.Assert(2);
-            addNodeNumber4.Assert(7);
+            (NumberNode addNodeNumber3, NumberNode addNodeNumber4) = multiplyNode2.AssertMultiplication<NumberNode, NumberNode>();
+            addNodeNumber3.AssertNumber(2);
+            addNodeNumber4.AssertNumber(7);
         }
 
         [Fact]
@@ -37,12 +37,12 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             (AddNode? addNode, NumberNode? num2) = programNode
                 .AssertProgramNode<PrintNode>()
                 .Assert<MultiplyNode>()
-                .Assert<AddNode, NumberNode>();
+                .AssertMultiplication<AddNode, NumberNode>();
 
-            (NumberNode addNodeNumber1, NumberNode addNodeNumber2) = addNode.Assert<NumberNode, NumberNode>();
-            addNodeNumber1.Assert(1);
-            addNodeNumber2.Assert(6);
-            num2.Assert(2);
+            (NumberNode addNodeNumber1, NumberNode addNodeNumber2) = addNode.AssertAddition<NumberNode, NumberNode>();
+            addNodeNumber1.AssertNumber(1);
+            addNodeNumber2.AssertNumber(6);
+            num2.AssertNumber(2);
         }
 
         [Fact]
@@ -54,10 +54,10 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             (AddNode? addNode, NumberNode? numberNode) = programNode
                 .AssertProgramNode<PrintNode>()
                 .Assert<MultiplyNode>()
-                .Assert<AddNode, NumberNode>();
-            numberNode.Assert(3);
-            (FunctionInvocationNode functionInvokation, NumberNode numberNodeInsideBracket) = addNode.Assert<FunctionInvocationNode, NumberNode>();
-            numberNodeInsideBracket.Assert(5);
+                .AssertMultiplication<AddNode, NumberNode>();
+            numberNode.AssertNumber(3);
+            (FunctionInvocationNode functionInvokation, NumberNode numberNodeInsideBracket) = addNode.AssertAddition<FunctionInvocationNode, NumberNode>();
+            numberNodeInsideBracket.AssertNumber(5);
             functionInvokation.Assert("test");
         }
 
@@ -70,11 +70,11 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             (AddNode? addNode, NumberNode? numberNode) = programNode
                 .AssertProgramNode<PrintNode>()
                 .Assert<MultiplyNode>()
-                .Assert<AddNode, NumberNode>();
-            numberNode.Assert(5);
-            (NumberNode numberNodeInAdd1, NumberNode numberNodeInAdd2) = addNode.Assert<NumberNode, NumberNode>();
-            numberNodeInAdd1.Assert(1);
-            numberNodeInAdd2.Assert(1);
+                .AssertMultiplication<AddNode, NumberNode>();
+            numberNode.AssertNumber(5);
+            (NumberNode numberNodeInAdd1, NumberNode numberNodeInAdd2) = addNode.AssertAddition<NumberNode, NumberNode>();
+            numberNodeInAdd1.AssertNumber(1);
+            numberNodeInAdd2.AssertNumber(1);
         }
 
         [Fact]

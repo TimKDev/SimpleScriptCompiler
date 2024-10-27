@@ -5,7 +5,8 @@ namespace SimpleScript.Parser.Tests.Helper.Extensions
 {
     internal static class AddNodeExtensions
     {
-        public static (TFirstChildNode, TSecondChildNode) Assert<TFirstChildNode, TSecondChildNode>(this AddNode addNode)
+        public static (TFirstChildNode, TSecondChildNode) AssertAddition<TFirstChildNode, TSecondChildNode>(
+            this AddNode addNode)
         {
             addNode.FirstArgument.Should().NotBeNull();
             addNode.SecondArgument.Should().NotBeNull();

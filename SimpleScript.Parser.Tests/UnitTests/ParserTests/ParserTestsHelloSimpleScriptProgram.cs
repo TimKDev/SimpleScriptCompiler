@@ -44,7 +44,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             programNode
                 .AssertProgramNode<PrintNode>()
                 .Assert<StringNode>()
-                .Assert(HelloMessage);
+                .AssertString(HelloMessage);
         }
     }
 }

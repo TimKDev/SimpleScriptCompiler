@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes.Interfaces
 {
-    public interface IBaseNode
+    public interface INodeBase
     {
         int StartLine { get; }
         int EndLine { get; }

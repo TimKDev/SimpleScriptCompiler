@@ -5,7 +5,7 @@ namespace SimpleScript.Parser.Tests.Helper.Extensions
 {
     internal static class MultiplyNodeExtensions
     {
-        public static (TFirstChildNode, TSecondChildNode) Assert<TFirstChildNode, TSecondChildNode>(this MultiplyNode multiplyNode)
+        public static (TFirstChildNode, TSecondChildNode) AssertMultiplication<TFirstChildNode, TSecondChildNode>(this MultiplyNode multiplyNode)
         {
             multiplyNode.FirstArgument.Should().NotBeNull();
             multiplyNode.SecondArgument.Should().NotBeNull();

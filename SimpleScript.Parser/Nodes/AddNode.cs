@@ -3,12 +3,13 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class AddNode : NodeBase, IBinaryOperation<IAddable>, IPrintableNode, IAddable, IMultiplyable
+    public class AddNode : NodeBase, IBinaryOperation<IAddable>, IAddable, IMultiplyable
     {
         public IAddable FirstArgument { get; private set; }
         public IAddable SecondArgument { get; private set; }
 
-        private AddNode(IAddable firstArgument, IAddable secondArgument, int startLine, int endLine) : base(startLine, endLine)
+        private AddNode(IAddable firstArgument, IAddable secondArgument, int startLine, int endLine) : base(startLine,
+            endLine)
         {
             FirstArgument = firstArgument;
             SecondArgument = secondArgument;
@@ -28,13 +29,15 @@ namespace SimpleScript.Parser.Nodes
             return new AddNode(firstArgument, secondArgument, startLine, endLine);
         }
 
-        private static string? StaticTypesCompatible(IAddable firstArgument, IAddable secondArgument) => (firstArgument, secondArgument) switch
-        {
-            (NumberNode, StringNode) => GetStaticTypError(NumberNode.TypeName, StringNode.TypeName),
-            (StringNode, NumberNode) => GetStaticTypError(StringNode.TypeName, NumberNode.TypeName),
-            _ => null,
-        };
+        private static string? StaticTypesCompatible(IAddable firstArgument, IAddable secondArgument) =>
+            (firstArgument, secondArgument) switch
+            {
+                (NumberNode, StringNode) => GetStaticTypError(NumberNode.TypeName, StringNode.TypeName),
+                (StringNode, NumberNode) => GetStaticTypError(StringNode.TypeName, NumberNode.TypeName),
+                _ => null,
+            };
 
-        private static string GetStaticTypError(ValueTypes type1, ValueTypes type2) => $"Addition between types {type1} and {type2} is not allowed.";
+        private static string GetStaticTypError(ValueTypes type1, ValueTypes type2) =>
+            $"Addition between types {type1} and {type2} is not allowed.";
     }
 }

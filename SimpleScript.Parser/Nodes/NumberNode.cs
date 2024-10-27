@@ -2,7 +2,7 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class NumberNode : NodeBase, IExpression, IPrintableNode, IAddable, IMultiplyable
+    public class NumberNode : NodeBase, IAddable, IMultiplyable, IEqualizable, ISizeComparable
     {
         public static ValueTypes TypeName = ValueTypes.Number;
         public int Value { get; private set; }
