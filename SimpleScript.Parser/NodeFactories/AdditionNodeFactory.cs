@@ -8,8 +8,8 @@ namespace SimpleScript.Parser.NodeFactories
 {
     public class AdditionNodeFactory : IAdditionNodeFactory
     {
-        public AdditionNodeFactory() { }
-        public Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand, IExpressionFactory expressionFactory)
+        public Result<AddNode> Create(List<Token> firstOperand, List<Token> secondOperand,
+            IExpressionFactory expressionFactory)
         {
             List<Error> errors = [];
             Result<IAddable> firstValueResult = expressionFactory.Create(firstOperand).MapIfSuccess(ConvertToAddable);
@@ -21,6 +21,8 @@ namespace SimpleScript.Parser.NodeFactories
             return errors.Any() ? errors : AddNode.Create(firstValueResult.Value, secondValueResult.Value);
         }
 
-        private static Result<IAddable> ConvertToAddable(IExpression expression) => expression is IAddable addable ? Result.ToResult(addable) : expression.CreateError("Expression is not supported for addition.");
+        private static Result<IAddable> ConvertToAddable(IExpression expression) => expression is IAddable addable
+            ? Result.ToResult(addable)
+            : expression.CreateError("Expression is not supported for addition.");
     }
 }

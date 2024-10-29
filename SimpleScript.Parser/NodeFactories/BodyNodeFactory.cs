@@ -16,7 +16,10 @@ namespace SimpleScript.Parser.NodeFactories
         private readonly IFunctionNodeFactory _functionNodeFactory;
         private readonly IReturnNodeFactory _returnNodeFactory;
 
-        public BodyNodeFactory(IStatementCombiner statementCombiner, IVariableDeclarartionNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory, IInputNodeFactory inputNodeFactory, IFunctionNodeFactory functionNodeFactory, IReturnNodeFactory returnNodeFactory)
+        public BodyNodeFactory(IStatementCombiner statementCombiner,
+            IVariableDeclarartionNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory,
+            IInputNodeFactory inputNodeFactory, IFunctionNodeFactory functionNodeFactory,
+            IReturnNodeFactory returnNodeFactory)
         {
             _statementCombiner = statementCombiner;
             _variableAssignmentFactory = variableAssignmentFactory;
@@ -32,6 +35,7 @@ namespace SimpleScript.Parser.NodeFactories
             {
                 throw new ArgumentException("Empty Body");
             }
+
             List<Error> errors = [];
             Result<List<Statement>> statementResult = _statementCombiner.CreateStatements(inputTokens);
 
