@@ -43,7 +43,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<EqulityNode>("isCool")
+            .AssertVariableDeclarationWithInit<EqulityNode>("areNumbersEqual")
             .AssertEquality<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");

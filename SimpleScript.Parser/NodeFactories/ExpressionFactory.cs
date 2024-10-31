@@ -11,14 +11,29 @@ namespace SimpleScript.Parser.NodeFactories
         private readonly IAdditionNodeFactory _additionNodeFactory;
         private readonly IMultiplicationNodeFactory _multiplicationNodeFactory;
         private readonly IFunctionInvocationNodeFactory _functionInvocationNodeFactory;
+        private readonly IEqualityNodeFactory _equalityNodeFactory;
+        private readonly IInEqualityNodeFactory _inEqualityNodeFactory;
+        private readonly IGreaterNodeFactory _greaterNodeFactory;
+        private readonly IGreaterOrEqualNodeFactory _greaterOrEqualNodeFactory;
+        private readonly ISmallerNodeFactory _smallerNodeFactory;
+        private readonly ISmallerOrEqualNodeFactory _smallerOrEqualNodeFactory;
 
         public ExpressionFactory(IAdditionNodeFactory additionNodeFactory,
             IMultiplicationNodeFactory multiplicationNodeFactory,
-            IFunctionInvocationNodeFactory functionInvocationNodeFactory)
+            IFunctionInvocationNodeFactory functionInvocationNodeFactory, IEqualityNodeFactory equalityNodeFactory,
+            IInEqualityNodeFactory inEqualityNodeFactory, IGreaterNodeFactory greaterNodeFactory,
+            IGreaterOrEqualNodeFactory greaterOrEqualNodeFactory, ISmallerNodeFactory smallerNodeFactory,
+            ISmallerOrEqualNodeFactory smallerOrEqualNodeFactory)
         {
             _additionNodeFactory = additionNodeFactory;
             _multiplicationNodeFactory = multiplicationNodeFactory;
             _functionInvocationNodeFactory = functionInvocationNodeFactory;
+            _equalityNodeFactory = equalityNodeFactory;
+            _inEqualityNodeFactory = inEqualityNodeFactory;
+            _greaterNodeFactory = greaterNodeFactory;
+            _greaterOrEqualNodeFactory = greaterOrEqualNodeFactory;
+            _smallerNodeFactory = smallerNodeFactory;
+            _smallerOrEqualNodeFactory = smallerOrEqualNodeFactory;
         }
 
         public Result<IExpression> Create(List<Token> inputTokens)
@@ -66,7 +81,19 @@ namespace SimpleScript.Parser.NodeFactories
                 TokenType.PLUS => _additionNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>(),
                 TokenType.MULTIPLY => _multiplicationNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                _ => Error.Create("Unknown Error happend.")
+                TokenType.EQUAL => _equalityNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
+                TokenType.NOTEQUAL => _inEqualityNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
+                TokenType.GREATER => _greaterNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
+                TokenType.GREATER_OR_EQUAL => _greaterOrEqualNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
+                TokenType.SMALLER => _smallerNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
+                TokenType.SMALLER_OR_EQUAL => _smallerOrEqualNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
+                _ => Error.Create("Unknown operation type.")
             };
         }
 

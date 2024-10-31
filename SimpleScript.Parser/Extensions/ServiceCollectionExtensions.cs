@@ -13,6 +13,12 @@ namespace SimpleScript.Parser.Extensions
             services.AddTransient<IStatementCombiner, StatementCombiner>();
             services.AddTransient<IAdditionNodeFactory, AdditionNodeFactory>();
             services.AddTransient<IMultiplicationNodeFactory, MultiplicationNodeFactory>();
+            services.AddTransient<IEqualityNodeFactory, EqualityNodeFactory>();
+            services.AddTransient<IInEqualityNodeFactory, InEqualityNodeFactory>();
+            services.AddTransient<IGreaterNodeFactory, GreaterNodeFactory>();
+            services.AddTransient<IGreaterOrEqualNodeFactory, GreaterOrEqualNodeFactory>();
+            services.AddTransient<ISmallerNodeFactory, SmallerNodeFactory>();
+            services.AddTransient<ISmallerOrEqualNodeFactory, SmallerOrEqualNodeFactory>();
             services.AddTransient<IExpressionFactory, ExpressionFactory>();
             services.AddTransient<IPrintNodeFactory, PrintNodeFactory>();
             services.AddTransient<IVariableDeclarartionNodeFactory, VariableDeclarationNodeFactory>();
