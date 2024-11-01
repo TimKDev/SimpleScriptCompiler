@@ -5,7 +5,7 @@ namespace SimpleScript.Parser.Tests.Helper.Extensions
 {
     internal static class PrintNodeExtensions
     {
-        public static TPrintExpression Assert<TPrintExpression>(this PrintNode printNode)
+        public static TPrintExpression AssertPrint<TPrintExpression>(this PrintNode printNode)
         {
             printNode.NodeToPrint.Should().NotBeNull();
             TPrintExpression firstChild = TH.ConvertTo<TPrintExpression>(printNode.NodeToPrint);

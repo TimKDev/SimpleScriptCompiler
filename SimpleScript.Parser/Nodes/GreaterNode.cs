@@ -3,7 +3,7 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes;
 
-public class GreaterNode : NodeBase, IBinaryOperation<ISizeComparable>, IExpression
+public class GreaterNode : NodeBase, IBinaryOperation<ISizeComparable>, IEqualizable
 {
     public ISizeComparable FirstArgument { get; }
     public ISizeComparable SecondArgument { get; }

@@ -3,7 +3,7 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes;
 
-public class InEqulityNode : NodeBase, IBinaryOperation<IEqualizable>
+public class InEqulityNode : NodeBase, IBinaryOperation<IEqualizable>, IEqualizable
 {
     public IEqualizable FirstArgument { get; private set; }
     public IEqualizable SecondArgument { get; private set; }

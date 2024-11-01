@@ -6,41 +6,63 @@ namespace SimpleScript.Parser
 {
     public class StatementCombiner : IStatementCombiner
     {
-        private TokenType[] TokensTypesToSplit = [TokenType.LET, TokenType.PRINT, TokenType.INPUT, TokenType.FUNC, TokenType.RETURN];
+        private TokenType[] TokensTypesToSplit =
+        [
+            TokenType.LET, TokenType.PRINT, TokenType.INPUT, TokenType.FUNC, TokenType.RETURN, TokenType.IF,
+            TokenType.WHILE
+        ];
+
+        private TokenType[] TokensThatDefineAStatementBlock = [TokenType.IF, TokenType.WHILE, TokenType.FUNC];
+
         public Result<List<Statement>> CreateStatements(List<Token> tokens)
         {
             List<Statement> result = [];
             Statement? statement = null;
-            bool isCurrentlyInFunction = false;
+            TokenType? tokenTypeToTerminateCurrentStatement = null;
+            bool strictlyAppendToCurrentStatement = false;
             foreach (Token token in tokens)
             {
-                if (token.TokenType == TokenType.ENDBODY)
+                if (token.TokenType == tokenTypeToTerminateCurrentStatement)
                 {
-                    isCurrentlyInFunction = false;
+                    strictlyAppendToCurrentStatement = false;
                 }
-                if (isCurrentlyInFunction && statement != null)
+
+                if (strictlyAppendToCurrentStatement && statement != null)
                 {
                     statement.Tokens.Add(token);
                     continue;
                 }
+
                 if (TokensTypesToSplit.Contains(token.TokenType))
                 {
                     if (statement != null)
                     {
                         result.Add(statement);
                     }
+
                     statement = new();
-                    if (token.TokenType == TokenType.FUNC)
+                    if (TokensThatDefineAStatementBlock.Contains(token.TokenType))
                     {
-                        isCurrentlyInFunction = true;
+                        strictlyAppendToCurrentStatement = true;
+                        tokenTypeToTerminateCurrentStatement = token.TokenType switch
+                        {
+                            TokenType.FUNC => TokenType.ENDBODY,
+                            TokenType.IF => TokenType.ENDIF,
+                            TokenType.WHILE => TokenType.ENDWHILE,
+                            _ => throw new Exception(
+                                $"No statement end token defined for token type: {token.TokenType}"),
+                        };
                     }
                 }
+
                 if (statement == null)
                 {
                     return tokens[0].CreateError("Missing Keyword at Statement start.");
                 }
+
                 statement.Tokens.Add(token);
             }
+
             if (statement != null)
             {
                 result.Add(statement);

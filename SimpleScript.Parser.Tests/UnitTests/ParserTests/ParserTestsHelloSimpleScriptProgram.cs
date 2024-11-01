@@ -34,7 +34,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<StringNode>();
+                .AssertPrint<StringNode>();
         }
 
         [Fact]
@@ -43,7 +43,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(ProgramTokens));
             programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<StringNode>()
+                .AssertPrint<StringNode>()
                 .AssertString(HelloMessage);
         }
     }

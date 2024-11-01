@@ -18,7 +18,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             (VariableDeclarationNode firstDeklaration, VariableDeclarationNode secondDeklaration, PrintNode printNode) = programNode.Assert<VariableDeclarationNode, VariableDeclarationNode, PrintNode>();
             firstDeklaration.AssertVariableDeclarationWithInit<NumberNode>("num1").AssertNumber(1);
             secondDeklaration.AssertVariableDeclarationWithInit<NumberNode>("num2").AssertNumber(2);
-            (VariableNode var1, VariableNode var2) = printNode.Assert<AddNode>().AssertAddition<VariableNode, VariableNode>();
+            (VariableNode var1, VariableNode var2) = printNode.AssertPrint<AddNode>().AssertAddition<VariableNode, VariableNode>();
             var1.AssertVariable("num1");
             var2.AssertVariable("num2");
         }

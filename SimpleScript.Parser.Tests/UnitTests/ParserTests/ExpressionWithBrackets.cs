@@ -17,7 +17,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             (MultiplyNode? multiplyNode1, MultiplyNode? multiplyNode2) = programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<AddNode>()
+                .AssertPrint<AddNode>()
                 .AssertAddition<MultiplyNode, MultiplyNode>();
 
             (NumberNode addNodeNumber1, NumberNode addNodeNumber2) = multiplyNode1.AssertMultiplication<NumberNode, NumberNode>();
@@ -36,7 +36,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             (AddNode? addNode, NumberNode? num2) = programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<MultiplyNode>()
+                .AssertPrint<MultiplyNode>()
                 .AssertMultiplication<AddNode, NumberNode>();
 
             (NumberNode addNodeNumber1, NumberNode addNodeNumber2) = addNode.AssertAddition<NumberNode, NumberNode>();
@@ -53,7 +53,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             (AddNode? addNode, NumberNode? numberNode) = programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<MultiplyNode>()
+                .AssertPrint<MultiplyNode>()
                 .AssertMultiplication<AddNode, NumberNode>();
             numberNode.AssertNumber(3);
             (FunctionInvocationNode functionInvokation, NumberNode numberNodeInsideBracket) = addNode.AssertAddition<FunctionInvocationNode, NumberNode>();
@@ -69,7 +69,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             (AddNode? addNode, NumberNode? numberNode) = programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<MultiplyNode>()
+                .AssertPrint<MultiplyNode>()
                 .AssertMultiplication<AddNode, NumberNode>();
             numberNode.AssertNumber(5);
             (NumberNode numberNodeInAdd1, NumberNode numberNodeInAdd2) = addNode.AssertAddition<NumberNode, NumberNode>();

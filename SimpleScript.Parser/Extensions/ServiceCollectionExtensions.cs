@@ -27,6 +27,8 @@ namespace SimpleScript.Parser.Extensions
             services.AddTransient<IBodyNodeFactory, BodyNodeFactory>();
             services.AddTransient<IReturnNodeFactory, ReturnNodeFactory>();
             services.AddTransient<IFunctionInvocationNodeFactory, FunctionInvocationNodeFactory>();
+            services.AddTransient<IIfNodeFactory, IfNodeFactory>();
+            services.AddTransient<IWhileNodeFactory, WhileNodeFactory>();
 
             return services;
         }

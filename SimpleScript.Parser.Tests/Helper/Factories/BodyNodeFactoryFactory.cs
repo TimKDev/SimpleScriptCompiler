@@ -6,6 +6,8 @@ public static class BodyNodeFactoryFactory
 {
     public static IBodyNodeFactory Create()
     {
-        return new BodyNodeFactory(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(), PrintNodeFactoryFactory.Create(), InputNodeFactoryFactory.Create(), FunctionNodeFactoryFactory.Create(), ReturnNodeFactoryFactory.Create());
+        return new BodyNodeFactory(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(),
+            PrintNodeFactoryFactory.Create(), InputNodeFactoryFactory.Create(), FunctionNodeFactoryFactory.Create(),
+            ReturnNodeFactoryFactory.Create(), IfNodeFactoryFactory.Create(), WhileNodeFactoryFactory.Create());
     }
 }

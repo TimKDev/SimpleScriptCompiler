@@ -18,7 +18,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             MultiplyNode multiplyNode = programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<MultiplyNode>();
+                .AssertPrint<MultiplyNode>();
 
             (NumberNode? num1, NumberNode? num2) = NH.AssertMultiplyNode<NumberNode, NumberNode>(multiplyNode);
             num1.Value.Should().Be(1);
@@ -32,7 +32,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
             AddNode addNode = programNode
                 .AssertProgramNode<PrintNode>()
-                .Assert<AddNode>();
+                .AssertPrint<AddNode>();
 
             (NumberNode? num1, MultiplyNode? mulNode) = NH.AssertAddNode<NumberNode, MultiplyNode>(addNode);
             num1.Value.Should().Be(1);

@@ -2,10 +2,11 @@
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class VariableNode : NodeBase, IExpression, IMultiplyable, IPrintableNode, IAddable
+    public class VariableNode : NodeBase, IMultiplyable, IAddable, ISizeComparable
     {
         public string Name { get; private set; }
         public ValueTypes Type { get; init; }
+
         public VariableNode(string name, int startLine, int endLine) : base(startLine, endLine)
         {
             Name = name;

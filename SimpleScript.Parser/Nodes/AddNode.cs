@@ -3,7 +3,7 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes
 {
-    public class AddNode : NodeBase, IBinaryOperation<IAddable>, IAddable, IMultiplyable
+    public class AddNode : NodeBase, IBinaryOperation<IAddable>, IAddable, IMultiplyable, ISizeComparable
     {
         public IAddable FirstArgument { get; private set; }
         public IAddable SecondArgument { get; private set; }

@@ -55,7 +55,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ParserTests
             programNode
                 .AssertProgramNode<FunctionNode>()
                 .AssertFunctionNode("add")
-                .AssertBodyNode<VariableDeclarationNode, ReturnNode>();
+                .AssertBody<VariableDeclarationNode, ReturnNode>();
         }
     }
 }

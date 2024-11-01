@@ -167,7 +167,7 @@ namespace SimpleScript.Parser.NodeFactories
                 TokenType.Variable => new VariableNode(operand.Value!, operand.Line, operand.Line),
                 TokenType.TRUE => new BooleanNode(true, operand.Line, operand.Line),
                 TokenType.FALSE => new BooleanNode(false, operand.Line, operand.Line),
-                _ => Error.Create($"Token type {operand.TokenType} is not supported for addition.")
+                _ => Error.Create($"Token type {operand.TokenType} is not supported as a expression.")
             };
         }
     }

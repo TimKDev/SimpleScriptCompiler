@@ -64,7 +64,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<InEqulityNode>("isCool")
+            .AssertVariableDeclarationWithInit<InEqulityNode>("areNumbersEqual")
             .AssertInEquality<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -85,7 +85,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<SmallerNode>("isCool")
+            .AssertVariableDeclarationWithInit<SmallerNode>("areNumbersEqual")
             .AssertSmaller<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -106,7 +106,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<GreaterNode>("isCool")
+            .AssertVariableDeclarationWithInit<GreaterNode>("areNumbersEqual")
             .AssertGreater<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -128,7 +128,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<GreaterOrEqualNode>("isCool")
+            .AssertVariableDeclarationWithInit<GreaterOrEqualNode>("areNumbersEqual")
             .AssertGreaterOrEqual<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -150,7 +150,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<SmallerOrEqualNode>("isCool")
+            .AssertVariableDeclarationWithInit<SmallerOrEqualNode>("areNumbersEqual")
             .AssertSmallerOrEqual<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -181,12 +181,12 @@ public class BooleanExpressions
     {
         //LET areNotStringsEqual = name != "Caro"
         List<Token> programTokens =
-            [TF.Let(), TF.Var("areNotStringEqual"), TF.Assign(), TF.Var("name"), TF.Equal(), TF.Str("Caro")];
+            [TF.Let(), TF.Var("areNotStringEqual"), TF.Assign(), TF.Var("name"), TF.NotEqual(), TF.Str("Caro")];
         ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
 
         (VariableNode variableNode, StringNode stringNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<InEqulityNode>("areStringEqual")
+            .AssertVariableDeclarationWithInit<InEqulityNode>("areNotStringEqual")
             .AssertInEquality<VariableNode, StringNode>();
 
         variableNode.AssertVariable("name");

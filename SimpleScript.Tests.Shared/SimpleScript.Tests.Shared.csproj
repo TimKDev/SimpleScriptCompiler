@@ -15,4 +15,10 @@
     <ProjectReference Include="..\SimpleScript.Lexer\SimpleScript.Lexer.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="xunit.abstractions">
+      <HintPath>..\..\..\..\.nuget\packages\xunit.abstractions\2.0.3\lib\netstandard2.0\xunit.abstractions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
