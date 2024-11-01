@@ -3,19 +3,19 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Parser.Nodes;
 
-public class EqulityNode : NodeBase, IBinaryOperation<IEqualizable>, IEqualizable
+public class EqualityNode : NodeBase, IBinaryOperation<IEqualizable>, IEqualizable
 {
     public IEqualizable FirstArgument { get; private set; }
     public IEqualizable SecondArgument { get; private set; }
 
-    private EqulityNode(IEqualizable firstArgument, IEqualizable secondArgument, int startLine, int endLine) : base(
+    private EqualityNode(IEqualizable firstArgument, IEqualizable secondArgument, int startLine, int endLine) : base(
         startLine, endLine)
     {
         FirstArgument = firstArgument;
         SecondArgument = secondArgument;
     }
 
-    public static Result<EqulityNode> Create(IEqualizable firstArgument, IEqualizable secondArgument)
+    public static Result<EqualityNode> Create(IEqualizable firstArgument, IEqualizable secondArgument)
     {
         int startLine = firstArgument.StartLine;
         int endLine = secondArgument.EndLine;
@@ -25,7 +25,7 @@ public class EqulityNode : NodeBase, IBinaryOperation<IEqualizable>, IEqualizabl
             return CreateError(staticTypeCheckingErrorMessage, startLine, endLine);
         }
 
-        return new EqulityNode(firstArgument, secondArgument, startLine, endLine);
+        return new EqualityNode(firstArgument, secondArgument, startLine, endLine);
     }
 
     private static string? StaticTypesCompatible(IEqualizable firstArgument, IEqualizable secondArgument) =>

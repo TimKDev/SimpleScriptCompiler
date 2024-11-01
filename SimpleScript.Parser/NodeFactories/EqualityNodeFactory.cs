@@ -3,8 +3,8 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Parser.NodeFactories;
 
-public class EqualityNodeFactory : BinaryNodeFactory<EqulityNode, IEqualizable>, IEqualityNodeFactory
+public class EqualityNodeFactory : BinaryNodeFactory<EqualityNode, IEqualizable>, IEqualityNodeFactory
 {
-    protected override Result<EqulityNode> Factory(IEqualizable firstOperand, IEqualizable secondOperant) =>
-        EqulityNode.Create(firstOperand, secondOperant);
+    protected override Result<EqualityNode> Factory(IEqualizable firstOperand, IEqualizable secondOperant) =>
+        EqualityNode.Create(firstOperand, secondOperant);
 }

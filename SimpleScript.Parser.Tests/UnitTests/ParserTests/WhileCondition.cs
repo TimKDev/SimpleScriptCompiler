@@ -39,7 +39,7 @@ public class WhileCondition(ITestOutputHelper testOutputHelper)
         ];
         ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));
         programNode.AssertProgramNode<WhileNode>()
-            .AssertWhile<EqulityNode>(equlityNode =>
+            .AssertWhile<EqualityNode>(equlityNode =>
             {
                 var (variableNode, stringNode) = equlityNode.AssertEquality<VariableNode, StringNode>();
                 variableNode.AssertVariable("name");

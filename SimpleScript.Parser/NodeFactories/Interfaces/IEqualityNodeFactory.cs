@@ -5,4 +5,4 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Parser.NodeFactories;
 
-public interface IEqualityNodeFactory : IBinaryNodeFactory<EqulityNode>;
+public interface IEqualityNodeFactory : IBinaryNodeFactory<EqualityNode>;

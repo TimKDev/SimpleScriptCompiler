@@ -43,7 +43,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<EqulityNode>("areNumbersEqual")
+            .AssertVariableDeclarationWithInit<EqualityNode>("areNumbersEqual")
             .AssertEquality<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -64,7 +64,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, MultiplyNode multiplyNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<InEqulityNode>("areNumbersEqual")
+            .AssertVariableDeclarationWithInit<InEqualityNode>("areNumbersEqual")
             .AssertInEquality<VariableNode, MultiplyNode>();
 
         variableNode.AssertVariable("x");
@@ -169,7 +169,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, StringNode stringNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<EqulityNode>("areStringEqual")
+            .AssertVariableDeclarationWithInit<EqualityNode>("areStringEqual")
             .AssertEquality<VariableNode, StringNode>();
 
         variableNode.AssertVariable("name");
@@ -186,7 +186,7 @@ public class BooleanExpressions
 
         (VariableNode variableNode, StringNode stringNode) = programNode
             .AssertProgramNode<VariableDeclarationNode>()
-            .AssertVariableDeclarationWithInit<InEqulityNode>("areNotStringEqual")
+            .AssertVariableDeclarationWithInit<InEqualityNode>("areNotStringEqual")
             .AssertInEquality<VariableNode, StringNode>();
 
         variableNode.AssertVariable("name");

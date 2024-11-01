@@ -5,7 +5,8 @@ namespace SimpleScript.Adapter.C.Tests.Helper.Factories
 {
     internal static class FunctionArgumentFactory
     {
-        public static FunctionArgumentNode Create(ArgumentType argumentType, string argumentName, int startLine, int endLine)
+        public static FunctionArgumentNode Create(ArgumentType argumentType, string argumentName, int startLine,
+            int endLine)
         {
             return new FunctionArgumentNode(argumentType, argumentName, startLine, endLine);
         }

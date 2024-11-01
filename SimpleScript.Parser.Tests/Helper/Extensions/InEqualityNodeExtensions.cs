@@ -6,7 +6,7 @@ namespace SimpleScript.Parser.Tests.Helper.Extensions;
 internal static class InEqualityNodeExtensions
 {
     public static (TFirstChildNode, TSecondChildNode) AssertInEquality<TFirstChildNode, TSecondChildNode>(
-        this InEqulityNode equalityNode)
+        this InEqualityNode equalityNode)
     {
         equalityNode.FirstArgument.Should().NotBeNull();
         equalityNode.SecondArgument.Should().NotBeNull();

@@ -22,7 +22,8 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             List<Token> secondArg = [TF.Num(2)];
             IExpression result = ErrorHelper.AssertResultSuccess(_sut.Create(firstArg, secondArg, _expressionFactory));
             MultiplyNode multiplyNode = TestHelper.ConvertTo<MultiplyNode>(result);
-            (NumberNode firstChild, NumberNode secondChild) = NH.AssertMultiplyNode<NumberNode, NumberNode>(multiplyNode);
+            (NumberNode firstChild, NumberNode secondChild) =
+                NH.AssertMultiplyNode<NumberNode, NumberNode>(multiplyNode);
             firstChild.Value.Should().Be(43);
             secondChild.Value.Should().Be(2);
         }
@@ -35,7 +36,7 @@ namespace SimpleScript.Parser.Tests.UnitTests.ExpressionBuilderTests
             Result<MultiplyNode> result = _sut.Create(firstArg, secondArg, _expressionFactory);
             result.IsSuccess.Should().BeFalse();
             result.Errors.Count().Should().Be(1);
-            result.Errors[0].Message.Should().Be("Error Line 1: Expression is not supported for multiplication.");
+            result.Errors[0].Message.Should().Be("Error Line 1: Expression is not supported for IMultiplyable.");
         }
     }
 }

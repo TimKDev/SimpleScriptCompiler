@@ -6,7 +6,7 @@ namespace SimpleScript.Parser.Tests.Helper.Extensions;
 internal static class EqualityNodeExtensions
 {
     public static (TFirstChildNode, TSecondChildNode) AssertEquality<TFirstChildNode, TSecondChildNode>(
-        this EqulityNode equalityNode)
+        this EqualityNode equalityNode)
     {
         equalityNode.FirstArgument.Should().NotBeNull();
         equalityNode.SecondArgument.Should().NotBeNull();

@@ -7,7 +7,8 @@ namespace SimpleScript.Adapter.C
 {
     public class ConvertBodyNodeToC
     {
-        public static Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> ConvertToStatements(BodyNode nodeWithBody, Scope? bodyScope = null)
+        public static Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> ConvertToStatements(
+            BodyNode nodeWithBody, Scope? bodyScope = null)
         {
             List<string> cMainScopeStatements = [];
             List<string> cFunctionDeclarations = [];
@@ -21,10 +22,13 @@ namespace SimpleScript.Adapter.C
                 Result<string[]> createStatementResult = directProgramChild switch
                 {
                     PrintNode printNode => ConvertPrintNodeToC.Convert(printNode, mainScope),
-                    VariableDeclarationNode variableDeclarationNode => ConvertVariableDeklarationToC.Convert(variableDeclarationNode, mainScope),
+                    VariableDeclarationNode variableDeclarationNode => ConvertVariableDeklarationToC.Convert(
+                        variableDeclarationNode, mainScope),
                     InputNode inputNode => ConvertInputNodeToC.Convert(inputNode, mainScope),
                     FunctionNode functionNode => ConvertFunctionNodeToC.Convert(functionNode, mainScope),
                     ReturnNode returnNode => ConvertReturnNodeToC.Convert(returnNode, mainScope),
+                    IfNode ifNode => ConvertIfConditionToC.Convert(ifNode, mainScope),
+                    WhileNode whileNode => ConvertWhileLoopToC.Convert(whileNode, mainScope),
                     _ => throw new NotImplementedException()
                 };
 
@@ -48,6 +52,3 @@ namespace SimpleScript.Adapter.C
         }
     }
 }
-
-
-
