@@ -24,12 +24,12 @@ public class WhileNodeFactory : IWhileNodeFactory
 
         int startLine = firstToken.Line;
         List<Token> conditionPart =
-            inputTokens.TakeWhile(token => token.TokenType != TokenType.DO).ToList();
-        List<Token> whileBody = inputTokens.SkipWhile(token => token.TokenType != TokenType.DO).ToList();
+            inputTokens.TakeWhile(token => token.TokenType != TokenType.Repeat).ToList();
+        List<Token> whileBody = inputTokens.SkipWhile(token => token.TokenType != TokenType.Repeat).ToList();
 
         if (conditionPart is not
             [
-                { TokenType: TokenType.WHILE }, ..
+                { TokenType: TokenType.While }, ..
             ])
         {
             return Token.CreateError("Invalid while condition definition.", startLine, conditionPart.Last().Line);
@@ -40,7 +40,7 @@ public class WhileNodeFactory : IWhileNodeFactory
             return firstToken.CreateError("Missing body declaration for while condition.");
         }
 
-        if (whileBody is not [{ TokenType: TokenType.DO }, .., { TokenType: TokenType.ENDWHILE }])
+        if (whileBody is not [{ TokenType: TokenType.Repeat }, .., { TokenType: TokenType.EndWhile }])
         {
             return Token.CreateError("Invalid body declaration.", whileBody.First().Line,
                 whileBody.Last().Line);

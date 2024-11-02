@@ -5,7 +5,7 @@ using Xunit.Abstractions;
 
 namespace SimpleScript.Adapter.C.Tests.ConverterTests;
 
-public class IfConditionShouldBeConvertedToCCode(ITestOutputHelper testOutputHelper)
+public class IfCondition(ITestOutputHelper testOutputHelper)
 {
     private readonly ProgramConverterToC _sut = new();
 
@@ -29,21 +29,22 @@ public class IfConditionShouldBeConvertedToCCode(ITestOutputHelper testOutputHel
     [Fact]
     public void GivenIfConditionWithEqualCondition()
     {
-        //TTODO Warum gibt dies keinen Fehler? Die Variable "name" wird doch verwendet, obwohl sie noch nicht im Scope existiert.
-        //Das sollte nicht erst Runtime auffallen!
         ProgramNode programNode = ProgramNodeFactory.Create([
+            VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Testname", 1, 1)),
             IfNodeFactory.Create(
                 EqualityNodeFactory.Create(VariableNodeFactory.Create("name", 1, 1), new StringNode("Tim", 1, 1)),
                 [
                     PrintNodeFactory.Create(StringNodeFactory.Create("Hallo Tim!", 1, 1))
-                ], 1, 1)
+                ],
+                1, 1)
         ]);
 
         _sut.AssertConverterToCCode(programNode, [
+            "char* name = \"Testname\";",
             "if((name == \"Tim\"))",
             "{",
             "printf(\"Hallo Tim!\");",
             "}"
-        ]);
+        ], testOutputHelper: testOutputHelper);
     }
 }

@@ -1,65 +1,69 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
 
-    <IsPackable>false</IsPackable>
-    <IsTestProject>true</IsTestProject>
-  </PropertyGroup>
+        <IsPackable>false</IsPackable>
+        <IsTestProject>true</IsTestProject>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="ExamplePrograms\ChangeVariableValue.simple" />
-    <None Remove="ExamplePrograms\Fibonacci.simple" />
-    <None Remove="ExamplePrograms\FunctionDefinition.simple" />
-    <None Remove="ExamplePrograms\HelloSimpleScript.simple" />
-    <None Remove="ExamplePrograms\PrintInputVariable.simple" />
-    <None Remove="ExamplePrograms\SimpleVariableDeklarationAndPrint.simple" />
-    <None Remove="ExamplePrograms\AddStringFunction.simple" />
-  </ItemGroup>
+    <ItemGroup>
+        <None Remove="ExamplePrograms\ChangeVariableValue.simple"/>
+        <None Remove="ExamplePrograms\Fibonacci.simple"/>
+        <None Remove="ExamplePrograms\FunctionDefinition.simple"/>
+        <None Remove="ExamplePrograms\HelloSimpleScript.simple"/>
+        <None Remove="ExamplePrograms\PrintInputVariable.simple"/>
+        <None Remove="ExamplePrograms\SimpleVariableDeklarationAndPrint.simple"/>
+        <None Remove="ExamplePrograms\AddStringFunction.simple"/>
+        <None Remove="ExamplePrograms\IfConditionWithPrint.simple"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="ExamplePrograms\AddStringFunction.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExamplePrograms\ChangeVariableValue.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExamplePrograms\Fibonacci.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExamplePrograms\FunctionDefinition.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExamplePrograms\HelloSimpleScript.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExamplePrograms\PrintInputVariable.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ExamplePrograms\SimpleVariableDeklarationAndPrint.simple">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="ExamplePrograms\AddStringFunction.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\ChangeVariableValue.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\Fibonacci.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\FunctionDefinition.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\HelloSimpleScript.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\PrintInputVariable.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\SimpleVariableDeklarationAndPrint.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\IfConditionWithPrint.simple">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="coverlet.collector" Version="6.0.0" />
-    <PackageReference Include="FluentAssertions" Version="6.12.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
-    <PackageReference Include="NSubstitute" Version="5.1.0" />
-    <PackageReference Include="xunit" Version="2.5.3" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.0"/>
+        <PackageReference Include="FluentAssertions" Version="6.12.0"/>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0"/>
+        <PackageReference Include="NSubstitute" Version="5.1.0"/>
+        <PackageReference Include="xunit" Version="2.5.3"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\SimpleScript.Compiler\SimpleScript.Compiler.csproj" />
-    <ProjectReference Include="..\SimpleScript.Parser.Tests\SimpleScript.Parser.Tests.csproj" />
-    <ProjectReference Include="..\SimpleScript.Tests.Shared\SimpleScript.Tests.Shared.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\SimpleScript.Compiler\SimpleScript.Compiler.csproj"/>
+        <ProjectReference Include="..\SimpleScript.Parser.Tests\SimpleScript.Parser.Tests.csproj"/>
+        <ProjectReference Include="..\SimpleScript.Tests.Shared\SimpleScript.Tests.Shared.csproj"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit" />
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
 
 </Project>

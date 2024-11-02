@@ -14,7 +14,7 @@ namespace SimpleScript.Parser.NodeFactories
             {
                 throw new Exception("No Arguments passed to FunctionInvocationNode Factory.");
             }
-            if (tokens is not [{ TokenType: TokenType.Variable, Value: var functionName }, { TokenType: TokenType.OPEN_BRACKET }, .., { TokenType: TokenType.CLOSED_BRACKET }] || functionName is null)
+            if (tokens is not [{ TokenType: TokenType.Variable, Value: var functionName }, { TokenType: TokenType.OpenBracket }, .., { TokenType: TokenType.ClosedBracket }] || functionName is null)
             {
                 return tokens.First().CreateError("Invalid function invocation.", tokens.Last().Line);
             }
@@ -31,7 +31,7 @@ namespace SimpleScript.Parser.NodeFactories
             List<Token> expressionParts = [];
             foreach (Token? argumentToken in argumentExpressionTokens)
             {
-                if (argumentToken.TokenType == TokenType.COMMA)
+                if (argumentToken.TokenType == TokenType.Comma)
                 {
                     //Create Expression
                     Result<IExpression> expressionResult = expressionFactory.Create(expressionParts);

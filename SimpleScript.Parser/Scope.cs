@@ -100,9 +100,18 @@ namespace SimpleScript.Parser
                 StringNode stringNode => new ScopeVariableEntry(StringNode.TypeName,
                     stringNode.Value.Length + 1), // + 1 is necessary to also include the \0 Null Character! 
                 NumberNode => new ScopeVariableEntry(NumberNode.TypeName),
+                BooleanNode => new ScopeVariableEntry(ValueTypes.Boolean),
                 VariableNode variableNode => EvaluateVariable(variableNode),
                 AddNode addNode => EvaluateBinaryOperation(addNode),
                 MultiplyNode multiplyNode => EvaluateBinaryOperation(multiplyNode),
+                EqualityNode equalityNode => EvaluateBinaryOperation(equalityNode, ValueTypes.Boolean),
+                InEqualityNode inEqualityNode => EvaluateBinaryOperation(inEqualityNode, ValueTypes.Boolean),
+                SmallerNode smallerNode => EvaluateBinaryOperation(smallerNode, ValueTypes.Boolean),
+                SmallerOrEqualNode smallerOrEqualNode =>
+                    EvaluateBinaryOperation(smallerOrEqualNode, ValueTypes.Boolean),
+                GreaterNode greaterNode => EvaluateBinaryOperation(greaterNode, ValueTypes.Boolean),
+                GreaterOrEqualNode greaterOrEqualNode =>
+                    EvaluateBinaryOperation(greaterOrEqualNode, ValueTypes.Boolean),
                 FunctionInvocationNode functionInvocationNode => EvaluateFunctionInvocation(functionInvocationNode),
                 _ => throw new NotImplementedException()
             };
@@ -147,7 +156,8 @@ namespace SimpleScript.Parser
         }
 
         //This function also works for multiplication, because it is only needed for strings and for strings there is no multiplication allowed.
-        private Result<ScopeVariableEntry> EvaluateBinaryOperation<T>(IBinaryOperation<T> node) where T : IExpression
+        private Result<ScopeVariableEntry> EvaluateBinaryOperation<T>(IBinaryOperation<T> node,
+            ValueTypes? typeOfBinaryOperation = null) where T : IExpression
         {
             var variableScopeFirstArg = GetScopeForExpression(node.FirstArgument);
             var variableScopeSecondArg = GetScopeForExpression(node.SecondArgument);
@@ -163,12 +173,13 @@ namespace SimpleScript.Parser
             if (firstArg.ValueType == secondArg.ValueType)
             {
                 //For numbers the Length is calculated, but it has no meaning!
-                return new ScopeVariableEntry(firstArg.ValueType, firstArg.Lenght + secondArg.Lenght - 1,
+                return new ScopeVariableEntry(typeOfBinaryOperation ?? firstArg.ValueType,
+                    firstArg.Lenght + secondArg.Lenght - 1,
                     firstArg.HeapAllocation ||
                     secondArg.HeapAllocation); // -1 because the null character is only needed once for each string. 
             }
 
-            return node.CreateError($"Types {firstArg} and {secondArg} are not compatible.");
+            return node.CreateError($"Types {firstArg.ValueType} and {secondArg.ValueType} are not compatible.");
         }
     }
 }

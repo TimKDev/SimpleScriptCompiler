@@ -3,12 +3,10 @@ using FluentAssertions;
 using SimpleScript.Adapter.C.Tests.Helper.Extensions;
 using SimpleScript.Adapter.C.Tests.Helper.Factories;
 using SimpleScript.Parser;
-using SimpleScript.Parser.Nodes;
-using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Adapter.C.Tests.ConverterTests
 {
-    public class ReturnNodeShouldBeConvertedToCCode
+    public class Return
     {
         [Fact]
         public void GivenNumberToReturn_ShouldConvertToReturnString()

@@ -17,40 +17,56 @@ namespace SimpleScript.Adapter.C
 
             var variableDeclarationExpression = initialValueScope.Value.ValueType switch
             {
-                ValueTypes.String => ConvertStringVariableDeclaration(variableDeclarationNode, initialValueScope.Value, scope, doesVariableExists),
+                ValueTypes.String => ConvertStringVariableDeclaration(variableDeclarationNode, initialValueScope.Value,
+                    scope, doesVariableExists),
                 ValueTypes.Number => ConvertNumberVariableDeclaration(variableDeclarationNode, doesVariableExists),
+                ValueTypes.Boolean => ConvertBooleanVariableDeclaration(variableDeclarationNode, doesVariableExists),
                 _ => throw new NotImplementedException(),
             };
 
             return variableDeclarationExpression.Convert(item => new string[] { item });
         }
 
-        private static Result<string> ConvertNumberVariableDeclaration(VariableDeclarationNode variableDeclarationNode, bool doesVariableExists)
+        private static Result<string> ConvertBooleanVariableDeclaration(VariableDeclarationNode variableDeclarationNode,
+            bool doesVariableExists)
         {
-            string assertResult = $"{variableDeclarationNode.VariableName} = {ConvertExpressionToC.Convert(variableDeclarationNode.InitialValue)};";
+            string assertResult =
+                $"{variableDeclarationNode.VariableName} = {ConvertExpressionToC.Convert(variableDeclarationNode.InitialValue)};";
             return doesVariableExists ? assertResult : $"int {assertResult}";
         }
 
-        private static Result<string> ConvertStringVariableDeclaration(VariableDeclarationNode variableDeclarationNode, ScopeVariableEntry initialValueScope, Scope scope, bool doesVariableExists)
+        private static Result<string> ConvertNumberVariableDeclaration(VariableDeclarationNode variableDeclarationNode,
+            bool doesVariableExists)
+        {
+            string assertResult =
+                $"{variableDeclarationNode.VariableName} = {ConvertExpressionToC.Convert(variableDeclarationNode.InitialValue)};";
+            return doesVariableExists ? assertResult : $"int {assertResult}";
+        }
+
+        private static Result<string> ConvertStringVariableDeclaration(VariableDeclarationNode variableDeclarationNode,
+            ScopeVariableEntry initialValueScope, Scope scope, bool doesVariableExists)
         {
             if (variableDeclarationNode.InitialValue is AddNode addNode)
             {
                 string tempVariableName = scope.GetTempVariableName();
-                return ConvertStringAdditionToC.Convert(tempVariableName, addNode, initialValueScope).MapIfSuccess<string>(result =>
-                {
-                    if (!doesVariableExists)
+                return ConvertStringAdditionToC.Convert(tempVariableName, addNode, initialValueScope)
+                    .MapIfSuccess<string>(result =>
                     {
-                        return $"{string.Join("\n", result)}\nchar *{variableDeclarationNode.VariableName} = {tempVariableName};";
-                    }
-                    return $"{string.Join("\n", result)}\n{variableDeclarationNode.VariableName} = {tempVariableName};";
-                });
+                        if (!doesVariableExists)
+                        {
+                            return
+                                $"{string.Join("\n", result)}\nchar *{variableDeclarationNode.VariableName} = {tempVariableName};";
+                        }
+
+                        return
+                            $"{string.Join("\n", result)}\n{variableDeclarationNode.VariableName} = {tempVariableName};";
+                    });
             }
 
-            string assertResult = $"{variableDeclarationNode.VariableName} = {ConvertExpressionToC.Convert(variableDeclarationNode.InitialValue)};";
+            string assertResult =
+                $"{variableDeclarationNode.VariableName} = {ConvertExpressionToC.Convert(variableDeclarationNode.InitialValue)};";
 
             return doesVariableExists ? assertResult : $"char *{assertResult}";
         }
     }
 }
-
-

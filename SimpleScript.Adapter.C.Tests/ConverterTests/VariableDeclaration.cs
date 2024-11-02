@@ -1,10 +1,12 @@
 ﻿using SimpleScript.Adapter.C.Tests.Helper.Extensions;
 using SimpleScript.Adapter.C.Tests.Helper.Factories;
 using SimpleScript.Parser.Nodes;
+using Xunit.Abstractions;
+using VariableDeclarationNodeFactory = SimpleScript.Adapter.C.Tests.Helper.Factories.VariableDeclarationNodeFactory;
 
 namespace SimpleScript.Adapter.C.Tests.ConverterTests
 {
-    public class LetDeklarationShouldConvertToCCode
+    public class VariableDeclaration(ITestOutputHelper testOutputHelper)
     {
         private readonly ProgramConverterToC _sut = new();
 
@@ -36,7 +38,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         public void GivenLetDeklarationWithAddExpressionInitialValue()
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
-                VariableDeclarationNodeFactory.Create("name", AddNodeFactory.Create(NumberNodeFactory.Create(3, 1, 1), NumberNodeFactory.Create(4, 1, 1)))
+                VariableDeclarationNodeFactory.Create("name",
+                    AddNodeFactory.Create(NumberNodeFactory.Create(3, 1, 1), NumberNodeFactory.Create(4, 1, 1)))
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
@@ -48,7 +51,9 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         public void GivenLetDeklarationWithAddExpressionWithString()
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
-                VariableDeclarationNodeFactory.Create("name", AddNodeFactory.Create(StringNodeFactory.Create("Hello ", 1, 1), StringNodeFactory.Create("World", 1, 1)))
+                VariableDeclarationNodeFactory.Create("name",
+                    AddNodeFactory.Create(StringNodeFactory.Create("Hello ", 1, 1),
+                        StringNodeFactory.Create("World", 1, 1)))
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
@@ -64,7 +69,9 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
                 VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Tim", 1, 1)),
-                VariableDeclarationNodeFactory.Create("message", AddNodeFactory.Create(VariableNodeFactory.Create("name", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2)))
+                VariableDeclarationNodeFactory.Create("message",
+                    AddNodeFactory.Create(VariableNodeFactory.Create("name", 2, 2),
+                        StringNodeFactory.Create(" ist mein Name", 2, 2)))
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
@@ -109,7 +116,9 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         public void GivenDeklarationAndReassign_ForStringAddInitialValue()
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
-                VariableDeclarationNodeFactory.Create("name", AddNodeFactory.Create(StringNodeFactory.Create("Tim", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2))),
+                VariableDeclarationNodeFactory.Create("name",
+                    AddNodeFactory.Create(StringNodeFactory.Create("Tim", 2, 2),
+                        StringNodeFactory.Create(" ist mein Name", 2, 2))),
                 VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Caro", 1, 1))
             ]);
 
@@ -127,7 +136,9 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
         {
             ProgramNode programNode = ProgramNodeFactory.Create([
                 VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Tim", 1, 1)),
-                VariableDeclarationNodeFactory.Create("name", AddNodeFactory.Create(StringNodeFactory.Create("Tim", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2)))
+                VariableDeclarationNodeFactory.Create("name",
+                    AddNodeFactory.Create(StringNodeFactory.Create("Tim", 2, 2),
+                        StringNodeFactory.Create(" ist mein Name", 2, 2)))
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
@@ -146,7 +157,9 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ProgramNode programNode = ProgramNodeFactory.Create([
                 VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Tim", 1, 1)),
                 VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Carolin", 1, 1)),
-                VariableDeclarationNodeFactory.Create("message", AddNodeFactory.Create(VariableNodeFactory.Create("name", 2, 2), StringNodeFactory.Create(" ist mein Name", 2, 2)))
+                VariableDeclarationNodeFactory.Create("message",
+                    AddNodeFactory.Create(VariableNodeFactory.Create("name", 2, 2),
+                        StringNodeFactory.Create(" ist mein Name", 2, 2)))
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
@@ -157,6 +170,43 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
                 "strcat(temp_1, \" ist mein Name\");",
                 "char *message = temp_1;"
             ]);
+        }
+
+        [Fact]
+        public void GivenBooleanDeclaration_ShouldConvertToCCode()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Carolin", 1, 1)),
+                VariableDeclarationNodeFactory.Create("isNotProgrammer",
+                    InEqualityNodeFactory.Create(
+                        VariableNodeFactory.Create("name", 1, 1),
+                        StringNodeFactory.Create("Tim", 1, 1)
+                    )
+                ),
+            ]);
+
+            _sut.AssertConverterToCCode(programNode, [
+                "char *name = \"Carolin\";",
+                "int isNotProgrammer = (name != \"Tim\");"
+            ]);
+        }
+
+        [Fact]
+        public void GivenBooleanDeclarationWithNotCompatibleEquals_ShouldReturnTypeError()
+        {
+            ProgramNode programNode = ProgramNodeFactory.Create([
+                VariableDeclarationNodeFactory.Create("name", StringNodeFactory.Create("Carolin", 1, 1)),
+                VariableDeclarationNodeFactory.Create("isNotProgrammer",
+                    InEqualityNodeFactory.Create(
+                        VariableNodeFactory.Create("name", 1, 1),
+                        NumberNodeFactory.Create(111, 1, 1)
+                    )
+                ),
+            ]);
+
+            _sut.AssertErrorsConverterToCCode(programNode, [
+                "Error Line 1: Types String and Number are not compatible.",
+            ], testOutputHelper);
         }
     }
 }

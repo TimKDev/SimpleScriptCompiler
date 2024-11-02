@@ -8,11 +8,11 @@ namespace SimpleScript.Parser
     {
         private TokenType[] TokensTypesToSplit =
         [
-            TokenType.LET, TokenType.PRINT, TokenType.INPUT, TokenType.FUNC, TokenType.RETURN, TokenType.IF,
-            TokenType.WHILE
+            TokenType.Let, TokenType.Print, TokenType.Input, TokenType.Func, TokenType.Return, TokenType.If,
+            TokenType.While
         ];
 
-        private TokenType[] TokensThatDefineAStatementBlock = [TokenType.IF, TokenType.WHILE, TokenType.FUNC];
+        private TokenType[] TokensThatDefineAStatementBlock = [TokenType.If, TokenType.While, TokenType.Func];
 
         public Result<List<Statement>> CreateStatements(List<Token> tokens)
         {
@@ -46,9 +46,9 @@ namespace SimpleScript.Parser
                         strictlyAppendToCurrentStatement = true;
                         tokenTypeToTerminateCurrentStatement = token.TokenType switch
                         {
-                            TokenType.FUNC => TokenType.ENDBODY,
-                            TokenType.IF => TokenType.ENDIF,
-                            TokenType.WHILE => TokenType.ENDWHILE,
+                            TokenType.Func => TokenType.EndBody,
+                            TokenType.If => TokenType.Endif,
+                            TokenType.While => TokenType.EndWhile,
                             _ => throw new Exception(
                                 $"No statement end token defined for token type: {token.TokenType}"),
                         };

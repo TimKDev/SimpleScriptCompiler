@@ -6,7 +6,7 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Adapter.C.Tests.ConverterTests
 {
-    public class PrintShouldConvertToCCode
+    public class Print
     {
         private readonly ProgramConverterToC _sut = new();
 

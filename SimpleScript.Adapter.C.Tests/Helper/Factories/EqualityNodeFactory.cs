@@ -9,3 +9,11 @@ internal static class EqualityNodeFactory
         return EqualityNode.Create(firstArg, secondArg).Value;
     }
 }
+
+internal static class InEqualityNodeFactory
+{
+    public static InEqualityNode Create(IEqualizable firstArg, IEqualizable secondArg)
+    {
+        return InEqualityNode.Create(firstArg, secondArg).Value;
+    }
+}

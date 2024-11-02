@@ -24,12 +24,12 @@ public class IfNodeFactory : IIfNodeFactory
 
         int startLine = firstToken.Line;
         List<Token> conditionPart =
-            inputTokens.TakeWhile(token => token.TokenType != TokenType.DO).ToList();
-        List<Token> ifBody = inputTokens.SkipWhile(token => token.TokenType != TokenType.DO).ToList();
+            inputTokens.TakeWhile(token => token.TokenType != TokenType.Do).ToList();
+        List<Token> ifBody = inputTokens.SkipWhile(token => token.TokenType != TokenType.Do).ToList();
 
         if (conditionPart is not
             [
-                { TokenType: TokenType.IF }, ..
+                { TokenType: TokenType.If }, ..
             ])
         {
             return Token.CreateError("Invalid If condition definition.", startLine, conditionPart.Last().Line);
@@ -40,7 +40,7 @@ public class IfNodeFactory : IIfNodeFactory
             return firstToken.CreateError("Missing body declaration for if condition.");
         }
 
-        if (ifBody is not [{ TokenType: TokenType.DO }, .., { TokenType: TokenType.ENDIF }])
+        if (ifBody is not [{ TokenType: TokenType.Do }, .., { TokenType: TokenType.Endif }])
         {
             return Token.CreateError("Invalid body declaration.", ifBody.First().Line,
                 ifBody.Last().Line);

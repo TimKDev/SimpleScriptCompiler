@@ -54,13 +54,13 @@ namespace SimpleScript.Parser.NodeFactories
             {
                 Result<IBodyNode> result = statement.Tokens[0].TokenType switch
                 {
-                    TokenType.LET => _variableAssignmentFactory.Create(statement.Tokens).Convert<IBodyNode>(),
-                    TokenType.PRINT => _printNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
-                    TokenType.INPUT => _inputNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
-                    TokenType.FUNC => _functionNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
-                    TokenType.RETURN => _returnNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
-                    TokenType.IF => _ifNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
-                    TokenType.WHILE => _whileNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
+                    TokenType.Let => _variableAssignmentFactory.Create(statement.Tokens).Convert<IBodyNode>(),
+                    TokenType.Print => _printNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
+                    TokenType.Input => _inputNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
+                    TokenType.Func => _functionNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
+                    TokenType.Return => _returnNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
+                    TokenType.If => _ifNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
+                    TokenType.While => _whileNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
                     _ => Error.Create("Compiler Error: Unknown Statement Type.")
                 };
                 errors.AddRange(result.Errors);

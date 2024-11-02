@@ -1,0 +1,3 @@
+LET name = "Tim"
+IF name == "Tim" DO PRINT "Hello Tim"
+IF name == "Carolin" DO PRINT "Hello Carolin"

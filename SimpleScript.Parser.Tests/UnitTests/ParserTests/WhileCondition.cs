@@ -18,7 +18,7 @@ public class WhileCondition(ITestOutputHelper testOutputHelper)
     {
         List<Token> programTokens =
         [
-            TF.While(), TF.True(), TF.Do(), TF.Print(), TF.Str("Hallo Tim"),
+            TF.While(), TF.True(), TF.Repeat(), TF.Print(), TF.Str("Hallo Tim"),
             TF.EndWhile()
         ];
         ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens), testOutputHelper);
@@ -34,7 +34,7 @@ public class WhileCondition(ITestOutputHelper testOutputHelper)
     {
         List<Token> programTokens =
         [
-            TF.While(), TF.Var("name"), TF.Equal(), TF.Str("Tim"), TF.Do(), TF.Print(), TF.Str("Hallo Tim"),
+            TF.While(), TF.Var("name"), TF.Equal(), TF.Str("Tim"), TF.Repeat(), TF.Print(), TF.Str("Hallo Tim"),
             TF.EndWhile()
         ];
         ProgramNode programNode = ErrorHelper.AssertResultSuccess(_sut.ParseTokens(programTokens));

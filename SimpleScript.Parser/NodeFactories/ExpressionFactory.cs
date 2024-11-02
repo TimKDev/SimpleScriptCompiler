@@ -43,16 +43,16 @@ namespace SimpleScript.Parser.NodeFactories
                 return Error.Create("Expression is empty.");
             }
 
-            if (inputTokens.Count(token => token.TokenType == TokenType.OPEN_BRACKET) !=
-                inputTokens.Count(token => token.TokenType == TokenType.CLOSED_BRACKET))
+            if (inputTokens.Count(token => token.TokenType == TokenType.OpenBracket) !=
+                inputTokens.Count(token => token.TokenType == TokenType.ClosedBracket))
             {
                 return inputTokens.First().CreateError("Number of Brackets are not equal", inputTokens.Last().Line);
             }
 
             if (inputTokens is
                 [
-                    { TokenType: TokenType.Variable }, { TokenType: TokenType.OPEN_BRACKET }, ..,
-                    { TokenType: TokenType.CLOSED_BRACKET }
+                    { TokenType: TokenType.Variable }, { TokenType: TokenType.OpenBracket }, ..,
+                    { TokenType: TokenType.ClosedBracket }
                 ])
             {
                 return (_functionInvocationNodeFactory.Create(inputTokens, this)).Convert<IExpression>();
@@ -78,20 +78,20 @@ namespace SimpleScript.Parser.NodeFactories
 
             return operantToken.TokenType switch
             {
-                TokenType.PLUS => _additionNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>(),
-                TokenType.MULTIPLY => _multiplicationNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.Plus => _additionNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>(),
+                TokenType.Multiply => _multiplicationNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                TokenType.EQUAL => _equalityNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.Equal => _equalityNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                TokenType.NOTEQUAL => _inEqualityNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.NotEqual => _inEqualityNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                TokenType.GREATER => _greaterNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.Greater => _greaterNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                TokenType.GREATER_OR_EQUAL => _greaterOrEqualNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.GreaterOrEqual => _greaterOrEqualNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                TokenType.SMALLER => _smallerNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.Smaller => _smallerNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
-                TokenType.SMALLER_OR_EQUAL => _smallerOrEqualNodeFactory.Create(firstOperant, secondOperant, this)
+                TokenType.SmallerOrEqual => _smallerOrEqualNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
                 _ => Error.Create("Unknown operation type.")
             };
@@ -101,8 +101,8 @@ namespace SimpleScript.Parser.NodeFactories
         {
             List<TokenType> operationsWithPlusSpecificity =
             [
-                TokenType.PLUS, TokenType.EQUAL, TokenType.NOTEQUAL, TokenType.GREATER, TokenType.GREATER_OR_EQUAL,
-                TokenType.SMALLER, TokenType.SMALLER_OR_EQUAL
+                TokenType.Plus, TokenType.Equal, TokenType.NotEqual, TokenType.Greater, TokenType.GreaterOrEqual,
+                TokenType.Smaller, TokenType.SmallerOrEqual
             ];
             int indexOfNextOperation = -1;
             int currentSpecificity = 0;
@@ -110,17 +110,17 @@ namespace SimpleScript.Parser.NodeFactories
             for (int i = 0; i < inputTokens.Count; i++)
             {
                 Token currentToken = inputTokens[i];
-                if (currentToken.TokenType == TokenType.OPEN_BRACKET)
+                if (currentToken.TokenType == TokenType.OpenBracket)
                 {
                     currentSpecificity += 10;
                 }
 
-                if (currentToken.TokenType == TokenType.CLOSED_BRACKET)
+                if (currentToken.TokenType == TokenType.ClosedBracket)
                 {
                     currentSpecificity -= 10;
                 }
 
-                if (currentToken.TokenType == TokenType.MULTIPLY && currentSpecificity + 1 < currentLowestSpecificity)
+                if (currentToken.TokenType == TokenType.Multiply && currentSpecificity + 1 < currentLowestSpecificity)
                 {
                     indexOfNextOperation = i;
                     currentLowestSpecificity = currentSpecificity + 1;
@@ -140,11 +140,11 @@ namespace SimpleScript.Parser.NodeFactories
         private List<Token> RemoveRedundantBrackets(List<Token> inputTokens)
         {
             int numberBracketsAtStart =
-                inputTokens.TakeWhile(token => token.TokenType == TokenType.OPEN_BRACKET).ToList().Count;
+                inputTokens.TakeWhile(token => token.TokenType == TokenType.OpenBracket).ToList().Count;
             int numberRedundantBrackets = 0;
             for (int i = inputTokens.Count - 1; i >= inputTokens.Count - numberBracketsAtStart; i--)
             {
-                if (inputTokens[i].TokenType != TokenType.CLOSED_BRACKET)
+                if (inputTokens[i].TokenType != TokenType.ClosedBracket)
                 {
                     break;
                 }
@@ -165,8 +165,8 @@ namespace SimpleScript.Parser.NodeFactories
                 TokenType.String => new StringNode(operand.Value!, operand.Line, operand.Line),
                 TokenType.Number => new NumberNode(int.Parse(operand.Value!), operand.Line, operand.Line),
                 TokenType.Variable => new VariableNode(operand.Value!, operand.Line, operand.Line),
-                TokenType.TRUE => new BooleanNode(true, operand.Line, operand.Line),
-                TokenType.FALSE => new BooleanNode(false, operand.Line, operand.Line),
+                TokenType.True => new BooleanNode(true, operand.Line, operand.Line),
+                TokenType.False => new BooleanNode(false, operand.Line, operand.Line),
                 _ => Error.Create($"Token type {operand.TokenType} is not supported as a expression.")
             };
         }

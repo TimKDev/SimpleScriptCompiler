@@ -29,10 +29,16 @@ namespace SimpleScript.Adapter.C
             {
                 ValueTypes.String => ConvertPrintOfString(nodeToPrint),
                 ValueTypes.Number => ConvertPrintOfNumber(nodeToPrint),
+                ValueTypes.Boolean => ConvertPrintOfBoolean(nodeToPrint),
                 _ => throw new NotImplementedException(),
             };
 
             return new string[] { printNodeExpression };
+        }
+
+        private static string ConvertPrintOfBoolean(IExpression nodeToPrint)
+        {
+            return $"printf({ConvertExpressionToC.Convert(nodeToPrint)} ? \"TRUE\" : \"FALSE\");";
         }
 
         private static string ConvertPrintOfString(IExpression nodeToPrint)

@@ -8,6 +8,12 @@ internal class ConvertIfConditionToC
 {
     internal static Result<string[]> Convert(IfNode ifNode, Scope scope)
     {
+        var scopeOfCondition = scope.GetScopeForExpression(ifNode.Condition);
+        if (!scopeOfCondition.IsSuccess)
+        {
+            return scopeOfCondition.Errors;
+        }
+
         var condition = ConvertExpressionToC.Convert(ifNode.Condition);
         var bodyResult = ConvertBodyNodeToC.ConvertToStatements(ifNode.Body, scope);
 
@@ -18,7 +24,7 @@ internal class ConvertIfConditionToC
 
         if (bodyResult.Value.cFunctionDeclarations.Count > 0)
         {
-            return Error.Create("Function declarations inside if conditions are not supported.");
+            return ifNode.Body.CreateError("Function declarations inside if conditions are not supported.");
         }
 
         List<string> result = [$"if({condition})", "{"];

@@ -5,7 +5,7 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Adapter.C.Tests.ConverterTests
 {
-    public class FunctionShouldBeConvertedToCCode
+    public class FunctionDeclaration
     {
         private readonly ProgramConverterToC _sut = new();
 

@@ -3,6 +3,7 @@
     public enum ArgumentType
     {
         Int,
-        String
+        String,
+        Boolean,
     }
 }

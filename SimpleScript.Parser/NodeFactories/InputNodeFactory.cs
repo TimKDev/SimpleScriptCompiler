@@ -13,13 +13,13 @@ namespace SimpleScript.Parser.NodeFactories
 
         public Result<InputNode> Create(List<Token> inputTokens) => inputTokens switch
         {
-        [{ TokenType: TokenType.INPUT, Line: var startLine }, { TokenType: TokenType.Variable, Value: var variableName, Line: var endLine }] when variableName is not null => new InputNode(variableName, startLine, endLine),
+        [{ TokenType: TokenType.Input, Line: var startLine }, { TokenType: TokenType.Variable, Value: var variableName, Line: var endLine }] when variableName is not null => new InputNode(variableName, startLine, endLine),
 
-        [{ TokenType: TokenType.INPUT, Line: var line }] => Token.CreateError(NoVariableNameAfterInputErrorMessage, line),
+        [{ TokenType: TokenType.Input, Line: var line }] => Token.CreateError(NoVariableNameAfterInputErrorMessage, line),
 
-        [{ TokenType: TokenType.INPUT }, { TokenType: not TokenType.Variable, Line: var line }, ..] => Token.CreateError(NoVariableNameAfterInputErrorMessage, line),
+        [{ TokenType: TokenType.Input }, { TokenType: not TokenType.Variable, Line: var line }, ..] => Token.CreateError(NoVariableNameAfterInputErrorMessage, line),
 
-        [{ TokenType: TokenType.INPUT, Line: var line }, { TokenType: TokenType.Variable, Value: null }, ..] => Token.CreateError(InvalidVariableNameAfterLetErrorMessage, line),
+        [{ TokenType: TokenType.Input, Line: var line }, { TokenType: TokenType.Variable, Value: null }, ..] => Token.CreateError(InvalidVariableNameAfterLetErrorMessage, line),
 
             _ => throw new Exception(UnknownErrorMessage)
 

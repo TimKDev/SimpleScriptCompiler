@@ -8,6 +8,12 @@ internal class ConvertWhileLoopToC
 {
     internal static Result<string[]> Convert(WhileNode whileNode, Scope scope)
     {
+        var scopeOfCondition = scope.GetScopeForExpression(whileNode.Condition);
+        if (!scopeOfCondition.IsSuccess)
+        {
+            return scopeOfCondition.Errors;
+        }
+
         var condition = ConvertExpressionToC.Convert(whileNode.Condition);
         var bodyResult = ConvertBodyNodeToC.ConvertToStatements(whileNode.Body, scope);
 
