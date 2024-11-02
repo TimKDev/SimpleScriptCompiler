@@ -2,7 +2,7 @@
   "profiles": {
     "SimpleScript.Compiler": {
       "commandName": "Project",
-      "commandLineArgs": "execute PrintInputVariable.simple"
+      "commandLineArgs": "execute ExamplePrograms/Fibonacci.simple"
     }
   }
 }

@@ -9,6 +9,7 @@ namespace SimpleScript.Parser.NodeFactories
     public class ExpressionFactory : IExpressionFactory
     {
         private readonly IAdditionNodeFactory _additionNodeFactory;
+        private readonly IMinusNodeFactory _minusNodeFactory;
         private readonly IMultiplicationNodeFactory _multiplicationNodeFactory;
         private readonly IFunctionInvocationNodeFactory _functionInvocationNodeFactory;
         private readonly IEqualityNodeFactory _equalityNodeFactory;
@@ -23,7 +24,7 @@ namespace SimpleScript.Parser.NodeFactories
             IFunctionInvocationNodeFactory functionInvocationNodeFactory, IEqualityNodeFactory equalityNodeFactory,
             IInEqualityNodeFactory inEqualityNodeFactory, IGreaterNodeFactory greaterNodeFactory,
             IGreaterOrEqualNodeFactory greaterOrEqualNodeFactory, ISmallerNodeFactory smallerNodeFactory,
-            ISmallerOrEqualNodeFactory smallerOrEqualNodeFactory)
+            ISmallerOrEqualNodeFactory smallerOrEqualNodeFactory, IMinusNodeFactory minusNodeFactory)
         {
             _additionNodeFactory = additionNodeFactory;
             _multiplicationNodeFactory = multiplicationNodeFactory;
@@ -34,6 +35,7 @@ namespace SimpleScript.Parser.NodeFactories
             _greaterOrEqualNodeFactory = greaterOrEqualNodeFactory;
             _smallerNodeFactory = smallerNodeFactory;
             _smallerOrEqualNodeFactory = smallerOrEqualNodeFactory;
+            _minusNodeFactory = minusNodeFactory;
         }
 
         public Result<IExpression> Create(List<Token> inputTokens)
@@ -79,6 +81,8 @@ namespace SimpleScript.Parser.NodeFactories
             return operantToken.TokenType switch
             {
                 TokenType.Plus => _additionNodeFactory.Create(firstOperant, secondOperant, this).Convert<IExpression>(),
+                TokenType.Minus => _minusNodeFactory.Create(firstOperant, secondOperant, this)
+                    .Convert<IExpression>(),
                 TokenType.Multiply => _multiplicationNodeFactory.Create(firstOperant, secondOperant, this)
                     .Convert<IExpression>(),
                 TokenType.Equal => _equalityNodeFactory.Create(firstOperant, secondOperant, this)
@@ -101,7 +105,8 @@ namespace SimpleScript.Parser.NodeFactories
         {
             List<TokenType> operationsWithPlusSpecificity =
             [
-                TokenType.Plus, TokenType.Equal, TokenType.NotEqual, TokenType.Greater, TokenType.GreaterOrEqual,
+                TokenType.Plus, TokenType.Minus, TokenType.Equal, TokenType.NotEqual, TokenType.Greater,
+                TokenType.GreaterOrEqual,
                 TokenType.Smaller, TokenType.SmallerOrEqual
             ];
             int indexOfNextOperation = -1;

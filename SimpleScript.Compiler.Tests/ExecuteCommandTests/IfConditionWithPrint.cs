@@ -20,10 +20,18 @@ public class IfConditionWithPrint
     public void ShouldCreateCorrectCCode()
     {
         string expectedCCode = CompilerTestHelper.ConvertToCCode([
-            "printf(\"Hello SimpleScript!\");"
+            "char *name = \"Tim\";",
+            "if((name == \"Tim\"))",
+            "{",
+            "printf(\"Hello Tim\");",
+            "}",
+            "if((name == \"Carolin\"))",
+            "{",
+            "printf(\"Hello Carolin\");",
+            "}",
         ]);
         _sut.Execute([_programPath]);
-        string resultingCCode = File.ReadAllText("HelloSimpleScript.c");
+        string resultingCCode = File.ReadAllText("IfConditionWithPrint.c");
         CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
     }
 }

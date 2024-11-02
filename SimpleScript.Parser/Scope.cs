@@ -6,9 +6,14 @@ namespace SimpleScript.Parser
 {
     public class Scope
     {
-        private readonly Dictionary<string, ScopeVariableEntry> _variables = [];
+        //TODO Design Problem: Wie kann ich garantieren, dass der Adapter für diese global verfügbaren Methoden eine Implementierung bereitstellt?
+        private readonly Dictionary<string, ScopeVariableEntry> _variables = new()
+        {
+            { "ToNumber", new ScopeVariableEntry(ValueTypes.Number, IsFunction: true) }
+        };
+
         private readonly Scope? _parentScope;
-        private int currentTempVariableNumber;
+        private int _currentTempVariableNumber;
 
         public Scope(Scope? parentScope = null)
         {
@@ -103,6 +108,7 @@ namespace SimpleScript.Parser
                 BooleanNode => new ScopeVariableEntry(ValueTypes.Boolean),
                 VariableNode variableNode => EvaluateVariable(variableNode),
                 AddNode addNode => EvaluateBinaryOperation(addNode),
+                MinusNode minusNode => EvaluateBinaryOperation(minusNode),
                 MultiplyNode multiplyNode => EvaluateBinaryOperation(multiplyNode),
                 EqualityNode equalityNode => EvaluateBinaryOperation(equalityNode, ValueTypes.Boolean),
                 InEqualityNode inEqualityNode => EvaluateBinaryOperation(inEqualityNode, ValueTypes.Boolean),
@@ -132,12 +138,12 @@ namespace SimpleScript.Parser
 
         public string GetTempVariableName()
         {
-            currentTempVariableNumber++;
-            string result = $"temp_{currentTempVariableNumber}";
+            _currentTempVariableNumber++;
+            string result = $"temp_{_currentTempVariableNumber}";
             while (DoesVariableNameExists(result))
             {
-                currentTempVariableNumber++;
-                result = $"temp_{currentTempVariableNumber}";
+                _currentTempVariableNumber++;
+                result = $"temp_{_currentTempVariableNumber}";
             }
 
             return result;

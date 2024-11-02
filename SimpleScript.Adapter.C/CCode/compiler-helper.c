@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 
 typedef struct Node
 {
@@ -29,4 +30,37 @@ void free_list()
         current = next_node;
     }
     head = NULL;
+}
+
+int ToNumber(const char* str)
+{
+    if (str == NULL)
+    {
+        return 0;
+    }
+
+    // Skip leading whitespace
+    while (isspace(*str))
+    {
+        str++;
+    }
+
+    // Check if the string is empty after removing whitespace
+    if (*str == '\0')
+    {
+        return 0;
+    }
+
+    // Convert string to integer using strtol
+    char* endptr;
+    int result = (int)strtol(str, &endptr, 10);
+
+    // Check for conversion errors
+    if (*endptr != '\0')
+    {
+        printf("Error: Invalid characters in input string\n");
+        return 0;
+    }
+
+    return result;
 }

@@ -185,5 +185,10 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
         {
             return new Token(TokenType.SmallerOrEqual, 1);
         }
+
+        public static Token Minus()
+        {
+            return new Token(TokenType.Minus, 1);
+        }
     }
 }

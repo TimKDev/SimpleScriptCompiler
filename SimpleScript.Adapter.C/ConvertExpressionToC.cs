@@ -14,6 +14,7 @@ namespace SimpleScript.Adapter.C
                 BooleanNode booleanNode => booleanNode.Value ? "true" : "false",
                 VariableNode variableNode => variableNode.Name,
                 AddNode addNode => $"({Convert(addNode.FirstArgument)} + {Convert(addNode.SecondArgument)})",
+                MinusNode minusNode => $"({Convert(minusNode.FirstArgument)} - {Convert(minusNode.SecondArgument)})",
                 MultiplyNode multiplyNode =>
                     $"({Convert(multiplyNode.FirstArgument)} * {Convert(multiplyNode.SecondArgument)})",
                 EqualityNode equalityNode =>

@@ -9,7 +9,7 @@ namespace SimpleScript.Parser.Tests.Helper.Factories
             return new ExpressionFactory(new AdditionNodeFactory(), new MultiplicationNodeFactory(),
                 FunctionInvocationNodeFactoryFactory.Create(), new EqualityNodeFactory(), new InEqualityNodeFactory(),
                 new GreaterNodeFactory(), new GreaterOrEqualNodeFactory(), new SmallerNodeFactory(),
-                new SmallerOrEqualNodeFactory());
+                new SmallerOrEqualNodeFactory(), new MinusNodeFactory());
         }
     }
 }
