@@ -4,7 +4,8 @@ public class Lexer
 {
     public TokenizedProgram Tokenize(string source)
     {
-        
-        return new TokenizedProgram([new StringToken("Hallo World", 1)]);
+        var result = new TokenizedProgram();
+        result.AddTokens([new StringToken("Hello World", 1)]);
+        return result;
     }
 }

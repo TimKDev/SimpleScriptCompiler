@@ -29,7 +29,7 @@ namespace SimpleScript.Adapter.C
                     ReturnNode returnNode => ConvertReturnNodeToC.Convert(returnNode, mainScope),
                     IfNode ifNode => ConvertIfConditionToC.Convert(ifNode, mainScope),
                     WhileNode whileNode => ConvertWhileLoopToC.Convert(whileNode, mainScope),
-                    _ => throw new NotImplementedException()
+                  _ => throw new NotImplementedException()
                 };
 
                 if (!createStatementResult.IsSuccess)
