@@ -28,7 +28,7 @@ namespace SimpleScript.Lexer.Tests
         }
 
         [Fact]
-        public void VariableAssignmentToBoolian()
+        public void VariableAssignmentToBoolean()
         {
             var stringToTokenize = "LET isDev = TRUE";
             var result = _lexer.ConvertToTokens(stringToTokenize, 0);

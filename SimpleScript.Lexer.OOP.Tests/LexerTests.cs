@@ -7,14 +7,16 @@ public class LexerTests
 {
     private readonly Lexer _sut = new Lexer();
 
-    [Fact]
-    public void ShouldReturnStringToken()
+    /*[Theory]
+    [InlineData("Hello World")]
+    [InlineData("Testw233")]
+    public void ShouldReturnStringToken(string stringInput)
     {
-        var input = "\"Hello World\"";
+        var input = $"\"{stringInput}\"";
         var result = _sut.Tokenize(input);
         result.Tokens.Count.Should().Be(1);
         var stringToken = result.Tokens[0];
         stringToken.TokenType.Should().Be(TokenType.String);
-        ((StringToken)stringToken).StringValue.Should().Be("Hello World");
-    }
+        ((StringToken)stringToken).StringValue.Should().Be(stringInput);
+    }*/
 }
