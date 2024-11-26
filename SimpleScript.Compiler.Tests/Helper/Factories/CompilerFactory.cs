@@ -7,7 +7,8 @@ namespace SimpleScript.Compiler.Tests.Helper.Factories
     {
         public static ICompiler Create()
         {
-            return new CompileCCode();
+            //TODO
+            return new CompileCCode(null);
         }
     }
 }
