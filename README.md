@@ -19,7 +19,7 @@ it to native executables.
 - Input/Output operations
 - Native code generation via C compilation
 
-## Examples Programs
+## Example Programs
 
 The following programs can be compiled and executed using the current version of the compiler:
 
