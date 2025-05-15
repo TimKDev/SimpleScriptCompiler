@@ -15,7 +15,7 @@ namespace SimpleScript.Adapter.C
 
         public bool Compile(string fileName, string code)
         {
-            string cFileName = $"{fileName}.c";
+            var cFileName = GetCFileName(fileName);
             File.WriteAllText(cFileName, code);
 
             if (!Directory.Exists("build"))
@@ -23,19 +23,24 @@ namespace SimpleScript.Adapter.C
                 Directory.CreateDirectory("build");
             }
 
-            if (!ExecuteProcessWithIoRedirect("gcc", $"-g -c {cFileName} -o build/{fileName}.o"))
+            var outputFileName = GetOutputFileName(fileName);
+
+            if (!ExecuteProcessWithIoRedirect("gcc", $"-g -c {cFileName} -o {outputFileName}"))
             {
                 _logger.LogError("Failed to compile {CFileName} to object file", cFileName);
                 return false;
             }
 
-            if (!ExecuteProcessWithIoRedirect("gcc", "-g -c CCode/compiler-helper.c -o build/compiler-helper.o"))
+            if (!ExecuteProcessWithIoRedirect("gcc",
+                    "-g -c CCode/compiler-helper.c -o build/compiler-helper.o"))
             {
                 _logger.LogError("Failed to compile compiler-helper.c to object file");
                 return false;
             }
 
-            bool result = ExecuteProcessWithIoRedirect("gcc", $"-o {fileName} build/{fileName}.o build/compiler-helper.o");
+            bool result =
+                ExecuteProcessWithIoRedirect("gcc",
+                    $"-o {fileName} build/{fileName}.o build/compiler-helper.o");
             if (!result)
             {
                 _logger.LogError("Failed to link object files into executable: {FileName}", fileName);
@@ -44,7 +49,36 @@ namespace SimpleScript.Adapter.C
             {
                 _logger.LogInformation("Successfully compiled {FileName}", fileName);
             }
+
             return result;
+        }
+
+        public void Cleanup(string fileName)
+        {
+            RemoveIfExists(GetCFileName(fileName));
+            RemoveIfExists(GetOutputFileName(fileName));
+            RemoveIfExists(fileName);
+        }
+
+        private static string GetOutputFileName(string fileName)
+        {
+            var outputFileName = $"build/{fileName}.o";
+            return outputFileName;
+        }
+
+        private static string GetCFileName(string fileName)
+        {
+            string cFileName = $"{fileName}.c";
+            return cFileName;
+        }
+
+
+        private void RemoveIfExists(string fileName)
+        {
+            if (File.Exists(fileName))
+            {
+                File.Delete(fileName);
+            }
         }
 
         private bool ExecuteProcessWithIoRedirect(string command, string arguments)

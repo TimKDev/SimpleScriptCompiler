@@ -2,7 +2,8 @@
   "profiles": {
     "SimpleScript.Compiler": {
       "commandName": "Project",
-      "commandLineArgs": "compile ExamplePrograms/Fibonacci.simple"
+      //"commandLineArgs": "compile ExamplePrograms/Fibonacci.simple"
+      "commandLineArgs": "execute-direct \"PRINT 'Hello direct execution :)'\""
     }
   }
 }

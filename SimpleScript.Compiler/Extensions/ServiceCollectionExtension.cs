@@ -13,6 +13,7 @@ public static class ServiceCollectionExtension
         services.AddScoped<ICompileService, CompileService>()
             .AddSingleton<IConsoleBase, ConsoleBase>()
             .AddSingleton<IConsoleCommand, ExecuteCommand>()
+            .AddSingleton<IConsoleCommand, ExecuteDirectCommand>()
             .AddSingleton<IConsoleCommand, CompileCommand>();
         
         return services;

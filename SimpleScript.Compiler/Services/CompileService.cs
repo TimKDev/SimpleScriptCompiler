@@ -23,7 +23,20 @@ public class CompileService : ICompileService
         _compiler = compiler;
     }
 
-    public Result Compile(string pathToCodeToCompile, string programName)
+    public Result Compile(string programName, string code)
+    {
+        List<Token> programTokens = [];
+        int currentLineNumber = 0;
+        foreach (var line in code.Split(Environment.NewLine))
+        {
+            programTokens.AddRange(_lexer.ConvertToTokens(line, currentLineNumber));
+            currentLineNumber++;
+        }
+
+        return CompileTokens(programName, programTokens);
+    }
+
+    public Result CompileFromFile(string pathToCodeToCompile, string programName)
     {
         string programAbsolutePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathToCodeToCompile);
 
@@ -42,6 +55,16 @@ public class CompileService : ICompileService
             currentLineNumber++;
         }
 
+        return CompileTokens(programName, programTokens);
+    }
+
+    public void Cleanup(string programName)
+    {
+       _compiler.Cleanup(programName); 
+    }
+
+    private Result CompileTokens(string programName, List<Token> programTokens)
+    {
         Result<ProgramNode> programNodeResult = _parser.ParseTokens(programTokens);
         if (!programNodeResult.IsSuccess)
         {

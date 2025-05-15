@@ -1,9 +1,8 @@
-using System.Text.RegularExpressions;
 using FluentAssertions;
 
 namespace SimpleScript.Adapter.C.Tests.Helper.Extensions
 {
-    public static partial class StringExtensions
+    public static class StringExtensions
     {
         public static void AssertWithoutWhitespace(this string actual, string expected)
         {
@@ -12,10 +11,7 @@ namespace SimpleScript.Adapter.C.Tests.Helper.Extensions
 
         private static string RemoveWhiteSpace(string myString)
         {
-            return MyRegex().Replace(myString, "");
+            return myString.Where(c => !char.IsWhiteSpace(c)).ToString() ?? "";
         }
-
-        [GeneratedRegex(@"\s+")]
-        private static partial Regex MyRegex();
     }
 }
