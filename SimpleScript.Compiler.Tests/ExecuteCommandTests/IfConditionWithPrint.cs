@@ -1,18 +1,25 @@
 using FluentAssertions;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests;
 
-public class IfConditionWithPrint
+[Collection("Sequential")]
+public class IfConditionWithPrint : IDisposable
 {
-    private readonly string _programPath = "ExamplePrograms/IfConditionWithPrint.simple";
+    private const string ProgramName = "IfConditionWithPrint";
     private readonly Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+    public IfConditionWithPrint()
+    {
+        CleanUp();
+    }
 
     [Fact]
     public void ShouldCompileSuccessfully()
     {
-        EntertainingErrors.Result result = _sut.Execute([_programPath]);
+        EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
         result.IsSuccess.Should().BeTrue();
     }
 
@@ -23,15 +30,27 @@ public class IfConditionWithPrint
             "char *name = \"Tim\";",
             "if((name == \"Tim\"))",
             "{",
-            "printf(\"Hello Tim\");",
+            "printf(\"%s\",\"Hello Tim\");",
+            "fflush(stdout);",
             "}",
             "if((name == \"Carolin\"))",
             "{",
-            "printf(\"Hello Carolin\");",
+            "printf(\"%s\", \"Hello Carolin\");",
+            "fflush(stdout);",
             "}",
         ]);
-        _sut.Execute([_programPath]);
-        string resultingCCode = File.ReadAllText("IfConditionWithPrint.c");
+        _sut.Execute([ProgramName.ToExampleProgramPath()]);
+        string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
         CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+    }
+
+    public void Dispose()
+    {
+        CleanUp();
+    }
+
+    private void CleanUp()
+    {
+        CompilerTestCleanup.DeleteFiles(ProgramName);
     }
 }

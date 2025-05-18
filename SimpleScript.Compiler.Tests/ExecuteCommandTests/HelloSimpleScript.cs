@@ -1,18 +1,25 @@
 using FluentAssertions;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class HelloSimpleScript
+    [Collection("Sequential")]
+    public class HelloSimpleScript : IDisposable
     {
-        private string _programPath = "ExamplePrograms/HelloSimpleScript.simple";
+        private const string ProgramName = "HelloSimpleScript";
         private readonly Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public HelloSimpleScript()
+        {
+            CleanUp();
+        }
 
         [Fact]
         public void ShouldCompileSuccessfully()
         {
-            EntertainingErrors.Result result = _sut.Execute([_programPath]);
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
             result.IsSuccess.Should().BeTrue();
         }
 
@@ -20,11 +27,22 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         public void ShouldCreateCorrectCCode()
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode([
-                "printf(\"Hello SimpleScript!\");"
+                "printf(\"%s\",\"Hello SimpleScript!\");",
+                "fflush(stdout);",
             ]);
-            _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("HelloSimpleScript.c");
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
         }
     }
 }

@@ -1,18 +1,25 @@
 ﻿using FluentAssertions;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class Fibonacci
+    [Collection("Sequential")]
+    public class Fibonacci : IDisposable
     {
-        private string _programPath = "ExamplePrograms/Fibonacci.simple";
+        private const string ProgramName = "Fibonacci";
         private Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public Fibonacci()
+        {
+            CleanUp();
+        }
 
         [Fact]
         public void ShouldCompileSuccessfully()
         {
-            EntertainingErrors.Result result = _sut.Execute([_programPath]);
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
             result.IsSuccess.Should().BeTrue();
         }
 
@@ -22,7 +29,8 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode([
                 //PRINT "How many fibonacci numbers do you want?"
-                "printf(\"How many fibonacci numbers do you want?\");",
+                "printf(\"%s\",\"How many fibonacci numbers do you want?\");",
+                "fflush(stdout);",
                 //INPUT numsInput
                 "char temp_1[200];",
                 "fgets(temp_1, sizeof(temp_1), stdin);",
@@ -39,7 +47,8 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
                 //ENDIF
                 "if((nums < 0))",
                 "{",
-                "printf(\"Number should be greater or equal to zero!\");",
+                "printf(\"%s\",\"Number should be greater or equal to zero!\");",
+                "fflush(stdout);",
                 "}",
                 //LET a = 0
                 "int a = 0;",
@@ -55,15 +64,26 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
                 "while((nums > 0))",
                 "{",
                 "printf(\"%d\", a);",
+                "fflush(stdout);",
                 "int c = (a + b);",
                 "a = b;",
                 "b = c;",
                 "nums = (nums - 1);",
                 "}",
             ]);
-            _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("Fibonacci.c");
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
         }
     }
 }

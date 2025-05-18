@@ -4,7 +4,8 @@
     {
         public static Command.ExecuteCommand Create()
         {
-            return new Command.ExecuteCommand(CompilerServiceFactory.Create(), ExecuterFactory.CreateMock());
+            return new Command.ExecuteCommand(CompilerServiceFactory.Create(), ExecuterFactory.CreateMock(),
+                new CompilerSettingMock(true));
         }
     }
 }

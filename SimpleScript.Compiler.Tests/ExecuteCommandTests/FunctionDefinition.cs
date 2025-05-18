@@ -1,18 +1,25 @@
 using FluentAssertions;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class FunctionDefinition
+    [Collection("Sequential")]
+    public class FunctionDefinition : IDisposable
     {
-        private string _programPath = "ExamplePrograms/FunctionDefinition.simple";
+        private const string ProgramName = "FunctionDefinition";
         private Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public FunctionDefinition()
+        {
+            CleanUp();
+        }
 
         [Fact]
         public void ShouldCompileSuccessfully()
         {
-            EntertainingErrors.Result result = _sut.Execute([_programPath]);
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
             result.IsSuccess.Should().BeTrue();
         }
 
@@ -20,8 +27,10 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         public void ShouldCreateCorrectCCode()
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode([
-                "printf(\"Result of 23 + 55 is \");",
-                "printf(\"%d\", add(23, 55));"
+                "printf(\"%s\", \"Result of 23 + 55 is \");",
+                "fflush(stdout);",
+                "printf(\"%d\", add(23, 55));",
+                "fflush(stdout);"
             ], [
                 "int add(int num_1, int num_2)",
                 "{",
@@ -29,9 +38,19 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
                 "return result;",
                 "}",
             ]);
-            _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("FunctionDefinition.c");
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
         }
     }
 }

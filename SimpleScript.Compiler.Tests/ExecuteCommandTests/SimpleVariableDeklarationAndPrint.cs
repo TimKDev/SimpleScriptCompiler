@@ -1,18 +1,25 @@
 using FluentAssertions;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class SimpleVariableDeklarationAndPrint
+    [Collection("Sequential")]
+    public class SimpleVariableDeklarationAndPrint : IDisposable
     {
-        private string _programPath = "ExamplePrograms/SimpleVariableDeklarationAndPrint.simple";
-        private Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+        private const string ProgramName = "SimpleVariableDeklarationAndPrint";
+        private readonly Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public SimpleVariableDeklarationAndPrint()
+        {
+            CleanUp();
+        }
 
         [Fact]
         public void ShouldCompileSuccessfully()
         {
-            EntertainingErrors.Result result = _sut.Execute([_programPath]);
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
             result.IsSuccess.Should().BeTrue();
         }
 
@@ -28,11 +35,22 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
                 "char temp_2[10];",
                 "strcpy(temp_2, \"Hello \");",
                 "strcat(temp_2, name);",
-                "printf(temp_2);",
+                "printf(\"%s\",temp_2);",
+                "fflush(stdout);",
             ]);
-            _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("SimpleVariableDeklarationAndPrint.c");
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
         }
     }
 }

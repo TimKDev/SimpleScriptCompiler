@@ -4,15 +4,21 @@ using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class AddStringFunction
+    [Collection("Sequential")]
+    public class AddStringFunction : IDisposable
     {
-        private readonly string _programPath = "ExamplePrograms/AddStringFunction.simple";
+        private const string ProgramName = "AddStringFunction";
         private readonly Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public AddStringFunction()
+        {
+            CleanUp();
+        }
 
         [Fact]
         public void ShouldCompileSuccessfully()
         {
-            EntertainingErrors.Result result = _sut.Execute([_programPath]);
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
             result.AssertSuccess();
         }
 
@@ -21,7 +27,8 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode(
             [
-                "printf(addStrings(\"Hallo \",  \"String Addition\"));",
+                "printf(\"%s\", addStrings(\"Hallo \",  \"String Addition\"));",
+                "fflush(stdout);"
             ], [
                 "char * addStrings(char string_1[], char string_2[])",
                 "{",
@@ -33,9 +40,19 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
                 "return result;",
                 "}",
             ]);
-            _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("AddStringFunction.c");
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
         }
     }
 }

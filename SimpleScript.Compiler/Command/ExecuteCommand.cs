@@ -38,13 +38,18 @@ namespace SimpleScript.Compiler.Command
 
             var compilationResult =
                 _compileService.CompileFromFile(pathToCodeToCompile, simpleScriptFileName.Value.ProgramName);
+
             if (!compilationResult.IsSuccess)
             {
                 return compilationResult;
             }
 
             _executer.RunExecutable(simpleScriptFileName.Value.ProgramName);
-            _compileService.Cleanup(simpleScriptFileName.Value.ProgramName);
+
+            if (!_compilerSettings.CreateOutputFiles)
+            {
+                _compileService.Cleanup(simpleScriptFileName.Value.ProgramName);
+            }
 
             return Result.Success();
         }

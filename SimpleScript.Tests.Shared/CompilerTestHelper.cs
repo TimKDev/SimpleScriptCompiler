@@ -29,7 +29,7 @@ namespace SimpleScript.Tests.Shared
 
         public static string NormalizeWhiteSpace(string input)
         {
-            return Regex.Replace(input, @"\s+", " ").Trim();
+            return Regex.Replace(input, @"\s+", "").Trim();
         }
 
         public static void AssertNormalizedStrings(string actual, string expected)

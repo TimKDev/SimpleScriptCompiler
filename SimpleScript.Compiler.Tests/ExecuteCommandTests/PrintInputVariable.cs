@@ -1,19 +1,26 @@
 ﻿using FluentAssertions;
 using SimpleScript.Compiler.Command;
+using SimpleScript.Compiler.Tests.Helper.Extensions;
 using SimpleScript.Compiler.Tests.Helper.Factories;
 using SimpleScript.Tests.Shared;
 
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
-    public class PrintInputVariable
+    [Collection("Sequential")]
+    public class PrintInputVariable : IDisposable
     {
-        private string _programPath = "ExamplePrograms/PrintInputVariable.simple";
+        private const string ProgramName = "PrintInputVariable";
         private ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public PrintInputVariable()
+        {
+            CleanUp();
+        }
 
         [Fact]
         public void ShouldCompileSuccessfully()
         {
-            EntertainingErrors.Result result = _sut.Execute([_programPath]);
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
             result.IsSuccess.Should().BeTrue();
         }
 
@@ -21,7 +28,8 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         public void ShouldCreateCorrectCCode()
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode([
-                "printf(\"Enter your name:\");",
+                "printf(\"%s\",\"Enter your name:\");",
+                "fflush(stdout);",
                 "char temp_1[200];",
                 "fgets(temp_1, sizeof(temp_1), stdin);",
                 "size_t temp_2 = strlen(temp_1);",
@@ -34,13 +42,22 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
                 "strcpy(temp_3, \"Hello \");",
                 "strcat(temp_3, name);",
                 "strcat(temp_3, \"! My name is SimpleScript\");",
-                "printf(temp_3);"
+                "printf(\"%s\",temp_3);",
+                "fflush(stdout);",
             ]);
-            _sut.Execute([_programPath]);
-            string resultingCCode = File.ReadAllText("PrintInputVariable.c");
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
             CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
         }
     }
 }
-
-
