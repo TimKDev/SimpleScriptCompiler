@@ -20,12 +20,29 @@ namespace SimpleScript.Adapter.C
                 return nodeToPrintScope.Errors;
             }
 
-            if (nodeToPrintScope.Value.ValueType is ValueTypes.String && nodeToPrint is AddNode addNodeToPrint)
+            var printNodeExpressionResult = PrintNodeExpression(nodeToPrintScope.Value, nodeToPrint, scope);
+
+            if (!printNodeExpressionResult.IsSuccess)
             {
-                return ConvertPrintOfStringAddNode(addNodeToPrint, nodeToPrintScope.Value, scope);
+                return printNodeExpressionResult;
             }
 
-            var printNodeExpression = nodeToPrintScope.Value.ValueType switch
+            var result = new List<string>();
+            result.AddRange(printNodeExpressionResult.Value);
+            result.Add("fflush(stdout);");
+            return result.ToArray();
+        }
+
+        private static Result<string[]> PrintNodeExpression(ScopeVariableEntry nodeToPrintScope,
+            IExpression nodeToPrint,
+            Scope scope)
+        {
+            if (nodeToPrintScope.ValueType is ValueTypes.String && nodeToPrint is AddNode addNodeToPrint)
+            {
+                return ConvertPrintOfStringAddNode(addNodeToPrint, nodeToPrintScope, scope);
+            }
+
+            var standardPrintNodeResult = nodeToPrintScope.ValueType switch
             {
                 ValueTypes.String => ConvertPrintOfString(nodeToPrint),
                 ValueTypes.Number => ConvertPrintOfNumber(nodeToPrint),
@@ -33,7 +50,7 @@ namespace SimpleScript.Adapter.C
                 _ => throw new NotImplementedException(),
             };
 
-            return new string[] { printNodeExpression };
+            return new[] { standardPrintNodeResult };
         }
 
         private static string ConvertPrintOfBoolean(IExpression nodeToPrint)
@@ -43,7 +60,7 @@ namespace SimpleScript.Adapter.C
 
         private static string ConvertPrintOfString(IExpression nodeToPrint)
         {
-            return $"printf({ConvertExpressionToC.Convert(nodeToPrint)});";
+            return $"printf(\"%s\", {ConvertExpressionToC.Convert(nodeToPrint)});";
         }
 
         private static string ConvertPrintOfNumber(IExpression nodeToPrint)
@@ -63,7 +80,7 @@ namespace SimpleScript.Adapter.C
             }
 
             var result = stringAdditionResult.Value.ToList();
-            result.Add($"\nprintf({tempVariableName});");
+            result.Add($"printf(\"%s\", {tempVariableName});");
             return result.ToArray();
         }
     }

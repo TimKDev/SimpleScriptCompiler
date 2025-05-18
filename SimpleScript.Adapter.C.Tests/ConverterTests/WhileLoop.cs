@@ -22,7 +22,8 @@ public class WhileLoop(ITestOutputHelper testOutputHelper)
         _sut.AssertConverterToCCode(programNode, [
             "while(true)",
             "{",
-            "printf(\"Hallo World!\");",
+            "printf(\"%s\",\"Hallo World!\");",
+            "fflush(stdout);",
             "}"
         ]);
     }
@@ -44,7 +45,8 @@ public class WhileLoop(ITestOutputHelper testOutputHelper)
             "char* name = \"Testname\";",
             "while((name == \"Tim\"))",
             "{",
-            "printf(\"Hallo Tim!\");",
+            "printf(\"%s\",\"Hallo Tim!\");",
+            "fflush(stdout);",
             "}"
         ], testOutputHelper: testOutputHelper);
     }

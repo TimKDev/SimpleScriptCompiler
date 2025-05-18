@@ -18,7 +18,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(\"Hello Simple Script Compiler\");"
+                "printf(\"%s\",\"Hello Simple Script Compiler\");",
+                "fflush(stdout);"
             ]);
         }
 
@@ -30,7 +31,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(\"%d\", 3);"
+                "printf(\"%d\", 3);",
+                "fflush(stdout);"
             ]);
         }
 
@@ -56,7 +58,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(\"%d\", (1 + 2));"
+                "printf(\"%d\", (1 + 2));",
+                "fflush(stdout);",
             ]);
         }
 
@@ -74,7 +77,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
                 "char temp_1[12];",
                 "strcpy(temp_1, \"Hello \");",
                 "strcat(temp_1, \"World\");",
-                "printf(temp_1);",
+                "printf(\"%s\", temp_1);",
+                "fflush(stdout);"
             ]);
         }
 
@@ -92,7 +96,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(\"%d\", ((1 * 2) + 3));"
+                "printf(\"%d\", ((1 * 2) + 3));",
+                "fflush(stdout);",
             ]);
         }
 
@@ -110,7 +115,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(\"%d\", ((1 + 2) * 3));"
+                "printf(\"%d\", ((1 + 2) * 3));",
+                "fflush(stdout);"
             ]);
         }
 
@@ -131,7 +137,8 @@ namespace SimpleScript.Adapter.C.Tests.ConverterTests
             ]);
 
             _sut.AssertConverterToCCode(programNode, [
-                "printf(\"%d\", ((1 + 2) * (3 + 4)));"
+                "printf(\"%d\", ((1 + 2) * (3 + 4)));",
+                "fflush(stdout);"
             ]);
         }
     }

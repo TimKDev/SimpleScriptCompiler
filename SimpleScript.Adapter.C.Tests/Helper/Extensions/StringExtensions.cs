@@ -11,7 +11,7 @@ namespace SimpleScript.Adapter.C.Tests.Helper.Extensions
 
         private static string RemoveWhiteSpace(string myString)
         {
-            return myString.Where(c => !char.IsWhiteSpace(c)).ToString() ?? "";
+            return new string(myString.Where(c => !char.IsWhiteSpace(c)).ToArray());
         }
     }
 }

@@ -7,7 +7,7 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
     public class HelloSimpleScript
     {
         private string _programPath = "ExamplePrograms/HelloSimpleScript.simple";
-        private Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+        private readonly Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
 
         [Fact]
         public void ShouldCompileSuccessfully()

@@ -60,7 +60,7 @@ public class CompileService : ICompileService
 
     public void Cleanup(string programName)
     {
-       _compiler.Cleanup(programName); 
+        _compiler.Cleanup(programName);
     }
 
     private Result CompileTokens(string programName, List<Token> programTokens)

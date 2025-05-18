@@ -1,6 +1,7 @@
 ﻿using ConsoleCore.Attributes;
 using ConsoleCore.Interfaces;
 using EntertainingErrors;
+using Microsoft.Extensions.Options;
 using SimpleScript.Adapter.Abstractions;
 using SimpleScript.Compiler.Services;
 
@@ -11,11 +12,14 @@ namespace SimpleScript.Compiler.Command
     {
         private readonly ICompileService _compileService;
         private readonly IExecuter _executer;
+        private readonly CompilerSettings _compilerSettings;
 
-        public ExecuteCommand(ICompileService compileService, IExecuter executer)
+        public ExecuteCommand(ICompileService compileService, IExecuter executer,
+            IOptions<CompilerSettings> compilerSettings)
         {
             _compileService = compileService;
             _executer = executer;
+            _compilerSettings = compilerSettings.Value;
         }
 
         public Result Execute(string[] args)

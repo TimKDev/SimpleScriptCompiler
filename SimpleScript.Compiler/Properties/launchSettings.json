@@ -3,7 +3,7 @@
     "SimpleScript.Compiler": {
       "commandName": "Project",
       //"commandLineArgs": "compile ExamplePrograms/Fibonacci.simple"
-      "commandLineArgs": "execute-direct \"PRINT 'Hello direct execution :)'\""
+      "commandLineArgs": "execute-direct \"PRINT 'Enter your name:'\nINPUT name\n PRINT 'Hello ' + name + '! My name is SimpleScript'\""
     }
   }
 }

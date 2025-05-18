@@ -21,7 +21,8 @@ public class IfCondition(ITestOutputHelper testOutputHelper)
         _sut.AssertConverterToCCode(programNode, [
             "if(true)",
             "{",
-            "printf(\"Hallo World!\");",
+            "printf(\"%s\",\"Hallo World!\");",
+            "fflush(stdout);",
             "}"
         ]);
     }
@@ -43,7 +44,8 @@ public class IfCondition(ITestOutputHelper testOutputHelper)
             "char* name = \"Testname\";",
             "if((name == \"Tim\"))",
             "{",
-            "printf(\"Hallo Tim!\");",
+            "printf(\"%s\", \"Hallo Tim!\");",
+            "fflush(stdout);",
             "}"
         ], testOutputHelper: testOutputHelper);
     }
