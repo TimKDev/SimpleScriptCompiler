@@ -5,7 +5,7 @@ using SimpleScript.Parser.Nodes.Interfaces;
 
 namespace SimpleScript.Adapter.C
 {
-    public class ConvertBodyNodeToC
+    public static class ConvertBodyNodeToC
     {
         public static Result<(List<string> mainStatements, List<string> cFunctionDeclarations)> ConvertToStatements(
             BodyNode nodeWithBody, Scope? bodyScope = null)

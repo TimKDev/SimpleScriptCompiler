@@ -4,7 +4,7 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Adapter.C;
 
-internal class ConvertIfConditionToC
+internal static class ConvertIfConditionToC
 {
     internal static Result<string[]> Convert(IfNode ifNode, Scope scope)
     {

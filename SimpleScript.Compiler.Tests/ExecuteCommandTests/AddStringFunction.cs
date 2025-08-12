@@ -5,6 +5,53 @@ using SimpleScript.Tests.Shared;
 namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
 {
     [Collection("Sequential")]
+    public class FunctionWithoutArguments : IDisposable
+    {
+        private const string ProgramName = "FunctionWithoutArguments";
+        private readonly Command.ExecuteCommand _sut = ExecuteCommandFactory.Create();
+
+        public FunctionWithoutArguments()
+        {
+            CleanUp();
+        }
+
+        [Fact]
+        public void ShouldCompileSuccessfully()
+        {
+            EntertainingErrors.Result result = _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            result.AssertSuccess();
+        }
+
+        [Fact]
+        public void ShouldCreateCorrectCCode()
+        {
+            string expectedCCode = CompilerTestHelper.ConvertToCCode(
+            [
+                "sayHello()",
+                "fflush(stdout);"
+            ], [
+                "void sayHello()",
+                "{",
+                "printf(\"%s\", \"Hello\");",
+                "}",
+            ]);
+            _sut.Execute([ProgramName.ToExampleProgramPath()]);
+            string resultingCCode = File.ReadAllText(ProgramName.AddCExtension());
+            CompilerTestHelper.AssertNormalizedStrings(resultingCCode, expectedCCode);
+        }
+
+        public void Dispose()
+        {
+            CleanUp();
+        }
+
+        private void CleanUp()
+        {
+            CompilerTestCleanup.DeleteFiles(ProgramName);
+        }
+    }
+
+    [Collection("Sequential")]
     public class AddStringFunction : IDisposable
     {
         private const string ProgramName = "AddStringFunction";

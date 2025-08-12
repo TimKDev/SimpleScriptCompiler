@@ -1,0 +1,6 @@
+﻿FUNC sayHello()
+BODY
+    PRINT "Hallo"
+ENDBODY
+
+sayHello()

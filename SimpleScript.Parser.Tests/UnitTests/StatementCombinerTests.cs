@@ -11,7 +11,8 @@ namespace SimpleScript.Parser.Tests.UnitTests
         [Fact]
         public void ShouldCreateTwoStatements_GivenAssignmentAndPrint()
         {
-            List<Token> tokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print(), TF.Var("hello")];
+            List<Token> tokens =
+                [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print(), TF.Var("hello")];
             List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));
             statements.Count.Should().Be(2);
         }
@@ -19,7 +20,8 @@ namespace SimpleScript.Parser.Tests.UnitTests
         [Fact]
         public void ShouldCreateTwoStatementsWithTokens_GivenAssignmentAndPrint()
         {
-            List<Token> tokens = [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print(), TF.Var("hello")];
+            List<Token> tokens =
+                [TF.Let(), TF.Var("hello"), TF.Assign(), TF.Str("Hello World"), TF.Print(), TF.Var("hello")];
             List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));
             statements.Count.Should().Be(2);
             Statement variableAssignmentStatement = statements[0];
@@ -37,7 +39,13 @@ namespace SimpleScript.Parser.Tests.UnitTests
             //    RETURN result
             //ENDBODY
             //PRINT add(23, 55)
-            List<Token> tokens = [TF.Func(), TF.Var("add"), TF.Open(), TF.Int(), TF.Var("num_1"), TF.Comma(), TF.Int(), TF.Var("num_2"), TF.Close(), TF.Body(), TF.Let(), TF.Var("result"), TF.Assign(), TF.Var("num_1"), TF.Add(), TF.Var("num_2"), TF.Return(), TF.Var("result"), TF.EndBody(), TF.Print(), TF.Var("add"), TF.Open(), TF.Num(23), TF.Comma(), TF.Num(55), TF.Close()];
+            List<Token> tokens =
+            [
+                TF.Func(), TF.Var("add"), TF.Open(), TF.Int(), TF.Var("num_1"), TF.Comma(), TF.Int(), TF.Var("num_2"),
+                TF.Close(), TF.Body(), TF.Let(), TF.Var("result"), TF.Assign(), TF.Var("num_1"), TF.Add(),
+                TF.Var("num_2"), TF.Return(), TF.Var("result"), TF.EndBody(), TF.Print(), TF.Var("add"), TF.Open(),
+                TF.Num(23), TF.Comma(), TF.Num(55), TF.Close()
+            ];
 
             List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));
             statements.Count.Should().Be(2);
@@ -45,6 +53,19 @@ namespace SimpleScript.Parser.Tests.UnitTests
             Statement printStatement = statements[1];
             functionDeclarationStatement.Tokens.Count.Should().Be(19);
             printStatement.Tokens.Count().Should().Be(7);
+        }
+
+        [Fact]
+        public void ShouldCreateTwoStatementsWithTokens_GivenFunctionInvocation()
+        {
+            List<Token> tokens =
+            [
+                TF.Func(), TF.Var("hello"), TF.Open(), TF.Close(), TF.Body(), TF.Print(), TF.Str("Hello World"),
+                TF.EndBody(), TF.Var("hello"), TF.Open(), TF.Close()
+            ];
+
+            List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));
+            statements.Count.Should().Be(2);
         }
     }
 }

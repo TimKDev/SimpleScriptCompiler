@@ -4,7 +4,7 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Adapter.C;
 
-internal class ConvertWhileLoopToC
+internal static class ConvertWhileLoopToC
 {
     internal static Result<string[]> Convert(WhileNode whileNode, Scope scope)
     {

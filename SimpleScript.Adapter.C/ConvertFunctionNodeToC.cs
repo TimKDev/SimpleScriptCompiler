@@ -4,7 +4,7 @@ using SimpleScript.Parser.Nodes;
 
 namespace SimpleScript.Adapter.C
 {
-    internal class ConvertFunctionNodeToC
+    internal static class ConvertFunctionNodeToC
     {
         internal static Result<string[]> Convert(FunctionNode functionNode, Scope mainScope)
         {

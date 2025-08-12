@@ -33,6 +33,9 @@
         <EmbeddedResource Include="ExamplePrograms\FunctionDefinition.simple">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </EmbeddedResource>
+        <EmbeddedResource Include="ExamplePrograms\FunctionWithoutArguments.simple">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
         <EmbeddedResource Include="ExamplePrograms\HelloSimpleScript.simple">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </EmbeddedResource>
