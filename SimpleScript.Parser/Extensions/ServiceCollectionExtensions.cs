@@ -11,6 +11,7 @@ namespace SimpleScript.Parser.Extensions
         {
             services.AddTransient<IParser, Parser>();
             services.AddTransient<IStatementCombiner, StatementCombiner>();
+            services.AddTransient<IExpressionCombiner, ExpressionCombiner>();
             services.AddTransient<IAdditionNodeFactory, AdditionNodeFactory>();
             services.AddTransient<IMinusNodeFactory, MinusNodeFactory>();
             services.AddTransient<IMultiplicationNodeFactory, MultiplicationNodeFactory>();

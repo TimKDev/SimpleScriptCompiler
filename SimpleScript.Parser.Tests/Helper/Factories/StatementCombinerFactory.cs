@@ -4,7 +4,7 @@
     {
         public static StatementCombiner Create()
         {
-            return new();
+            return new(ExpressionCombinerFactory.Create());
         }
     }
 }
