@@ -88,9 +88,9 @@ namespace SimpleScript.Parser.Tests.UnitTests
         {
             List<Token> tokens =
             [
-                TF.Let(), TF.Var("hello"), TF.Equal(), TF.Num(10),
-                TF.Let(), TF.Var("hello2"), TF.Equal(), TF.Num(10),
-                TF.Let(), TF.Var("hello3"), TF.Equal(), TF.Num(10),
+                TF.Let(), TF.Var("hello"), TF.Assign(), TF.Num(10),
+                TF.Let(), TF.Var("hello2"), TF.Assign(), TF.Num(10),
+                TF.Let(), TF.Var("hello3"), TF.Assign(), TF.Num(10),
             ];
 
             List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));
@@ -103,7 +103,7 @@ namespace SimpleScript.Parser.Tests.UnitTests
         {
             List<Token> tokens =
             [
-                TF.Let(), TF.Var("hello3"), TF.Equal(), TF.Num(11), TF.Let(), TF.Var("hello"), TF.Equal(), TF.Num(10),
+                TF.Let(), TF.Var("hello3"), TF.Assign(), TF.Num(11), TF.Let(), TF.Var("hello"), TF.Assign(), TF.Num(10),
                 TF.Mul(), TF.Open(), TF.Num(5), TF.Add(), TF.Var("hello3"), TF.Close()
             ];
 
@@ -117,7 +117,7 @@ namespace SimpleScript.Parser.Tests.UnitTests
             List<Token> tokens =
             [
                 TF.Print(), TF.Num(10), TF.Mul(), TF.Open(), TF.Num(5), TF.Add(), TF.Num(6), TF.Close(),
-                TF.Let(), TF.Var("hello3"), TF.Equal(), TF.Open(), TF.Num(10), TF.Close()
+                TF.Let(), TF.Var("hello3"), TF.Assign(), TF.Open(), TF.Num(10), TF.Close()
             ];
 
             List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));
@@ -131,7 +131,7 @@ namespace SimpleScript.Parser.Tests.UnitTests
             [
                 TF.Func(), TF.Var("hello"), TF.Open(), TF.Close(), TF.Body(), TF.Print(), TF.Str("Hello World"),
                 TF.EndBody(),
-                TF.Var("test"), TF.Equal(), TF.Var("hello"), TF.Open(), TF.Close(), TF.Add(), TF.Str("Hello World"),
+                TF.Let(), TF.Var("test"), TF.Assign(), TF.Var("hello"), TF.Open(), TF.Close(), TF.Add(), TF.Str("Hello World"),
             ];
 
             List<Statement> statements = ErrorHelper.AssertResultSuccess(_sut.CreateStatements(tokens));

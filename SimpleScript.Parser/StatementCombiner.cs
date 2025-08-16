@@ -8,7 +8,7 @@ namespace SimpleScript.Parser
     {
         private readonly TokenType[] _tokensTypesFollowedByExpression =
         [
-            TokenType.Let, TokenType.Print, TokenType.Input
+            TokenType.Let, TokenType.Print, TokenType.Input, TokenType.Return
         ];
 
         private readonly (TokenType StartType, TokenType EndType)[] _tokensThatDefineAStatementBlock =
@@ -57,7 +57,7 @@ namespace SimpleScript.Parser
                 }
 
                 //Check for Function invocation
-                if (currentPosition < tokens.Count - 3)
+                if (currentPosition < tokens.Count - 2)
                 {
                     if ((tokens[currentPosition].TokenType, tokens[currentPosition + 1].TokenType,
                             tokens[currentPosition + 2].TokenType) is (TokenType.Variable, TokenType.OpenBracket,

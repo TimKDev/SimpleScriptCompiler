@@ -21,7 +21,7 @@ public class ExpressionCombiner : IExpressionCombiner
         TokenType.SmallerOrEqual,
         TokenType.Greater,
         TokenType.Smaller,
-        //Was ist Assign?????
+        TokenType.Assign,
     ];
 
     private readonly TokenType[] _bracketTokenTypes =
@@ -51,18 +51,7 @@ public class ExpressionCombiner : IExpressionCombiner
             if (_bracketTokenTypes.Contains(currentToken.TokenType))
             {
                 result.Add(currentToken);
-                break;
-            }
-
-            if (_binaryOperatorTypes.Contains(currentToken.TokenType))
-            {
-                if (openExpression)
-                {
-                    return Error.Create("Expression is not complete");
-                }
-
-                result.Add(currentToken);
-                openExpression = true;
+                continue;
             }
 
             if (openExpression)
@@ -82,6 +71,18 @@ public class ExpressionCombiner : IExpressionCombiner
                 }
 
                 result.Add(currentToken);
+                continue;
+            }
+
+            if (_binaryOperatorTypes.Contains(currentToken.TokenType))
+            {
+                if (openExpression)
+                {
+                    return Error.Create("Expression is not complete");
+                }
+
+                result.Add(currentToken);
+                openExpression = true;
                 continue;
             }
 
