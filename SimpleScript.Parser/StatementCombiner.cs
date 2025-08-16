@@ -1,5 +1,4 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using EntertainingErrors;
+﻿using EntertainingErrors;
 using SimpleScript.Lexer;
 using SimpleScript.Parser.Interfaces;
 
