@@ -8,6 +8,6 @@ public static class BodyNodeFactoryFactory
     {
         return new BodyNodeFactory(StatementCombinerFactory.Create(), VariableAssignmentNodeFactoryFactory.Create(),
             PrintNodeFactoryFactory.Create(), InputNodeFactoryFactory.Create(), FunctionNodeFactoryFactory.Create(),
-            ReturnNodeFactoryFactory.Create(), IfNodeFactoryFactory.Create(), WhileNodeFactoryFactory.Create());
+            ReturnNodeFactoryFactory.Create(), IfNodeFactoryFactory.Create(), WhileNodeFactoryFactory.Create(), FunctionInvocationNodeFactoryFactory.Create(), ExpressionFactoryFactory.Create());
     }
 }

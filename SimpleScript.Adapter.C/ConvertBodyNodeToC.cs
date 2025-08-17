@@ -17,8 +17,6 @@ namespace SimpleScript.Adapter.C
 
             foreach (IBodyNode directProgramChild in nodeWithBody.ChildNodes)
             {
-                //Sammel alle Function Node die Child Elemente der Body Node sind ein und deklariere die entsprechende Funktion.
-                //Hierbei muss wieder auf den Scope geachtet werden, da zwei Funktionen mit dem gleichen Namen nicht erlaubt sind.
                 Result<string[]> createStatementResult = directProgramChild switch
                 {
                     PrintNode printNode => ConvertPrintNodeToC.Convert(printNode, mainScope),
@@ -29,7 +27,9 @@ namespace SimpleScript.Adapter.C
                     ReturnNode returnNode => ConvertReturnNodeToC.Convert(returnNode, mainScope),
                     IfNode ifNode => ConvertIfConditionToC.Convert(ifNode, mainScope),
                     WhileNode whileNode => ConvertWhileLoopToC.Convert(whileNode, mainScope),
-                  _ => throw new NotImplementedException()
+                    FunctionInvocationNode functionInvocationNode => ConvertFunctionInvocationToC.Convert(
+                        functionInvocationNode, mainScope),
+                    _ => throw new NotImplementedException()
                 };
 
                 if (!createStatementResult.IsSuccess)

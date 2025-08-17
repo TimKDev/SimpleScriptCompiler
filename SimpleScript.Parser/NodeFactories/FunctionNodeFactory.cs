@@ -49,7 +49,7 @@ namespace SimpleScript.Parser.NodeFactories
             List<Token> argumentDefinitionTokens =
                 functionDeclarationPart.Skip(3).Take(functionDeclarationPart.Count - 4).ToList();
             List<Token> bodyDefinitionTokens =
-                bodyDeclarationPart.Skip(1).Take(functionDeclarationPart.Count - 1).ToList();
+                bodyDeclarationPart.Skip(1).Take(bodyDeclarationPart.Count - 2).ToList();
 
             if (functionName is null)
             {

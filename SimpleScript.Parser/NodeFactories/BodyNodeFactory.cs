@@ -18,11 +18,14 @@ namespace SimpleScript.Parser.NodeFactories
         private readonly IReturnNodeFactory _returnNodeFactory;
         private readonly IIfNodeFactory _ifNodeFactory;
         private readonly IWhileNodeFactory _whileNodeFactory;
+        private readonly IFunctionInvocationNodeFactory _functionInvocationNodeFactory;
+        private readonly IExpressionFactory _expressionFactory;
 
         public BodyNodeFactory(IStatementCombiner statementCombiner,
             IVariableDeclarartionNodeFactory variableAssignmentFactory, IPrintNodeFactory printNodeFactory,
             IInputNodeFactory inputNodeFactory, IFunctionNodeFactory functionNodeFactory,
-            IReturnNodeFactory returnNodeFactory, IIfNodeFactory ifNodeFactory, IWhileNodeFactory whileNodeFactory)
+            IReturnNodeFactory returnNodeFactory, IIfNodeFactory ifNodeFactory, IWhileNodeFactory whileNodeFactory,
+            IFunctionInvocationNodeFactory functionInvocationNodeFactory, IExpressionFactory expressionFactory)
         {
             _statementCombiner = statementCombiner;
             _variableAssignmentFactory = variableAssignmentFactory;
@@ -32,6 +35,8 @@ namespace SimpleScript.Parser.NodeFactories
             _returnNodeFactory = returnNodeFactory;
             _ifNodeFactory = ifNodeFactory;
             _whileNodeFactory = whileNodeFactory;
+            _functionInvocationNodeFactory = functionInvocationNodeFactory;
+            _expressionFactory = expressionFactory;
         }
 
         public Result<BodyNode> Create(List<Token> inputTokens)
@@ -61,6 +66,8 @@ namespace SimpleScript.Parser.NodeFactories
                     TokenType.Return => _returnNodeFactory.Create(statement.Tokens).Convert<IBodyNode>(),
                     TokenType.If => _ifNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
                     TokenType.While => _whileNodeFactory.Create(statement.Tokens, this).Convert<IBodyNode>(),
+                    TokenType.Variable => _functionInvocationNodeFactory.Create(statement.Tokens, _expressionFactory)
+                        .Convert<IBodyNode>(),
                     _ => Error.Create("Compiler Error: Unknown Statement Type.")
                 };
                 errors.AddRange(result.Errors);

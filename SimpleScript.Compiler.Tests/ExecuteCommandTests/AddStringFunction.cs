@@ -27,12 +27,12 @@ namespace SimpleScript.Compiler.Tests.ExecuteCommandTests
         {
             string expectedCCode = CompilerTestHelper.ConvertToCCode(
             [
-                "sayHello()",
-                "fflush(stdout);"
+                "sayHello();",
             ], [
                 "void sayHello()",
                 "{",
-                "printf(\"%s\", \"Hello\");",
+                "printf(\"%s\", \"Hallo\");",
+                "fflush(stdout);",
                 "}",
             ]);
             _sut.Execute([ProgramName.ToExampleProgramPath()]);
