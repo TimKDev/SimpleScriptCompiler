@@ -1,0 +1,7 @@
+FUNC add(int num_1) 
+BODY
+	LET test = 5
+	RETURN num_1 + 1
+ENDBODY 
+
+PRINT add(3)

@@ -48,6 +48,10 @@
         <EmbeddedResource Include="ExamplePrograms\IfConditionWithPrint.simple">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </EmbeddedResource>
+        <None Remove="ExamplePrograms\SingleArgFunction.simple" />
+        <EmbeddedResource Include="ExamplePrograms\SingleArgFunction.simple">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </EmbeddedResource>
     </ItemGroup>
 
     <ItemGroup>
